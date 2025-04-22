@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Fashanize/LogIn</title>
+
+  <style>
+    .container {
+      display: flex;
+      padding-left: 3rem;
+    }
+
+    .split {
+      width: 50%;
+    }
+
+    .left {
+      background-color: #dde7fb;
+      width: 40%;
+      padding: 3rem;
+      padding-left: 3rem;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .right {
+      width: 60%;
+      background-color: #ffffff;
+      padding: 3rem;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    input {
+      background-color: #dde7fb;
+      width: 80%;
+      border: none;
+      padding: 1rem;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    button {
+      align-items: center;
+      color: #ffffff;
+      background-color: #4a69d9;
+      border-radius: 999px;
+      border: none;
+      font-size: 24px;
+      width: 100%;
+      padding: 1.2rem 0;
+    }
+    button:hover {
+      background-color: #000000;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      font-size: larger;
+      color: black;
+      margin: 0%;
+    }
+
+    .form_container {
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      width: 80%;
+    }
+
+    .remember {
+      display: flex;
+      font-size: 13px;
+      justify-content: space-between;
+      width: 65%
+    }
+
+    .remember-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .Forgot,
+    .no_account {
+      text-decoration: none;
+      color: black;
+    }
+
+    .no_account {
+      font-size: 13px;
+    }
+
+    .star_row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      font-size: 45px;
+      color: #FBBF24;
+    }
+
+    .pic {
+      width: 150px;
+      height: 150px;
+      background-color: #ccc;
+    }
+
+    .Welcome {
+      font-size: 25px;
+    }
+
+    label i {
+      margin-right: 0.5rem;
+      color: #b1b1b1;
+    }
+
+    .button_final {
+      width: 80%;
+      text-align: center;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      font-family: 'Poppins', sans-serif;
+      color: black;
+      justify-content: center;
+    }
+
+    .tabs a {
+      text-decoration: none;
+      font-size: larger;
+      color: black;
+    }
+    .tabs a.selected {
+      border-bottom: 2px solid #575757;
+      padding-bottom: 8px;
+      width: 135px;
+      text-align: center;
+    }
+
+
+    .Forgot:hover,
+    .tabs a:hover,
+    .no_account:hover {
+      color: #4a69d9;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="split left">
+      <div class="centered">
+        <img src="" alt="logo">
+        <h1>Fashanize</h1>
+        <p class="Welcome">Welcome Back!
+        <p>
+        <p>Login to access your virtual wardrobe and <br>style recommendations</p>
+        <br><br>
+
+        <div class="star_row">
+          <div class="pic"></div>
+          <!-- style later - user pic -->
+          <p>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </p>
+
+        </div>
+        <br><br><br>
+
+        <div class="star_row">
+          <div class="pic"></div>
+          <p>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </p>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+
+
+    <div class="split right">
+      <div class="centered2">
+        <div class="sign_up">
+
+          <div class="tabs">
+            <a href="#">Sign-Up</a>
+            <a href="#" class="selected">Log-In</a>
+
+          </div>
+
+          <div class="form_container">
+
+            <form>
+
+              <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label><br><br>
+              <input type="text" name="email" id="email" required>
+              <br><br>
+
+
+              <label for="password"><i class="fa-solid fa-lock"></i> Password: </label><br><br>
+              <input type="password" name="password" id="password" required>
+              <br><br>
+
+              <div class="remember">
+                <div class="remember-left">
+                  <input type="checkbox" id="remember" required>
+                  <label for="remember">Remember Me</label>
+                </div>
+                <a href="#" class="Forgot">Forgot Password?</a>
+              </div>
+              <br><br>
+
+              <div class="button_final">
+                <button type="submit"> Log In </button>
+                <br><br>
+                <a href="#" class="no_account">Don't have an account? Sign Up</a>
+              </div>
+
+
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>
