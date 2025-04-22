@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="navbar-container">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Fashonise Logo" />
+                    <span>Fashonise</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('wardrobe') }}">MyWardrobe</a></li>
+                    <li><a href="{{ url_for('outfits') }}">MyOutfits</a></li>
+                    <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                    <li><a href="{{ url_for('social') }}">Social</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="main-container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>
