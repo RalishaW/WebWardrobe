@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Fashanize/SignUp</title>
+
+  <style>
+    .container {
+      display: flex;
+      padding-left: 3rem;
+    }
+
+    .split {
+      width: 50%;
+    }
+
+    .left {
+      background-color: #dde7fb;
+      width: 40%;
+      padding: 3rem;
+      padding-left: 3rem;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .right {
+      width: 60%;
+      background-color: #ffffff;
+      padding: 3rem;
+
+    }
+    .centered {
+      text-align: center;
+    }
+
+    input {
+      background-color: #dde7fb;
+      width: 100%;
+      border: none;
+      padding: 1rem;
+    }
+
+    input[type="checkbox"] {
+      background-color: #dde7fb;
+      width: 18px;
+      height: 18px;
+      border: none;
+
+    }
+
+    form {
+      width: 70%;
+    }
+
+    button {
+      align-items: center;
+      color: #ffffff;
+      background-color: #4a69d9;
+      border-radius: 999px;
+      border: none;
+      font-size: 24px;
+      width: 100%;
+      padding: 1.2rem 0;
+    }
+    button:hover {
+      background-color: #000000;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      font-size: larger;
+      color: black;
+      margin: 0%;
+    }
+
+    .terms_cont,
+    .terms {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .star_row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      font-size: 45px;
+      color: #FBBF24;
+    }
+
+    label i {
+      margin-right: 0.5rem;
+      color: #b1b1b1;
+    }
+
+    .pic {
+      width: 150px;
+      height: 150px;
+      background-color: #ccc;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      font-family: 'Poppins', sans-serif;
+      justify-content: center;
+    }
+
+    .tabs a {
+      text-decoration: none;
+      font-size: larger;
+      color: black;
+    }
+    .tabs a.selected {
+      border-bottom: 2px solid #575757;
+      padding-bottom: 8px;
+      width: 135px;
+      text-align: center;
+    }
+    .tabs a:hover {
+      color: #4a69d9;
+    }
+
+    .sign_up {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="split left">
+      <div class="centered">
+        <img src="" alt="logo">
+        <h1>Fashanize</h1>
+        <p>Join 50,000+ users who have transformed <br> their closet experience</p>
+        <br>
+
+        <div class="star_row">
+          <div class="pic"></div>
+          <!-- style later - user pic -->
+          <p>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </p>
+        </div>
+        <br><br>
+
+        <div class="star_row">
+          <div class="pic"></div>
+          <p>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </p>
+        </div>
+        <br><br>
+
+        <div class="star_row">
+          <div class="pic"></div>
+          <p>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    
+    <div class="split right">
+      <div class="centered2">
+        <div class="sign_up">
+
+          <div class="tabs">
+            <a href="#" class="selected">Sign-Up</a>
+            <a href="#">Log-In</a>
+
+          </div>
+
+          <form>
+            <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label><br><br>
+            <input type="text" name="firstname" id="firstname" required>
+            <br><br>
+
+            <label for="lastname"><i class="fa-solid fa-user"></i> Last Name: </label><br><br>
+            <input type="text" name="lastname" id="lastname" required>
+            <br><br>
+
+            <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label><br><br>
+            <input type="text" name="email" id="email" required>
+            <br><br>
+
+            <label for="password"><i class="fa-solid fa-lock"></i> Password: </label><br><br>
+            <input type="password" name="password" id="password" required>
+            <br><br>
+
+            <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password: </label><br><br>
+            <input type="password" name="confirm" id="confirm" required>
+            <br><br>
+
+            <div class="terms_cont">
+              <input type="checkbox" id="terms" required>
+              <label>I agree to the Terms & Conditions</label>
+            </div>
+
+
+            <br><br>
+            <button type="submit"> Sign-Up </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>
