@@ -17,7 +17,7 @@
 
     header {
       background-color: #dde7fb;
-      padding: 0.5rem 3rem;
+      padding: 0rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -33,7 +33,11 @@
       margin-left: 2rem;
       text-decoration: none;
       color: #1A2A4A;
-      font-weight: 500;
+      /* font-weight: 600; */
+    }
+
+    .nav-links a:hover {
+      color: #3B6ECA;
     }
 
     .hero {
@@ -67,7 +71,7 @@
       max-width: 500px;
       padding-bottom: 1rem;
     }
-
+    
     .cta {
       margin-top: 2rem;
     }
@@ -79,7 +83,10 @@
       text-decoration: none;
       border-radius: 999px;
       font-size: 1rem;
-      font-weight: 600;
+    }
+
+    .cta a:hover{
+      background-color: #1A2A4A;
     }
 
     .hero-image {
@@ -137,7 +144,7 @@
   <!-- Navigation Bar -->
   <header>
     <div class="logo">
-      <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="logo" width="150">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="150">
     </div>
     <div class="nav-links">
       <a href="{{ url_for('login') }}">Login</a>
@@ -156,7 +163,7 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="{{ url_for('static', filename='images/Home-MockOutfit.png') }}" alt="Outfit inspiration or wardrobe layout">
+      <img src="{{ url_for('static', filename='images/Home-MockOutfit.jpg') }}" alt="Outfit inspiration or wardrobe layout">
     </div>
   </section>
 
