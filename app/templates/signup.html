@@ -21,8 +21,6 @@
       background-color: #dde7fb;
       width: 40%;
       padding: 3rem;
-      padding-left: 3rem;
-
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -32,29 +30,22 @@
       width: 60%;
       background-color: #ffffff;
       padding: 3rem;
-
     }
+
     .centered {
       text-align: center;
     }
 
     input {
       background-color: #dde7fb;
-      width: 100%;
+      width: 95%;
       border: none;
-      padding: 1rem;
+      padding: 0.8rem;
     }
 
     input[type="checkbox"] {
-      background-color: #dde7fb;
-      width: 18px;
-      height: 18px;
-      border: none;
-
-    }
-
-    form {
-      width: 70%;
+      width: 13px;
+      height: 13px;
     }
 
     button {
@@ -67,23 +58,56 @@
       width: 100%;
       padding: 1.2rem 0;
     }
+
     button:hover {
-      background-color: #000000;
+      background-color: #1A2A4A;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       font-size: larger;
-      color: black;
-      margin: 0%;
+      color: #1A2A4A;
+      margin: 0;
     }
 
-    .terms_cont,
-    .terms {
+    .form_container {
       width: 100%;
       display: flex;
-      gap: 10px;
+      justify-content: center;
+    }
+
+    form {
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    label {
+      align-self: flex-start;
+      font-size: 1rem;
+    }
+
+    label i {
+      margin-right: 0.5rem;
+      color: #b1b1b1;
+    }
+
+    .terms_cont {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 13px;
+      color: #1A2A4A;
+    }
+
+    .terms_cont label {
+      font-size: 13px;
+      font-weight: 400;
+      color: #1A2A4A;
     }
 
     .star_row {
@@ -94,11 +118,6 @@
       color: #FBBF24;
     }
 
-    label i {
-      margin-right: 0.5rem;
-      color: #b1b1b1;
-    }
-
     .pic {
       width: 150px;
       height: 150px;
@@ -107,25 +126,27 @@
 
     .tabs {
       display: flex;
-      gap: 2rem;
-      margin-bottom: 2rem;
-      font-family: 'Poppins', sans-serif;
       justify-content: center;
+      gap: 2rem;
+      margin-bottom: 5rem;
     }
 
     .tabs a {
       text-decoration: none;
       font-size: larger;
-      color: black;
+      color: #1A2A4A;
+      padding: 0.5rem 1.5rem;
+      text-align: center;
+      display: inline-block;
     }
+
     .tabs a.selected {
       border-bottom: 2px solid #575757;
-      padding-bottom: 8px;
-      width: 135px;
-      text-align: center;
     }
+
     .tabs a:hover {
       color: #4a69d9;
+      border-bottom: 2px solid #4a69d9;
     }
 
     .sign_up {
@@ -142,14 +163,13 @@
 
     <div class="split left">
       <div class="centered">
-        <img src="" alt="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="207">
         <h1>Fashanize</h1>
         <p>Join 50,000+ users who have transformed <br> their closet experience</p>
         <br>
 
         <div class="star_row">
           <div class="pic"></div>
-          <!-- style later - user pic -->
           <p>
             <i class="fa-solid fa-star"></i>
             <i class="fa-solid fa-star"></i>
@@ -179,56 +199,46 @@
             <i class="fa-solid fa-star"></i>
           </p>
         </div>
-
       </div>
     </div>
 
-    
     <div class="split right">
       <div class="centered2">
         <div class="sign_up">
 
           <div class="tabs">
-            <a href="#" class="selected">Sign-Up</a>
-            <a href="#">Log-In</a>
-
+            <a href="{{ url_for('signup') }}" class="selected">Sign-Up</a>
+            <a href="{{ url_for('login') }}">Log-In</a>
           </div>
 
-          <form>
-            <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label><br><br>
-            <input type="text" name="firstname" id="firstname" required>
-            <br><br>
+          <div class="form_container">
+            <form>
+              <label for="firstname"><i class="fa-solid fa-user"></i> First Name:</label>
+              <input type="text" name="firstname" id="firstname" required>
 
-            <label for="lastname"><i class="fa-solid fa-user"></i> Last Name: </label><br><br>
-            <input type="text" name="lastname" id="lastname" required>
-            <br><br>
+              <label for="lastname"><i class="fa-solid fa-user"></i> Last Name:</label>
+              <input type="text" name="lastname" id="lastname" required>
 
-            <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label><br><br>
-            <input type="text" name="email" id="email" required>
-            <br><br>
+              <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
+              <input type="text" name="email" id="email" required>
 
-            <label for="password"><i class="fa-solid fa-lock"></i> Password: </label><br><br>
-            <input type="password" name="password" id="password" required>
-            <br><br>
+              <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
+              <input type="password" name="password" id="password" required>
 
-            <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password: </label><br><br>
-            <input type="password" name="confirm" id="confirm" required>
-            <br><br>
+              <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password:</label>
+              <input type="password" name="confirm" id="confirm" required>
 
-            <div class="terms_cont">
-              <input type="checkbox" id="terms" required>
-              <label>I agree to the Terms & Conditions</label>
-            </div>
+              <div class="terms_cont">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the Terms & Conditions</label>
+              </div>
 
-
-            <br><br>
-            <button type="submit"> Sign-Up </button>
-
-          </form>
+              <button type="submit">Sign-Up</button>
+            </form>
+          </div>
 
         </div>
       </div>
-
     </div>
   </div>
 </body>
