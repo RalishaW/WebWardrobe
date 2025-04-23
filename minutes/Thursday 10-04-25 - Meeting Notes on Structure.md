@@ -4,7 +4,9 @@ To be done by Monday:
 
 
 Examples:
+
 https://www.fittedcloset.com/ 
+
 https://www.openwardrobe.co/#testimonials 
  
 
@@ -48,21 +50,25 @@ ________________
 
 
    3. A "visualise data" view, allowing user's to view analysis of either their data or other people's data which has been shared with them.
-   1. Radar Chart eg.   
-      1. Possible categories:
-      1. Style: Casual, Formal…
-      2. Season: summer, spring (mild), autumn, winter, rain…
-      3. Colours: dark, light, warm, cold…
+         1. Radar Charts, pie charts, bar graphs - Possible categories:
+             1. Style: Casual, Formal…
+             2. Season: summer, spring (mild), autumn, winter, rain…
+             3. Colours: dark, light, warm, cold…
       2. Other data we can collect: frequency of item worn, frequency of item appearing in outfits
-      4. A "share data" view, allowing the users to selectively share their data with other specific users.
-      1. Choose to make outfits public (posted to Public Page with time and caption) or private
+   4. A "share data" view, allowing the users to selectively share their data with other specific users.
+         1. Choose to make outfits public (posted to Public Page with time and caption) or private
 
 
 Pages (about 6 to start off):
+      
       * Main Wardrobe > Categorie tabs - [Upload button] > Upload Page
+      
       * Public Page
+      
       * Option to like and save public outfits
+      
       * Outfit Maker > publish/private
+      
       * [Make it yourself button] > Outfit Builder Page or [Randomise! Button] Randomiser Page
 
 
@@ -71,6 +77,9 @@ Blues Greys Blacks
 
 
 Questions:
+      
       * remgb module Python allowed? Considered core function?
+      
       * The rembg module in Python is a library used for removing the background from images https://medium.com/@HeCanThink/rembg-effortlessly-remove-backgrounds-in-python-c2248501f992#:~:text=The%20rembg%20module%20in%20Python,the%20task%20of%20background%20removal. 
+      
       * Remove background with rembg tutorial: https://www.youtube.com/watch?v=LVlnNdVUyOQ
