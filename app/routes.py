@@ -1,4 +1,3 @@
-
 from app import app
 from flask import render_template, redirect, url_for, request, session
 
@@ -23,6 +22,7 @@ def login():
         return redirect(url_for("wardrobe"))
     return render_template("login.html")
 
+# Core Pages
 @app.route('/wardrobe')
 def wardrobe():
     return render_template('wardrobe.html')
@@ -38,4 +38,3 @@ def analysis():
 @app.route('/social')
 def social():
     return render_template('social.html')
-

@@ -1,248 +1,89 @@
-<!DOCTYPE html>
-<html>
+{% extends "base2.html" %}
 
-<head>
-  <meta charset="utf-8">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <title>Fashanize/SignUp</title>
+{% block content %}
+<div class="container signup-page">
+  <div class="split left">
+    <div class="centered">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+      
+      <p class="Welcome"><b>Welcome to Fashonize!</b></p>
 
-  <style>
-    .container {
-      display: flex;
-      padding-left: 3rem;
-    }
+      <br>
+      <p>Join 50,000+ users who have transformed <br> their closet experience</p>
+      
+      <br>
 
-    .split {
-      width: 50%;
-    }
-
-    .left {
-      background-color: #dde7fb;
-      width: 40%;
-      padding: 3rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .right {
-      width: 60%;
-      background-color: #ffffff;
-      padding: 3rem;
-    }
-
-    .centered {
-      text-align: center;
-    }
-
-    input {
-      background-color: #dde7fb;
-      width: 95%;
-      border: none;
-      padding: 0.8rem;
-    }
-
-    input[type="checkbox"] {
-      width: 13px;
-      height: 13px;
-    }
-
-    button {
-      align-items: center;
-      color: #ffffff;
-      background-color: #4a69d9;
-      border-radius: 999px;
-      border: none;
-      font-size: 24px;
-      width: 100%;
-      padding: 1.2rem 0;
-    }
-
-    button:hover {
-      background-color: #1A2A4A;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      font-size: larger;
-      color: #1A2A4A;
-      margin: 0;
-    }
-
-    .form_container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    form {
-      width: 100%;
-      max-width: 450px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    label {
-      align-self: flex-start;
-      font-size: 1rem;
-    }
-
-    label i {
-      margin-right: 0.5rem;
-      color: #b1b1b1;
-    }
-
-    .terms_cont {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 13px;
-      color: #1A2A4A;
-    }
-
-    .terms_cont label {
-      font-size: 13px;
-      font-weight: 400;
-      color: #1A2A4A;
-    }
-
-    .star_row {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      font-size: 45px;
-      color: #FBBF24;
-    }
-
-    .pic {
-      width: 150px;
-      height: 150px;
-      background-color: #ccc;
-    }
-
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 5rem;
-    }
-
-    .tabs a {
-      text-decoration: none;
-      font-size: larger;
-      color: #1A2A4A;
-      padding: 0.5rem 1.5rem;
-      text-align: center;
-      display: inline-block;
-    }
-
-    .tabs a.selected {
-      border-bottom: 2px solid #575757;
-    }
-
-    .tabs a:hover {
-      color: #4a69d9;
-      border-bottom: 2px solid #4a69d9;
-    }
-
-    .sign_up {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-
-    <div class="split left">
-      <div class="centered">
-        <a href="{{ url_for('home') }}">
-          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="207">
-        </a>
-        <h1>Fashanize</h1>
-        <p>Join 50,000+ users who have transformed <br> their closet experience</p>
-        <br>
-
-        <div class="star_row">
-          <div class="pic"></div>
-          <p>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-          </p>
-        </div>
-        <br><br>
-
-        <div class="star_row">
-          <div class="pic"></div>
-          <p>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-          </p>
-        </div>
-        <br><br>
-
-        <div class="star_row">
-          <div class="pic"></div>
-          <p>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-          </p>
-        </div>
+      <div class="star_row">
+        <div class="pic"></div>
+        <p>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </p>
       </div>
-    </div>
 
-    <div class="split right">
-      <div class="centered2">
-        <div class="sign_up">
+      <br>
 
-          <div class="tabs">
-            <a href="{{ url_for('signup') }}" class="selected">Sign-Up</a>
-            <a href="{{ url_for('login') }}">Log-In</a>
-          </div>
+      <div class="star_row">
+        <div class="pic"></div>
+        <p>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </p>
+      </div>
 
-          <div class="form_container">
-            <form>
-              <label for="firstname"><i class="fa-solid fa-user"></i> First Name:</label>
-              <input type="text" name="firstname" id="firstname" required>
+      <br>
 
-              <label for="lastname"><i class="fa-solid fa-user"></i> Last Name:</label>
-              <input type="text" name="lastname" id="lastname" required>
-
-              <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
-              <input type="text" name="email" id="email" required>
-
-              <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
-              <input type="password" name="password" id="password" required>
-
-              <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password:</label>
-              <input type="password" name="confirm" id="confirm" required>
-
-              <div class="terms_cont">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">I agree to the Terms & Conditions</label>
-              </div>
-
-              <button type="submit">Sign-Up</button>
-            </form>
-          </div>
-
-        </div>
+      <div class="star_row">
+        <div class="pic"></div>
+        <p>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </p>
       </div>
     </div>
   </div>
-</body>
 
-</html>
+  <div class="split right">
+    <div class="centered2">
+      <div class="sign_up">
+
+        <div class="tabs">
+          <a href="{{ url_for('signup') }}" class="selected">Sign-Up</a>
+          <a href="{{ url_for('login') }}">Log-In</a>
+        </div>
+
+        <form>
+          <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label>
+          <input type="text" name="firstname" id="firstname" required>
+
+          <label for="lastname"><i class="fa-solid fa-user"></i> Last Name: </label>
+          <input type="text" name="lastname" id="lastname" required>
+
+          <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label>
+          <input type="text" name="email" id="email" required>
+
+          <label for="password"><i class="fa-solid fa-lock"></i> Password: </label>
+          <input type="password" name="password" id="password" required>
+
+          <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password: </label>
+          <input type="password" name="confirm" id="confirm" required>
+
+          <div class="terms_cont">
+            <input type="checkbox" id="terms" required>
+            <label for="terms">I agree to the Terms & Conditions</label>
+          </div>
+
+          <button type="submit"> Sign-Up </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
