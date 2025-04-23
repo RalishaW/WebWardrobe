@@ -61,13 +61,13 @@
       padding: 1.2rem 0;
     }
     button:hover {
-      background-color: #000000;
+      background-color: #1A2A4A;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       font-size: larger;
-      color: black;
+      color: #1A2A4A;
       margin: 0%;
     }
 
@@ -96,7 +96,7 @@
     .Forgot,
     .no_account {
       text-decoration: none;
-      color: black;
+      color: #1A2A4A;
     }
 
     .no_account {
@@ -136,14 +136,14 @@
       gap: 2rem;
       margin-bottom: 2rem;
       font-family: 'Poppins', sans-serif;
-      color: black;
+      color: #1A2A4A;
       justify-content: center;
     }
 
     .tabs a {
       text-decoration: none;
       font-size: larger;
-      color: black;
+      color: #1A2A4A;
     }
     .tabs a.selected {
       border-bottom: 2px solid #575757;
@@ -155,7 +155,18 @@
 
     .Forgot:hover,
     .tabs a:hover,
-    .no_account:hover {
+
+    .no_account {
+      font-size: 13px;
+    }
+
+    .no_account a {
+      color: #1A2A4A;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .no_account a:hover {
       color: #4a69d9;
     }
 
@@ -168,7 +179,7 @@
 
     <div class="split left">
       <div class="centered">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="207" length="207">
         <h1>Fashanize</h1>
         <p class="Welcome">Welcome Back!
         <p>
@@ -208,9 +219,8 @@
         <div class="sign_up">
 
           <div class="tabs">
-            <a href="#">Sign-Up</a>
-            <a href="#" class="selected">Log-In</a>
-
+            <a href="{{ url_for('signup') }}">Sign-Up</a>
+            <a href="{{ url_for('login') }}" class="selected">Log-In</a>
           </div>
 
           <div class="form_container">
@@ -238,7 +248,10 @@
               <div class="button_final">
                 <button type="submit"> Log In </button>
                 <br><br>
-                <a href="#" class="no_account">Don't have an account? Sign Up</a>
+                <p class="no_account">
+                  Don't have an account?
+                  <a href="{{ url_for('signup') }}">Sign Up</a>
+                </p>                                
               </div>
 
 
