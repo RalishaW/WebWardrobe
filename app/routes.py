@@ -1,3 +1,4 @@
+
 from app import app
 from flask import render_template
 
@@ -17,6 +18,3 @@ def analysis():
 def social():
     return render_template('social.html')
 
-
-
-# add the rest as needed (outfit, analysis, social)
