@@ -25,7 +25,7 @@ class ClothingItem(db.Model):
     season = db.Column(db.String(50))
     clothing_type = db.Column(db.String(50))
     occasion = db.Column(db.String(50))
-    body_part = db.Column(db.String(50))                 # 4 parts: head, body, legs, foot
+    body_part = db.Column(db.String(70))                 # 4 parts: head, body, legs, foot
 
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
