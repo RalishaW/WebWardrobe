@@ -1,6 +1,17 @@
 {% extends "base2.html" %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 <div class="container signup-page">
   <div class="split left">
     <div class="centered">
@@ -58,7 +69,7 @@
           <a href="{{ url_for('login') }}">Log-In</a>
         </div>
 
-        <form>
+        <form method="POST" action="{{url_for('signup')}}">
           <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label>
           <input type="text" name="firstname" id="firstname" required>
 
