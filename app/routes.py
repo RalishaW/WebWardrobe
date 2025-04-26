@@ -19,7 +19,7 @@ def signup():
             return redirect(url_for("signup.html"))
         
         # Create user
-        create_user(user_name, password)
+        create_user(username, password)
         flash("Account created successfully. Please log in.", "success")
         return redirect(url_for("login"))
 
