@@ -550,3 +550,359 @@ input[type="submit"]:active {
     font-size: 20px;
   }
   
+  .analysis {
+    padding: 2rem;
+}
+
+.analysis h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-card {
+    background-color: #dce6f7;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.analysis-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.analysis-card .value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.analysis-card .subtitle {
+    font-size: 1rem;
+    color: #555;
+}
+
+.section-title {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.most-used-item-block {
+    background-color: #dce6f7;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.most-used-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    background-color: #ccc; /* fallback if no image */
+    border-radius: 8px;
+}
+
+.most-used-item-info h3 {
+    margin: 0;
+}
+
+.graph-style-analysis {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    justify-items: center;
+}
+
+/* --------------------------------------------------
+   Home Page Specific Styles
+-------------------------------------------------- */
+
+.home-page {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fefefe;
+  color: #1A2A4A;
+}
+
+/* Header styles */
+.home-page header {
+  background-color: #dde7fb;
+  padding: 0rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-page .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.home-page .nav-links a {
+  margin-left: 2rem;
+  text-decoration: none;
+  color: #1A2A4A;
+}
+
+.home-page .nav-links a:hover {
+  color: #3B6ECA;
+}
+
+/* Hero section */
+.home-page .hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 5%;
+  flex-wrap: wrap;
+  padding-top: 5rem;
+}
+
+.home-page .hero-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.home-page .hero-text h1 {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+}
+
+.home-page .hero-text p.slogan {
+  font-size: 1.8rem;
+  color: #3B6ECA;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.home-page .hero-text p.description {
+  font-size: 1.3rem;
+  max-width: 500px;
+  padding-bottom: 1rem;
+}
+
+.home-page .cta {
+  margin-top: 2rem;
+}
+
+.home-page .cta a {
+  background-color: #4a69d9;
+  color: white;
+  padding: 0.9rem 2rem;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 1rem;
+}
+
+.home-page .cta a:hover {
+  background-color: #1A2A4A;
+}
+
+/* Hero image */
+.home-page .hero-image {
+  flex: 1;
+  min-width: 300px;
+  text-align: right;
+  padding-right: 2rem;
+}
+
+.home-page .hero-image img {
+  max-width: 100%;
+  max-height: 700px;
+  object-fit: contain;
+}
+
+/* Steps section */
+.home-page .steps {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 4rem auto;
+  max-width: 1450px;
+  max-height: 900px;
+  text-align: center;
+}
+
+.home-page .step {
+  background-color: #eef2ff;
+  border-radius: 12px;
+  padding: 4rem 3rem;
+  width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease-in-out;
+}
+
+.home-page .step h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #4a69d9;
+}
+
+.home-page .step p {
+  font-size: 1.1rem;
+}
+
+.home-page .step i {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  color: #4a69d9;
+}
+
+/* --------------------------------------------------
+   Social Page Styles
+-------------------------------------------------- */
+
+.social-container {
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.social-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A2A4A;
+  margin-bottom: 1rem;
+}
+
+.filter-dropdown {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #1A2A4A;
+}
+
+.user-grid-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  max-width: 1200px;
+}
+
+.user-card {
+  background-color: #dde7fb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  position: relative;
+  min-height: 440px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1A2A4A;
+}
+
+.outfit-preview {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  border: 2px solid #ccc;
+}
+
+.tag-container {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 3rem;
+}
+
+.tag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 550;
+  background-color: white;
+  border: 1.8px solid;
+}
+
+.tag.winter {
+  color: #4a69d9;
+  border-color: #4a69d9;
+}
+
+.tag.casual {
+  color: #1A2A4A;
+  border-color: #1A2A4A;
+}
+
+.save-button {
+  background-color: #4a69d9;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+}
+
+.save-button:hover {
+  background-color: #1a2a4a;
+}
+
+/* Responsive Grid */
+@media (max-width: 1300px) {
+  .user-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .user-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .user-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
