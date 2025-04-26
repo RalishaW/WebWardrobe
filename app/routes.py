@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, redirect, url_for, request, session
+from flask import render_template, redirect, url_for, flash, request, session
 
 # Introductory / Landing Page
 @app.route("/")
@@ -10,8 +10,19 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        # handle form submission
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        # Check for existing account
+        if existed_account(username):
+            flash("Account already existed. Please log in.", "error")
+            return redirect(url_for("signup.html"))
+        
+        # Create user
+        create_user(user_name, password)
+        flash("Account created successfully. Please log in.", "success")
         return redirect(url_for("login"))
+
     return render_template("signup.html")
 
 # Log In
@@ -19,7 +30,15 @@ def signup():
 def login():
     if request.method == "POST":
         # check user credentials and log in
-        return redirect(url_for("wardrobe"))
+        username = request.form["username"]
+        password = request.form["password"]
+        if not validate_account(username, password):
+            flash("Incorrect login credentials. Please check your username and password", "error")
+            return redirect(url_for("login.html"))
+    
+        session["username"] = username
+        return redirect(url_for("wardrobe.html"))
+
     return render_template("login.html")
 
 # Core Pages
