@@ -1,5 +1,7 @@
 from app import app
-from flask import render_template, redirect, url_for, request, session
+from flask import render_template, redirect, url_for, request, flash, session
+from app.models import db, User
+from werkzeug.security import generate_password_hash
 
 # Introductory / Landing Page
 @app.route("/")
@@ -10,17 +12,60 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        # handle form submission
-        return redirect(url_for("login"))
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm')
+
+        if password != confirm_password:
+            flash('Passwords do not match. Please try again.', 'error')
+            return redirect(url_for('signup'))
+
+        # Check if the email already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('An account with that email already exists. Please log in.', 'error')
+            return redirect(url_for('signup'))
+
+        # Hash the password
+        # do later as this is not working rnhashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+
+        # Create a new user
+        new_user = User(firstname=firstname, lastname=lastname, email=email, password=password)#hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Account created successfully! Please log in.', 'success')
+        return redirect(url_for('login'))
+
     return render_template("signup.html")
 
 # Log In
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # check user credentials and log in
-        return redirect(url_for("wardrobe"))
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            flash('No account found with that email. Please sign up.', 'error')
+            return redirect(url_for('login'))
+
+        if user.password != password:
+            flash('Incorrect password. Please try again.', 'error')
+            return redirect(url_for('login'))
+
+        # If login successful
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        flash('Logged in successfully!', 'success')
+        return redirect(url_for('wardrobe'))  # Redirect to wardrobe page after login
+
     return render_template("login.html")
+    
 
 # Core Pages
 @app.route('/wardrobe')
