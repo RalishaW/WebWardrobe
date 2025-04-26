@@ -32,6 +32,7 @@ class ClothingItem(db.Model):
     personal_notes = db.Column(db.Text)                     # Personal note on the item
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
 
 # ----------------------
 # Outfit Model
