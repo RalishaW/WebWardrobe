@@ -27,6 +27,7 @@ class ClothingItem(db.Model):
     occasion = db.Column(db.String(50))
     
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
 
 # ----------------------
 # Outfit Model
