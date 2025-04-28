@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+# Intialize Flask App
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fashanise.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -1,7 +1,10 @@
 from app import app
 from flask import render_template, redirect, url_for, request, flash, session
+from flask_wtf import FlaskForm
 from app.models import db, User
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
+from app.models import ClothingItem
 
 # Introductory / Landing Page
 @app.route("/")
@@ -83,3 +86,16 @@ def analysis():
 @app.route('/social')
 def social():
     return render_template('social.html')
+
+@app.route('/wardrobe')
+def add_item():
+    form = ClothingItem()
+    if 'image' not in request.files:
+        return 'No image file part', 400
+    
+    file = request.files['image']
+    if file.filename == '':
+        return 'No selected file', 400
+    
+    if file:
+        filename = secure_filename(file.filename)
