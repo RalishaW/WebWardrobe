@@ -1,10 +1,14 @@
 from app import app
 from flask import render_template, redirect, url_for, request, flash, session
 from flask_wtf import FlaskForm
+from sqlalchemy.exc import IntegrityError
 from app.models import db, User
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from app.models import ClothingItem
+from app.models import User, ClothingItem, Outfit
+from app.forms import LoginForm, SignupForm
+import os
+import time
 
 # Introductory / Landing Page
 @app.route("/")
@@ -14,66 +18,68 @@ def home():
 # Sign Up
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == "POST":
-        firstname = request.form.get('firstname')
-        lastname = request.form.get('lastname')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm')
+    form = SignupForm()
+    if form.validate_on_submit():
+        print('Form submitted and validated.')
+        firstname = form.firstname.data
+        lastname = form.lastname.data
+        email = form.email.data
+        password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
+        
+        new_user = User(
+            firstname = firstname,
+            lastname = lastname,
+            email = email,
+            password = password,
+        )
 
-        if password != confirm_password:
-            flash('Passwords do not match. Please try again.', 'error')
-            return redirect(url_for('signup'))
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Registration Successful! Please Login.', 'success')
+            return redirect(url_for('login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash('Email already existed. Please use another email!', 'error')
 
-        # Check if the email already exists
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            flash('An account with that email already exists. Please log in.', 'error')
-            return redirect(url_for('signup'))
+    return render_template('signup.html', form=form)
 
-        # Hash the password
-        # do later as this is not working rnhashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-
-        # Create a new user
-        new_user = User(firstname=firstname, lastname=lastname, email=email, password=password)#hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created successfully! Please log in.', 'success')
-        return redirect(url_for('login'))
-
-    return render_template("signup.html")
 
 # Log In
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        email = request.form.get('email')
-        password = request.form.get('password')
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password, form.password.data):
+            session['logged_in'] = True
+            session['email'] = user.email
+            if form.remember.data:
+                session.permanent = True
+            flash('Login successful!', 'success')
+            return redirect(url_for('wardrobe'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'error')
 
-        user = User.query.filter_by(email=email).first()
-
-        if not user:
-            flash('No account found with that email. Please sign up.', 'error')
-            return redirect(url_for('login'))
-
-        if user.password != password:
-            flash('Incorrect password. Please try again.', 'error')
-            return redirect(url_for('login'))
-
-        # If login successful
-        session['user_id'] = user.id
-        session['user_email'] = user.email
-        flash('Logged in successfully!', 'success')
-        return redirect(url_for('wardrobe'))  # Redirect to wardrobe page after login
-
-    return render_template("login.html")
-    
+    return render_template("login.html", form=form)
 
 # Core Pages
 @app.route('/wardrobe')
 def wardrobe():
-    return render_template('wardrobe.html')
+    if not session.get('logged_in'):  # <-- FIXED here
+        flash('You must be logged in to view your wardrobe.', 'error')
+        return redirect(url_for('login'))
+    
+    user_email = session.get('email')
+    user = User.query.filter_by(email=user_email).first()
+
+    if user:     
+        items = ClothingItem.query.filter_by(email=user.email).all()
+        print(f"User email in session: {session.get('email')}")
+        return render_template('wardrobe.html', wardrobe_items=items)
+    else:
+        flash('User not found', 'error')
+        return redirect(url_for('login'))
 
 @app.route('/outfits')
 def outfits():
@@ -87,15 +93,15 @@ def analysis():
 def social():
     return render_template('social.html')
 
-@app.route('/wardrobe')
-def add_item():
-    form = ClothingItem()
-    if 'image' not in request.files:
-        return 'No image file part', 400
+# @app.route('/wardrobe')
+# def add_item():
+#     form = ClothingItem()
+#     if 'image' not in request.files:
+#         return 'No image file part', 400
     
-    file = request.files['image']
-    if file.filename == '':
-        return 'No selected file', 400
+#     file = request.files['image']
+#     if file.filename == '':
+#         return 'No selected file', 400
     
-    if file:
-        filename = secure_filename(file.filename)
+#     if file:
+#         filename = secure_filename(file.filename)
