@@ -56,15 +56,16 @@
 
         <div class="form_container">
           <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
             <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
-            <input type="text" name="email" id="email" required>
+            {{ form.email(size=32, class='form-control') }}
 
             <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
-            <input type="password" name="password" id="password" required>
+            {{ form.password(size=32, class='form-control') }}
 
             <div class="remember">
               <div class="remember-left">
-                <input type="checkbox" id="remember">
+                {{ form.remember() }}
                 <label for="remember">Remember Me</label>
               </div>
               <a href="#" class="Forgot">Forgot Password?</a>
