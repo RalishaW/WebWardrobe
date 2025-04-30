@@ -24,8 +24,7 @@ def signup():
         firstname = form.firstname.data
         lastname = form.lastname.data
         email = form.email.data
-        password = generate_password_hash(form.password.data, method='pbkdf2:sha256')
-        
+        password = generate_password_hash(form.password.data, method='pbkdf2:sha256')        
         new_user = User(
             firstname = firstname,
             lastname = lastname,
@@ -80,6 +79,47 @@ def wardrobe():
     else:
         flash('User not found', 'error')
         return redirect(url_for('login'))
+
+@app.route('/wardrobe/add', methods=["POST"])
+def add_clothing_item():
+    # Adding clothing item to database
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+    
+    user_email = session.get('email')
+    user = User.query.filter_by(email=user_email).first()
+
+    if not user:
+        flash('User not found', 'error')
+        return redirect(url_for('login'))
+    
+    image = request.files.get('image')
+    color = request.form.get('color')
+    season = request.form.get('season')
+    clothing_type = request.form.get('type')
+    occasion = request.form.get('occasion')
+
+    if image and image.filename:
+        filename = secure_filename(f"{int(time.time())}")
+        upload_path = os.path.join('app', 'static', 'images', 'clothing_items')
+        image.save(upload_path)
+
+        new_item = ClothingItem(
+            filename=filename,
+            color = color,
+            season = season,
+            clothing_type = clothing_type,
+            occasion = occasion,
+            email=user.email
+        )
+
+        db.session.add(new_item)
+        db.session.commit()
+        flash('Item uploaded successfully', 'success')
+    else:
+        flash('No image uploaded', 'error')
+        return redirect(url_for('wardrobe'))
 
 @app.route('/outfits')
 def outfits():

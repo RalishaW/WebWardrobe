@@ -34,9 +34,11 @@ class ProfilePicture(FlaskForm):
 
 class ClothingItemForm(FlaskForm):
     image = FileField('Clothing Item Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
-    color = StringField('Clothing Item Color', validators=[Optional()])
+    color = StringField('Clothing Item Color', validators=[DataRequired()])
     season = StringField('Season', validators=[AnyOf(['Winter', 'Summer', 'Spring', 'Autumn'], message='Season must be Winter, Summer, Spring, or Autumn')])
-    
+    clothing_type = StringField('Clothing Type', validators=[AnyOf(['Tops', 'Pants', 'Jackets'])])
+    occasion = StringField('Occasion', validators=[AnyOf(['Casual', 'Formal'])])
+
 
 # class RemoveClothingItemForm(FlaskForm):
 

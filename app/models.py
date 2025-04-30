@@ -22,7 +22,7 @@ class ClothingItem(db.Model):
     __tablename__ = 'clothing_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(200), nullable=False)  # File path to uploaded image
+    image_path = db.Column(db.String(200), nullable=False)  # File path to uploaded image
     color = db.Column(db.String(50))
     season = db.Column(db.String(50))
     clothing_type = db.Column(db.String(50))
@@ -38,7 +38,7 @@ class Outfit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     privacy = db.Column(db.String(20), nullable=False)  # 'public' or 'private'
-    preview_image = db.Column(db.String(200))  # file path to generated outfit preview
+    preview_image = db.Column(db.String(200))           # file path to generated outfit preview
     occasion = db.Column(db.String(50))
     season = db.Column(db.String(50))
     email = db.Column(db.String, db.ForeignKey('users.email'), nullable=False)
