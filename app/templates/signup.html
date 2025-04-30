@@ -12,6 +12,17 @@
 {% extends "base2.html" %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 <div class="container signup-page">
   <div class="split left">
     <div class="centered">
@@ -69,25 +80,31 @@
           <a href="{{ url_for('login') }}">Log-In</a>
         </div>
 
-        <form>
+        <form method="POST" action="{{url_for('signup')}}">
+          {{ form.hidden_tag() }}
           <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label>
-          <input type="text" name="firstname" id="firstname" required>
+          {{ form.firstname(class='form-control', id='firstname')}}
 
           <label for="lastname"><i class="fa-solid fa-user"></i> Last Name: </label>
-          <input type="text" name="lastname" id="lastname" required>
+          {{ form.lastname(class='form-control', id='lastname')}}
 
           <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label>
-          <input type="text" name="email" id="email" required>
+          {{ form.email(class='form-control', id='email')}}
 
           <label for="password"><i class="fa-solid fa-lock"></i> Password: </label>
-          <input type="password" name="password" id="password" required>
+          {{ form.password(class='form-control', id='password')}}
 
-          <label for="confirm"><i class="fa-solid fa-lock"></i> Confirm Password: </label>
-          <input type="password" name="confirm" id="confirm" required>
+          <label for="confirm_password"><i class="fa-solid fa-lock"></i> Confirm Password: </label>
+          {{ form.confirm_password(class='form-control', id='confirm_password')}}
 
           <div class="terms_cont">
-            <input type="checkbox" id="terms" required>
+            {{ form.terms(class='form-check-input', id='terms')}}
             <label for="terms">I agree to the Terms & Conditions</label>
+            {% for field, errors in form.errors.items() %}
+              {% for error in errors %}
+                <div class="error">{{ error }}</div>
+              {% endfor %}
+            {% endfor %}
           </div>
 
           <button type="submit"> Sign-Up </button>
