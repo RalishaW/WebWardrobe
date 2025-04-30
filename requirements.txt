@@ -5,3 +5,6 @@ pip install flask
 pip install flask_wtf
 pip install flask_sqlalchemy
 pip install wtforms
+pip install flask_login
+pip install flask_migrate
+email_validator

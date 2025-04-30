@@ -2,16 +2,6 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
 <div class="container signup-page">
   <div class="split left">
     <div class="centered">
@@ -71,23 +61,26 @@
 
         <form method="POST" action="{{url_for('signup')}}">
           {{ form.hidden_tag() }}
+          <lable for="username"><i class="fa-solid fa-user"></i> Username: </lable>
+          {{ form.username(class='form-control', id='username') }}
+
           <label for="firstname"><i class="fa-solid fa-user"></i> First Name: </label>
-          {{ form.firstname(class='form-control', id='firstname')}}
+          {{ form.firstname(class='form-control', id='firstname') }}
 
           <label for="lastname"><i class="fa-solid fa-user"></i> Last Name: </label>
-          {{ form.lastname(class='form-control', id='lastname')}}
+          {{ form.lastname(class='form-control', id='lastname') }}
 
           <label for="email"><i class="fa-solid fa-envelope"></i> Email: </label>
-          {{ form.email(class='form-control', id='email')}}
+          {{ form.email(class='form-control', id='email') }}
 
           <label for="password"><i class="fa-solid fa-lock"></i> Password: </label>
-          {{ form.password(class='form-control', id='password')}}
+          {{ form.password(class='form-control', id='password') }}
 
           <label for="confirm_password"><i class="fa-solid fa-lock"></i> Confirm Password: </label>
-          {{ form.confirm_password(class='form-control', id='confirm_password')}}
+          {{ form.confirm_password(class='form-control', id='confirm_password') }}
 
           <div class="terms_cont">
-            {{ form.terms(class='form-check-input', id='terms')}}
+            {{ form.terms(class='form-check-input', id='terms') }}
             <label for="terms">I agree to the Terms & Conditions</label>
             {% for field, errors in form.errors.items() %}
               {% for error in errors %}
