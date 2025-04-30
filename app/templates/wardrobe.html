@@ -9,23 +9,29 @@
 
 <!-- Upload form -->
 <div id="upload-form" class="upload-form" style="display: none;">
-    <form action="/upload_item" method="post" enctype="multipart/form-data" class="upload-card">
+    <form action="{{ url_for('add_clothing_item') }}" method="post" enctype="multipart/form-data" class="upload-card">
         <div class="form-row">
             <div class="form-group">
                 <label>Image:</label>
-                <input type="file" name="image" required onchange="previewImage(event)">
+                <input type="file" name="image" required onchange="previewImage(event)" required>
                 <img id="image-preview" style="max-width: 100px; margin-top: 10px;" />
 
                 <label>Color:</label>
                 <input type="text" name="color">
 
                 <label>Season:</label>
-                <input type="text" name="season">
+                <select name="season" required>
+                    <option value="">Select season</option>
+                    <option value="Spring">Spring</option>
+                    <option value="Summer">Summer</option>
+                    <option value="Fall">Fall</option>
+                    <option value="Winter">Winter</option>
+                </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" required>
                 <label>Clothing Type:</label>
-                <select name="type">
+                <select name="type" required>
                     <option value="">Select Type</option>
                     <option value="Tops">Tops</option>
                     <option value="Pants">Pants</option>
@@ -33,7 +39,7 @@
                 </select>
 
                 <label>Occasion:</label>
-                <select name="occasion">
+                <select name="occasion" required>
                     <option value="">Select Occasion</option>
                     <option value="Casual">Casual</option>
                     <option value="Formal">Formal</option>

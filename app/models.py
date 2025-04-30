@@ -22,8 +22,8 @@ class ClothingItem(db.Model):
     __tablename__ = 'clothing_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(200), nullable=False)  # File path to uploaded image
-    color = db.Column(db.String(50))
+    filename = db.Column(db.String(200), nullable=False, nullable=True)  # File path to uploaded image
+    color = db.Column(db.String(50),)
     season = db.Column(db.String(50))
     clothing_type = db.Column(db.String(50))
     occasion = db.Column(db.String(50))
