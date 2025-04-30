@@ -1,18 +1,19 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, IntegerField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, InputRequired, EqualTo, Optional, AnyOf
-from flask_wtf.file import FileField, FileAllowed
+from wtforms import PasswordField, StringField, BooleanField, SubmitField
+from wtforms.validators import DataRequired, InputRequired, EqualTo, Length, Email
 
 # ----------------------
 # Form Models using Flask
 # ----------------------
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    # username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[InputRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
 class SignupForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
@@ -28,16 +29,6 @@ class ResetPasswordRequestForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     submit = SubmitField('Password Reset Form')
-
-class ProfilePicture(FlaskForm):
-    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
-
-class ClothingItemForm(FlaskForm):
-    image = FileField('Clothing Item Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
-    color = StringField('Clothing Item Color', validators=[DataRequired()])
-    season = StringField('Season', validators=[AnyOf(['Winter', 'Summer', 'Spring', 'Autumn'], message='Season must be Winter, Summer, Spring, or Autumn')])
-    clothing_type = StringField('Clothing Type', validators=[AnyOf(['Tops', 'Pants', 'Jackets'])])
-    occasion = StringField('Occasion', validators=[AnyOf(['Casual', 'Formal'])])
 
 
 # class RemoveClothingItemForm(FlaskForm):

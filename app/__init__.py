@@ -1,12 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_migrate import Migrate
 import os
 
-db = SQLAlchemy()
+# Initialize Flask App
+app = Flask(__name__)
 
-# Intialize Flask App
-app = Flask(__name__, instance_relative_config=True)
-
+# Configs
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'fashanise.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "your_secret_key_here"
@@ -15,12 +16,21 @@ app.config['UPLOAD_PROFILE_PICTURE'] = 'app/static/images/profile_picture'
 app.config['UPLOAD_CLOTHING_ITEM'] = 'app/static/images/clothing_items'
 app.config['MAKE_OUTFIT'] = 'app/static/images/outfits'
 
-db.init_app(app)
+# Initialize extensions
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Ensure upload folder exists
 upload_folder = app.config['UPLOAD_PROFILE_PICTURE']
-if not os.path.exists(upload_folder):
-    os.makedirs(upload_folder)
+os.makedirs(upload_folder, exist_ok=True)
 
+from app.models import User
+from app import routes
 
-from app import routes, models
+@login_manager.user_loader
+def load_user(user_id):  
+    return User.query.get(int(user_id))
+

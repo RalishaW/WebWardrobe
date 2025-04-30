@@ -15,6 +15,9 @@
                 <label>Image:</label>
                 <input type="file" name="image" required onchange="previewImage(event)" required>
                 <img id="image-preview" style="max-width: 100px; margin-top: 10px;" />
+                
+                <label>Item name:</label>
+                <input type="text" name="item_name">
 
                 <label>Color:</label>
                 <input type="text" name="color">
@@ -63,8 +66,9 @@
 <!-- Item Gallery -->
 <div class="wardrobe-gallery">
     {% for item in wardrobe_items %}
-    <div class="wardrobe-item" data-type="{{ item.type }}">
-        <img src="{{ url_for('static', filename='uploads/' ~ item.filename) }}" alt="Item">
+    <div class="wardrobe-item">
+        <img src="{{ url_for('static', filename=item.image_path.replace('static/', '')) }}" alt="{{ item.item_name }}">
+        <p> {{ item.item_name }}</p>
     </div>
     {% endfor %}
 </div>
