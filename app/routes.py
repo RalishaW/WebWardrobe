@@ -81,6 +81,8 @@ def wardrobe():
         flash('User not found', 'error')
         return redirect(url_for('login'))
 
+
+
 @app.route('/outfits')
 def outfits():
     return render_template('outfit.html')
