@@ -906,6 +906,7 @@ select {
   }
 }
 
+
 .flashes {
   list-style: none;
   padding: 0;
@@ -937,3 +938,74 @@ select {
   font-size: 0.9em;
   margin-top: 5px;
 }
+
+/* --------------------------------------------------
+   Home page Responsive fixes - small screen
+-------------------------------------------------- */
+
+@media screen and (max-width: 768px) {
+  .home-page .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .home-page .hero-text {
+    order: 2;
+  }
+
+  .home-page .hero-image {
+    order: 1;
+    padding-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .home-page .hero-text h1 {
+    font-size: 3rem;
+  }
+
+  .home-page .hero-text p.slogan,
+  .home-page .hero-text p.description {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+}
+
+/* --------------------------------------------------
+   Mid-Screen Responsive Fixes 
+-------------------------------------------------- */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+  .home-page .hero {
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .home-page .hero-text {
+    flex: 1 1 100%;
+    order: 2;
+    text-align: center;
+  }
+
+  .home-page .hero-image {
+    flex: 1 1 100%;
+    order: 1;
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .home-page .hero-image img {
+    max-width: 90%;
+    height: auto;
+  }
+
+  .home-page .hero-text h1 {
+    font-size: 4rem;
+  }
+
+  .home-page .hero-text p.slogan,
+  .home-page .hero-text p.description {
+    font-size: 1.3rem;
+    padding: 0 1rem;
+  }
+}
+
