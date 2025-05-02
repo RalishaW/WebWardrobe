@@ -644,12 +644,19 @@ input[type="submit"]:active {
   gap: 0.5rem;
 }
 
-.home-page .nav-links a {
+.home-page .nav-links {
   display: flex;
-  align-items: center;
   gap: 1.5rem;
-  margin-left: auto;  
+  align-items: center;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.home-page .nav-links a {
+  text-decoration: none;
   color: #1A2A4A;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .home-page .nav-links a:hover {
