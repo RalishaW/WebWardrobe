@@ -9,8 +9,8 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', 'Helvetica Neue', sans-serif;
-    background-color: #EDE8F5;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fefefe;
     color: #1f1f1f;
     -webkit-font-smoothing: antialiased;
 }
@@ -624,8 +624,6 @@ input[type="submit"]:active {
 -------------------------------------------------- */
 
 .home-page {
-  font-family: 'Poppins', sans-serif;
-  background-color: #fefefe;
   color: #1A2A4A;
   display: flex;
   flex-direction: column;
