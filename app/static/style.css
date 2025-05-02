@@ -645,8 +645,10 @@ input[type="submit"]:active {
 }
 
 .home-page .nav-links a {
-  margin-left: 2rem;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;  
   color: #1A2A4A;
 }
 
