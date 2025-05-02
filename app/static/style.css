@@ -627,6 +627,8 @@ input[type="submit"]:active {
   font-family: 'Poppins', sans-serif;
   background-color: #fefefe;
   color: #1A2A4A;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Header styles */
