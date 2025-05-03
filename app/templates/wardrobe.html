@@ -20,7 +20,20 @@
                 <input type="text" name="item_name">
 
                 <label>Color:</label>
-                <input type="text" name="color">
+                <select name="color" required>
+                    <option value="">Select Type</option>
+                    <option value="White">White</option>
+                    <option value="Black">Black</option>
+                    <option value="Gray">Gray</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Multicolor">Mulitcolor</option>
+                    <option value="Other">Other</option>
+                </select>
 
                 <label>Season:</label>
                 <select name="season" required>
@@ -29,6 +42,7 @@
                     <option value="Summer">Summer</option>
                     <option value="Fall">Fall</option>
                     <option value="Winter">Winter</option>
+                    <option value="All Season"> All Season</option>
                 </select>
             </div>
 
@@ -36,9 +50,24 @@
                 <label>Clothing Type:</label>
                 <select name="type" required>
                     <option value="">Select Type</option>
-                    <option value="Tops">Tops</option>
-                    <option value="Pants">Pants</option>
+                    <option value="Top">Top</option>
+                    <option value="T-Shirt">T-Shirt</option>
+                    <option value="Shirt">Shirt</option>
+                    <option value="Blouse">Blouse</option>
+                    <option value="Sweater">Sweater</option>
+                    <option value="Hoodie">Hoodie</option>
+                    <option value="Coat">Coat</option>
+                    <option value="Pant">Pant</option>
+                    <option value="Jeans">Jeans</option>
+                    <option value="Shorts">Shorts</option>
+                    <option value="Skirt">Skirt</option>
+                    <option value="Dress">Dress</option>
+                    <option value="Shoes">Shoes</option>
                     <option value="Jackets">Jackets</option>
+                    <option value="Accessory">Accessory</option>
+                    <option value="Other">Other</option>
+                    
+
                 </select>
 
                 <label>Occasion:</label>
@@ -46,6 +75,12 @@
                     <option value="">Select Occasion</option>
                     <option value="Casual">Casual</option>
                     <option value="Formal">Formal</option>
+                    <option value="Work">Work</option>
+                    <option value="Party">Party</option>
+                    <option value="Gym">Gym</option>
+                    <option value="Beach">Beach</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Other">Other</option>
                 </select>
 
                 <input type="submit" value="Upload Item">
@@ -61,13 +96,17 @@
     <button class="filter-btn" onclick="filterWardrobe('Tops')">Tops</button>
     <button class="filter-btn" onclick="filterWardrobe('Pants')">Pants</button>
     <button class="filter-btn" onclick="filterWardrobe('Jackets')">Jackets</button>
+    <button class="filter-btn" onclick="filterWardrobe('Dresses')">Dresses</button>
+    <button class="filter-btn" onclick="filterWardrobe('Shoes')">Shoes</button>
+    <button class="filter-btn" onclick="filterWardrobe('Accessories')">Accessories</button>
 </div>
 
 <!-- Item Gallery -->
 <div class="wardrobe-gallery">
     {% for item in wardrobe_items %}
-    <div class="wardrobe-item">
-        <img src="{{ url_for('static', filename=item.image_path.replace('static/', '')) }}" alt="{{ item.item_name }}">
+    <div class="wardrobe-item" data-type="{{ item.type }}">
+        <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.item_name }}">
+
         <p> {{ item.item_name }}</p>
     </div>
     {% endfor %}
@@ -85,20 +124,52 @@ function previewImage(event) {
     preview.src = URL.createObjectURL(event.target.files[0]);
 }
 
+const filterGroups = {
+    "Tops": ["Top", "T-Shirt", "Shirt", "Blouse", "Sweater", "Hoodie"],
+    "Pants": ["Pant", "Jeans", "Shorts"],
+    "Jackets": ["Jackets", "Coat"],
+    "Dresses": ["Dress"],
+    "Shoes": ["Shoes"],
+    "Accessories": ["Accessory"]
+};
+
 // Wardrobe item filter
 function filterWardrobe(type) {
     const buttons = document.querySelectorAll('.filters[data-type="type"] .filter-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
 
+    // Normalize filter type
+    const normalizedType = type.toLowerCase().trim();
+
     document.querySelectorAll('.wardrobe-item').forEach(item => {
-        const itemType = item.getAttribute('data-type');
-        if (type === 'all' || itemType === type) {
+        const itemType = item.getAttribute('data-type')?.toLowerCase().trim();
+
+        if (normalizedType === 'all') {
             item.style.display = '';
-        } else {
-            item.style.display = 'none';
+            return;
         }
+
+        let showItem = false;
+
+        // Check if filter group exists
+        Object.keys(filterGroups).forEach(groupName => {
+            const groupItems = filterGroups[groupName].map(t => t.toLowerCase().trim());
+
+            if (groupName.toLowerCase() === normalizedType && groupItems.includes(itemType)) {
+                showItem = true;
+            }
+        });
+
+        // If not in group, directly compare type
+        if (!showItem && normalizedType === itemType) {
+            showItem = true;
+        }
+
+        item.style.display = showItem ? '' : 'none';
     });
 }
+
+
 </script>
 {% endblock %}
