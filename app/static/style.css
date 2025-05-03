@@ -240,6 +240,15 @@ input[type="submit"]:active {
     margin-top: 0.5rem;
 }
 
+.wardrobe-item img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+
 /* --------------------------------------------------
    Responsive (Optional Add-On)
 -------------------------------------------------- */
@@ -504,6 +513,8 @@ input[type="submit"]:active {
     width: 55%;
     background-color: #ffffff;
     padding: 3rem;
+    overflow-y: auto;
+    max-height: 100vh;
   }
   
   .signup-page .centered {
@@ -544,8 +555,9 @@ input[type="submit"]:active {
   .signup-page .sign_up {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    height: 100%;
+    justify-content: flex-start;
+    
+    min-height: 0;
   }
 
   .signup-page .Welcome {
