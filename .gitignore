@@ -6,3 +6,4 @@ app/.DS_Store
 *.db
 instance/fashanise.db           # Ignore a SQLite database file
 migrations/__pycache__/
+static/uploads
