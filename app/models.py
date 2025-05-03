@@ -39,7 +39,7 @@ class ClothingItem(db.Model):
     image_path = db.Column(db.String(200), nullable=False)  # File path to uploaded image
     color = db.Column(db.String(50))
     season = db.Column(db.String(50))
-    clothing_type = db.Column(db.String(50))
+    type = db.Column(db.String(50))
     occasion = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
