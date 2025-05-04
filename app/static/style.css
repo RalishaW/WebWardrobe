@@ -28,11 +28,12 @@ body {
  Navbar
 -------------------------------------------------- */
 nav {
-  background-color: #ADBBD4;
-  height: 110px;
+  background-color: #dde7fb;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 120px;
 }
 
 .navbar-container {
@@ -67,15 +68,16 @@ nav {
 
 .nav-links li a {
   
-  color: #1c1c1c;
+  color: #1A2A4A;
   font-weight: 600;
-  font-size: 1.50rem;
+  font-size: 1.3rem;
   padding: 0 0.5rem;
   transition: color 0.2s ease;
+  text-decoration: none;
 }
 
 .nav-links li a:hover {
-  color: #4d61fc;
+  color: #3B6ECA;
 }
 
 /* --------------------------------------------------
@@ -659,7 +661,7 @@ justify-content: flex-end;
 text-decoration: none;
 color: #1A2A4A;
 font-weight: 600;
-font-size: 1.1rem;
+font-size: 1.2rem;
 }
 
 .home-page .nav-links a:hover {
