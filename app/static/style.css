@@ -85,8 +85,7 @@ nav {
 -------------------------------------------------- */
 h2 {
   font-size: 2.2rem;
-  margin: 1.5rem 0 1rem 0;
-  padding-left: 2rem;
+  padding: 0.8rem 1.6rem;
 }
 
 /* --------------------------------------------------
@@ -164,10 +163,22 @@ input[type="submit"]:active {
  Outfit Creator
 -------------------------------------------------- */
 .outfit-header {
+  padding: 0rem 0.5rem;
+  /* border: 5px solid #dde7fb; */
+  /* background: #dde7fb; */
+  border-radius: 159px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1A2A4A;
+  width: min-content;
+  margin-top: 1rem;
+  /* margin-left: 2rem; */
+}
+
+.create-outfit-button {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 2rem 1rem 2rem;
+  margin-right: 2rem;
+  justify-content: flex-end;
 }
 
 .create-outfit-form {
