@@ -421,7 +421,7 @@ label i {
 /* Login Page Styles */
 .login-page .left {
   background-color: #dde7fb;
-  height: in-content;
+  height: fit-content;
   padding: 3rem;
   display: flex;
   flex-direction: column;
@@ -531,6 +531,7 @@ label i {
 
 .signup-page .centered {
   text-align: center;
+  margin-bottom: 3rem;
 }
 
 .signup-page .tabs {
