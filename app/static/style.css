@@ -192,7 +192,7 @@ input[type="submit"]:active {
 }
 
 .filter-btn {
-  background-color: #8697C4;
+  background-color: #dde7fb;
   color: #333;
   margin-right: 0.5rem;
   padding: 0.5rem 1.2rem;
@@ -203,11 +203,17 @@ input[type="submit"]:active {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
-.filter-btn.active,
-.filter-btn:hover {
-  background-color: #3D52A0;
+.filter-btn.active {
+  background-color: #4a69d9;
   color: white;
   box-shadow: 0 3px 10px rgba(61, 82, 160, 0.25);
+}
+
+.filter-btn:hover {
+  background-color: #1A2A4A;
+  transform: scale(1.03);
+  color: white;
+  box-shadow: 0 4px 12px rgba(61, 82, 160, 0.25);
 }
 
 /* --------------------------------------------------
@@ -919,13 +925,11 @@ background-color: #1A2A4A;
 .flashes {
 list-style: none;
 padding: 0;
-margin-bottom: 1rem;
 }
 
 .flashes li {
 padding: 0.8rem;
 border-radius: 5px;
-margin-bottom: 0.5rem;
 font-weight: bold;
 }
 
@@ -945,7 +949,6 @@ border: 1px solid #f5c2c7;
 .error {
 color: red;
 font-size: 0.9em;
-margin-top: 5px;
 }
 
 /* --------------------------------------------------
