@@ -1,8 +1,21 @@
 import os
 
-UPLOAD_FOLDER_CLOTHING_ITEMS = 'app/static/images/clothing_items'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'jfif', 'webp'}
 MAX_FILE_SIZE = 16 * 1024 * 1024
+
+from rembg import remove 
+from PIL import Image
+
+def make_image_transparent(input_path, output_path):
+    input_image = Image.open(input_path)
+    transparent = remove(input_image)
+
+    output_path = os.path.splitext(output_path)[0] + '.png'
+    transparent.save(output_path)
+
+    return output_path   # <<== This return is important
+
 
 # Allowed file extensions
 def allowed_file(filename):

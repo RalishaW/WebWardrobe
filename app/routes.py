@@ -12,6 +12,7 @@ from app.utils import allowed_file, size_limit
 import uuid
 import os
 import time
+from app.utils import make_image_transparent
 
 # Introductory / Landing Page
 @app.route("/")
@@ -94,47 +95,48 @@ def wardrobe():
 @app.route('/wardrobe/add', methods=["POST"])
 @login_required
 def add_clothing_item():
+
+    user_id = current_user.id
+    
     item_name = request.form['item_name']
+    type_ = request.form['type']   
     color = request.form['color']
     season = request.form['season']
-    clothing_type = request.form['type']
     occasion = request.form['occasion']
 
-    # Getting user id
-    user_id = current_user.id
-
     image = request.files['image']
-    if image and allowed_file(image.filename):
-        # Check for size limit for upload file
-        if not size_limit(image):
-            flash('Image file is too large. Maximum size is 16MB.', 'error')
-            return redirect(url_for('wardrobe'))
-        
-        filename = secure_filename(image.filename)
-        filename = f"{uuid.uuid4()}"
-        image_path = os.path.join(app.config['UPLOAD_CLOTHING_ITEM'], filename)
-        image.save(image_path)
+
+    if image and allowed_file(image.filename) and size_limit(image):
+        filename = f"{user_id}_{secure_filename(image.filename)}"
+
+        upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+        os.makedirs(upload_folder, exist_ok=True)
+
+        filepath = os.path.join(upload_folder, filename)
+
+        image.save(filepath)
+
+        new_filepath = make_image_transparent(filepath, filepath)
+
+        # Get only the path relative to static/
+        relative_path = os.path.relpath(new_filepath, os.path.join(app.root_path, 'static'))
 
         new_item = ClothingItem(
-            user_id = user_id,
-            item_name = item_name,
-            color = color,
-            season = season,
-            clothing_type = clothing_type, 
-            occasion = occasion, 
-            image_path = f"images/clothing_items/{filename}",
+            user_id=current_user.id,
+            item_name=item_name,
+            type=type_,
+            color=color,
+            season=season,
+            occasion=occasion,
+            image_path = relative_path
         )
 
-        try:
-            db.session.add(new_item)
-            db.session.commit()
-            flash(f'Clothing item {item_name} added successfully!', 'success')
-            return redirect(url_for('wardrobe'))
-        except IntegrityError:
-            db.session.rollback()
-            flash('Error adding clothing item. Please try again.', 'error')
+        db.session.add(new_item)
+        db.session.commit()
+
+        flash('Item added successfully!', 'success')
     else:
-        flash('Invalid image file. Please upload a jpeg, jpg or png image.', 'error')      
+        flash('Invalid file type or file size exceeds limit.', 'error')
 
     return redirect(url_for('wardrobe'))
 
