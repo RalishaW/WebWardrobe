@@ -585,7 +585,7 @@ label i {
 }
 
 .analysis-card {
-  background-color: #dce6f7;
+  background-color: #dde7fb;
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
@@ -614,7 +614,7 @@ label i {
 }
 
 .most-used-item-block {
-  background-color: #dce6f7;
+  background-color: #dde7fb;
   display: flex;
   align-items: center;
   gap: 1rem;
