@@ -89,8 +89,8 @@ def logout():
 @login_required
 def wardrobe():
     user = current_user
-    items = ClothingItem.query.filter_by(user_id = user.id).all()
-    return render_template('wardrobe.html', wardrobe_items=items)
+    wardrobe_items = ClothingItem.query.filter_by(user_id = user.id).all()
+    return render_template('wardrobe.html', wardrobe_items=wardrobe_items)
 
 @app.route('/wardrobe/add', methods=["POST"])
 @login_required
@@ -139,6 +139,29 @@ def add_clothing_item():
         flash('Invalid file type or file size exceeds limit.', 'error')
 
     return redirect(url_for('wardrobe'))
+
+@app.route('/wardrobe/delete/<int:item_id>', methods=["POST"])
+@login_required
+def delete_clothing_item(item_id):
+    item = ClothingItem.query.get_or_404(item_id)
+
+    # Check if the item belongs to the logged-in user
+    if item.user_id != current_user.id:
+        flash("You are not authorized to delete this item.", "error")
+        return redirect(url_for('wardrobe'))
+
+    # Delete image from uploads
+    file_path = os.path.join(app.root_path, 'static', item.image_path)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # Delete item from database
+    db.session.delete(item)
+    db.session.commit()
+
+    flash("Item deleted successfully.", "success")
+    return redirect(url_for('wardrobe'))
+
 
 
 @app.route('/outfits')
