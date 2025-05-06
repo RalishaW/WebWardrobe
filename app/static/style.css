@@ -272,6 +272,21 @@ input[type="submit"]:active {
   margin-top: 0.5rem;
 }
 
+.wardrobe-item form button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.wardrobe-item form button:hover {
+  background-color: #c0392b;
+}
+
 
 /* --------------------------------------------------
  Responsive (Optional Add-On)
