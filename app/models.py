@@ -56,3 +56,18 @@ class Outfit(db.Model):
     occasion = db.Column(db.String(50))
     season = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+# ----------------------
+# Outfit Item Model (Link between Outfit and ClothingItem)
+# ----------------------
+
+class OutfitItem(db.Model):
+    __tablename__ = 'outfit_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    outfit_id = db.Column(db.Integer, db.ForeignKey('outfits.id'), nullable=False)
+    clothing_item_id = db.Column(db.Integer, db.ForeignKey('clothing_items.id'), nullable=False)
+
+    # Optional: Relationship backrefs (if needed later)
+    outfit = db.relationship("Outfit", backref=db.backref("outfit_items", cascade="all, delete-orphan"))
+    clothing_item = db.relationship("ClothingItem")
