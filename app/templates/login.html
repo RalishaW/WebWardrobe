@@ -60,7 +60,7 @@
                 {{ form.remember() }}
                 <label for="remember">Remember Me</label>
               </div>
-              <a href="#" class="Forgot">Forgot Password?</a>
+              <a href="{{ url_for('request_reset_password') }}" class="Forgot">Forgot Password?</a>
             </div>
 
             <div class="button_final">
