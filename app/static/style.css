@@ -692,7 +692,7 @@ input[type="submit"]:active {
     font-size: 13px;
   }
   
-  .signup-page .sign_up {
+  .signup-page .sign_up .reset_password{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1159,4 +1159,21 @@ font-size: 0.9em;
   font-size: 1.3rem;
   padding: 0 1rem;
 }
+}
+
+
+/* --------------------------------------------------
+ Request Reset Password Page
+-------------------------------------------------- */
+.split-right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 3rem;
+}
+
+.centered3 {
+  text-align: center;
+  width: 100%;
 }

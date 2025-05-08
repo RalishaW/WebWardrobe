@@ -22,14 +22,14 @@ class SignupForm(FlaskForm):
     terms = BooleanField('I agree to the Terms & Conditions', validators=[DataRequired()])
     submit = SubmitField('Sign-Up')
 
-class ResetPasswordRequestForm(FlaskForm):
+class RequestResetPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     submit = SubmitField('Request Password Reset')
 
 class ResetPasswordForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
-    submit = SubmitField('Password Reset Form')
-
+    password = PasswordField('New Password', validators=[DataRequired(), Length(min=4)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message="Password must match")])
+    submit = SubmitField('Reset Password')
 
 # class RemoveClothingItemForm(FlaskForm):
 

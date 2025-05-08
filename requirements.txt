@@ -16,4 +16,6 @@ pip install onnxruntime
 
 pip install numpy==1.24.4
 
-email_validator
+pip install email_validator
+pip install pyjwt    # token validator for reset password
+pip install flask_mail  # for sending email to user to reset password
