@@ -1,144 +1,103 @@
 {% extends "base.html" %}
-{% block title %}My Outfits - Fashanize{% endblock %}
+{% block title %}My Outfits - Fashonize{% endblock %}
 
 {% block content %}
-<div class="outfit-header-row">
-    <h2 class="outfit-header">MyOutfits</h2>
-    <div class="create-outfit-button">
-        <button onclick="toggleOutfitCreator()">Create New Outfit</button>
-    </div>
+
+<div class="wardrobe-header">
+    <h2>MyOutfits</h2>
+    <button onclick="document.getElementById('create-outfit-form').style.display='block'">+ Create Outfit</button>
 </div>
 
-<!-- Step 1: Occasion + Season -->
-<div id="outfit-creator" class="outfit-creator-container" style="display: none;">
-    <div class="outfit-options">
+<!-- Create Outfit Form -->
+<div id="create-outfit-form" class="create-outfit-form" style="display: none;">
+    <form method="POST" action="{{ url_for('preview_outfit') }}">
         <label>Occasion:</label>
-        <select name="occasion" id="occasion">
+        <select name="occasion" required>
             <option value="">Select</option>
-            <option value="casual">Casual</option>
-            <option value="formal">Formal</option>
-            <option value="party">Party</option>
+            <option value="Casual">Casual</option>
+            <option value="Formal">Formal</option>
+            <option value="Party">Party</option>
         </select>
 
         <label>Season:</label>
-        <select name="season" id="season">
+        <select name="season" required>
             <option value="">Select</option>
-            <option value="summer">Summer</option>
-            <option value="winter">Winter</option>
-            <option value="spring">Spring</option>
-            <option value="autumn">Autumn</option>
+            <option value="Summer">Summer</option>
+            <option value="Winter">Winter</option>
+            <option value="Spring">Spring</option>
+            <option value="Autumn">Autumn</option>
         </select>
 
-        <button type="button" onclick="showOutfitBuild()">Generate Outfit</button>
-    </div>
-
-    <!-- Step 2: Outfit Preview + Save Form -->
-    <div id="outfit-builder" class="outfit-main-content" style="display: none;">
-        <div class="outfit-form">
-            <form>
-                <label>Outfit Name:</label>
-                <input type="text" name="name" required>
-
-                <label>Privacy:</label>
-                <select name="privacy">
-                    <option value="private">Private</option>
-                    <option value="public">Public</option>
-                </select>
-
-                <button type="submit">Save Outfit</button>
-            </form>
-        </div>
-
-        <div class="outfit-preview">
-            <h4>Outfit Preview</h4>
-            <div class="outfit-box">
-                <img src="{{ url_for('static', filename='outfits/placeholder.png') }}" alt="Generated Outfit">
-            </div>
-        </div>
-    </div>
+        <button type="submit">Generate Preview</button>
+    </form>
 </div>
 
-<!-- Filter Tags -->
-<div class="filters" data-type="occasion">
-    <span>Filter by Occasion:</span>
-    <button class="filter-btn active" onclick="filterOutfits('all', 'occasion')">All</button>
-    <button class="filter-btn" onclick="filterOutfits('casual', 'occasion')">Casual</button>
-    <button class="filter-btn" onclick="filterOutfits('formal', 'occasion')">Formal</button>
-    <button class="filter-btn" onclick="filterOutfits('party', 'occasion')">Party</button>
+<!-- Filter by Privacy -->
+<div class="filters" data-type="privacy">
+    <span>Filter by Privacy:</span>
+    <button class="filter-btn active" onclick="filterOutfits(event, 'all')">All</button>
+    <button class="filter-btn" onclick="filterOutfits(event, 'public')">Public</button>
+    <button class="filter-btn" onclick="filterOutfits(event, 'private')">Private</button>
 </div>
 
-<div class="filters" data-type="season">
-    <span>Filter by Season:</span>
-    <button class="filter-btn active" onclick="filterOutfits('all', 'season')">All</button>
-    <button class="filter-btn" onclick="filterOutfits('summer', 'season')">Summer</button>
-    <button class="filter-btn" onclick="filterOutfits('winter', 'season')">Winter</button>
-    <button class="filter-btn" onclick="filterOutfits('spring', 'season')">Spring</button>
-    <button class="filter-btn" onclick="filterOutfits('autumn', 'season')">Autumn</button>
-</div>
+<!-- Outfit Preview -->
+{% if preview_image %}
+<div class="outfit-preview-container">
+    <h3>Outfit Preview</h3>
+    <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
 
-<!-- Outfit Gallery -->
+    <form method="POST" action="{{ url_for('save_outfit') }}" class="outfit-form">
+        <label>Outfit Name:</label>
+        <input type="text" name="outfit_name" required>
+
+        <label>Privacy:</label>
+        <select name="privacy" required>
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+        </select>
+
+        <button type="submit">Save Outfit</button>
+    </form>
+</div>
+{% endif %}
+
+<!-- Saved Outfits -->
 <div class="outfit-gallery">
     {% for outfit in outfits %}
-    <div class="outfit-item" data-occasion="{{ outfit.occasion }}" data-season="{{ outfit.season }}">
-        <h4>{{ outfit.name }}</h4>
-        <img src="{{ url_for('static', filename='outfits/' ~ outfit.preview) }}" alt="Outfit Preview">
-        <div class="tag-container">
-            <span class="tag">{{ outfit.occasion }}</span>
-            <span class="tag">{{ outfit.season }}</span>
-        </div>
+    <div class="outfit-item" data-privacy="{{ outfit.privacy }}">
+        <h4>{{ outfit.outfit_name }}</h4>
+        <img src="{{ url_for('static', filename=outfit.preview_image or 'outfits/placeholder.png') }}" alt="Outfit Image">
+
+        <form action="{{ url_for('delete_outfit', outfit_id=outfit.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this outfit?');">
+            <button type="submit" class="delete-btn">Delete</button>
+        </form>
     </div>
     {% endfor %}
 </div>
 
 <script>
-function toggleOutfitCreator() {
-    const creator = document.getElementById("outfit-creator");
-    creator.style.display = creator.style.display === "none" ? "block" : "none";
-}
-
-function showOutfitBuild() {
-    const builder = document.getElementById("outfit-builder");
-    builder.style.display = "flex";
-}
-
-let currentOccasion = 'all';
-let currentSeason = 'all';
-
-function filterOutfits(value, type) {
-    const filterGroup = document.querySelector(`.filters[data-type="${type}"]`);
-    const buttons = filterGroup.querySelectorAll('.filter-btn');
-    const clickedBtn = event.target;
-
-    const isActive = clickedBtn.classList.contains('active');
-
-    // Remove all active states
+function filterOutfits(event, type) {
+    
+    const buttons = document.querySelectorAll('.filters[data-type="privacy"] .filter-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
 
-    if (isActive || value === 'all') {
-        // Revert to 'all'
-        if (type === 'occasion') currentOccasion = 'all';
-        else currentSeason = 'all';
-
-        buttons.forEach(btn => {
-            if (btn.textContent.toLowerCase() === 'all') {
-                btn.classList.add('active');
-            }
-        });
-    } else {
-        clickedBtn.classList.add('active');
-        if (type === 'occasion') currentOccasion = value;
-        else currentSeason = value;
-    }
+    const normalizedType = type.toLowerCase();
 
     document.querySelectorAll('.outfit-item').forEach(item => {
-        const occasion = item.getAttribute('data-occasion');
-        const season = item.getAttribute('data-season');
+        const itemPrivacy = item.getAttribute('data-privacy')?.toLowerCase();
 
-        const matchOccasion = currentOccasion === 'all' || occasion === currentOccasion;
-        const matchSeason = currentSeason === 'all' || season === currentSeason;
-
-        item.style.display = matchOccasion && matchSeason ? '' : 'none';
+        if (normalizedType === 'all' || itemPrivacy === normalizedType) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
     });
+
+
+
+
 }
 </script>
+
 {% endblock %}
