@@ -13,11 +13,11 @@
         <div class="form-row">
             <div class="form-group">
                 <label>Image:</label>
-                <input type="file" name="image" required onchange="previewImage(event)" required>
+                <input type="file" name="image" onchange="previewImage(event)" required>
                 <img id="image-preview" style="max-width: 100px; margin-top: 10px;" />
                 
                 <label>Item name:</label>
-                <input type="text" name="item_name">
+                <input type="text" name="item_name" required>
 
                 <label>Color:</label>
                 <select name="color" required>
@@ -31,7 +31,7 @@
                     <option value="Yellow">Yellow</option>
                     <option value="Purple">Purple</option>
                     <option value="Brown">Brown</option>
-                    <option value="Multicolor">Mulitcolor</option>
+                    <option value="Multicolor">Multicolor</option>
                     <option value="Other">Other</option>
                 </select>
 
@@ -46,7 +46,7 @@
                 </select>
             </div>
 
-            <div class="form-group" required>
+            <div class="form-group">
                 <label>Clothing Type:</label>
                 <select name="type" required>
                     <option value="">Select Type</option>
@@ -83,7 +83,7 @@
                     <option value="Other">Other</option>
                 </select>
 
-                <input type="submit" value="Upload Item">
+                <input type="submit" value="Upload Item" id="submit-btn">
             </div>
         </div>
     </form>
@@ -92,13 +92,13 @@
 <!-- Filter Buttons -->
 <div class="filters" data-type="type">
     <span>Filter by Type:</span>
-    <button class="filter-btn active" onclick="filterWardrobe('all')">All</button>
-    <button class="filter-btn" onclick="filterWardrobe('Tops')">Tops</button>
-    <button class="filter-btn" onclick="filterWardrobe('Pants')">Pants</button>
-    <button class="filter-btn" onclick="filterWardrobe('Jackets')">Jackets</button>
-    <button class="filter-btn" onclick="filterWardrobe('Dresses')">Dresses</button>
-    <button class="filter-btn" onclick="filterWardrobe('Shoes')">Shoes</button>
-    <button class="filter-btn" onclick="filterWardrobe('Accessories')">Accessories</button>
+    <button class="filter-btn active" onclick="filterWardrobe('all', event)">All</button>
+    <button class="filter-btn" onclick="filterWardrobe('Tops', event)">Tops</button>
+    <button class="filter-btn" onclick="filterWardrobe('Pants', event)">Pants</button>
+    <button class="filter-btn" onclick="filterWardrobe('Jackets',event)">Jackets</button>
+    <button class="filter-btn" onclick="filterWardrobe('Dresses', event)">Dresses</button>
+    <button class="filter-btn" onclick="filterWardrobe('Shoes', event)">Shoes</button>
+    <button class="filter-btn" onclick="filterWardrobe('Accessories', event)">Accessories</button>
 </div>
 
 <!-- Item Gallery -->
@@ -119,6 +119,16 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#upload-form form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitBtn.value = 'Uploading...'; // Optional: change button text
+    });
+});
+
 function toggleUploadForm() {
     const form = document.getElementById("upload-form");
     form.style.display = form.style.display === "none" ? "flex" : "none";
@@ -140,7 +150,7 @@ const filterGroups = {
 };
 
 // Wardrobe item filter
-function filterWardrobe(type) {
+function filterWardrobe(type, event) {
     const buttons = document.querySelectorAll('.filters[data-type="type"] .filter-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
