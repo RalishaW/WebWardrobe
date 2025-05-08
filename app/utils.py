@@ -1,11 +1,14 @@
 import os
+from app import db
+from rembg import remove 
+from PIL import Image
+
+
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'jfif', 'webp'}
 MAX_FILE_SIZE = 16 * 1024 * 1024
 
-from rembg import remove 
-from PIL import Image
 
 def make_image_transparent(input_path, output_path):
     input_image = Image.open(input_path)
@@ -33,3 +36,4 @@ def size_limit(image):
     if file_size > MAX_FILE_SIZE:
         return False
     return True
+

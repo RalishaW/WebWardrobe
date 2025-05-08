@@ -212,7 +212,7 @@ input[type="submit"]:active {
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -232,10 +232,16 @@ input[type="submit"]:active {
 /* --------------------------------------------------
  Gallery Styles
 -------------------------------------------------- */
-.wardrobe-gallery,
-.outfit-gallery {
+.wardrobe-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+}
+
+.outfit-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
   padding: 1rem 2rem;
 }
@@ -258,10 +264,58 @@ input[type="submit"]:active {
 
 .outfit-item img {
   max-width: 100%;
-  height: 200px;
+  height: 300px;
   object-fit: contain;
   border-radius: 8px;
   margin-top: 0.5rem;
+}
+
+.outfit-item h4 {
+  margin: 0.5rem 0;
+  color: #1A2A4A;
+  font-size: 1.1rem;
+}
+
+.outfit-item form button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.outfit-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem; /* less gap than before */
+  padding: 1rem 2rem;
+}
+
+
+.outfit-item form button:hover {
+  background-color: #c0392b;
+}
+
+.privacy-badge.private {
+  background-color: #ccc;
+  color: #555;
+}
+
+.privacy-badge.public {
+  background-color: #4a69d9;
+  color: white;
+}
+
+
+.outfit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
 }
 
 .wardrobe-item img {
@@ -309,29 +363,25 @@ input[type="submit"]:active {
       flex-direction: column;
   }
 }
-.generated-outfit-container {
+
+
+.outfit-box {
   display: flex;
-  gap: 2rem;
-  margin: 2rem;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 12px;
 }
 
 .outfit-box img {
   max-width: 100%;
   border-radius: 10px;
+  margin-top: 0.5rem;
+  object-fit: cover;
 }
 
-.outfit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  justify-content: center;
-}
 
 
 .outfit-creator-container {
@@ -357,23 +407,64 @@ input[type="submit"]:active {
   flex-wrap: wrap;
 }
 
-.outfit-form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
-.outfit-preview {
-  flex: 1;
+
+.outfit-preview h4 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #1A2A4A;
   text-align: center;
 }
 
-.outfit-box img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-top: 0.5rem;
+.outfit-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+.outfit-preview-container img {
+  max-width: 250px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.create-outfit-form {
+  display: none;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.create-outfit-form form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.create-outfit-form select,
+.create-outfit-form button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.preview-outfit-img {
+  max-width: 150px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+
+
 
 /* --------------------------------------------------
  Auth Pages (Login & Signup)
