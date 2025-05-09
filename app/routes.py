@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from app.forms import LoginForm, SignupForm, RequestResetPasswordForm, ResetPasswordForm
 from app.utils import allowed_file, size_limit, make_image_transparent
 import os
-from app.utils import make_image_transparent, generate_reset_token, verify_reset_token
+from app.utils import make_image_transparent, generate_reset_token, verify_reset_token, try_to_login
 from app import mail
 from flask_mail import Message
 import os
@@ -70,15 +70,12 @@ def signup():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            flash('Login successfully!', 'success')
+        success = try_to_login(form.email, form.password, form.remember)
+        if success:
+            flash("Login successfully!.", 'success')
             return redirect(url_for('wardrobe'))
         else:
-            flash('Login Unsuccessful. Please check username and password.', 'error')
-    
+            flash("Login unsuccesful. Please check your username or password.", 'error')
     return render_template("login.html", form=form)
 
 @app.route("/logout")

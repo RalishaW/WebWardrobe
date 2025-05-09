@@ -1,12 +1,14 @@
 import os
+from flask_login import login_user
 import jwt
 from datetime import datetime, timedelta 
-from flask import current_app
+from flask import current_app, flash, redirect, url_for
 from app import db
 from rembg import remove 
 from PIL import Image
 
-
+from werkzeug.security import check_password_hash
+from app.models import User
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'jfif', 'webp'}
@@ -69,3 +71,12 @@ def size_limit(image):
         return False
     return True
 
+def try_to_login(email, password, remember):
+    user = User.query.filter_by(email=email).first()
+
+    if user and check_password_hash(user.password, password):
+        login_user(user, remember)
+        flash('Login successfully!', 'success')
+        return True
+    else:
+        return False
