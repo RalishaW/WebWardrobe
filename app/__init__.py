@@ -15,9 +15,9 @@ mail = Mail()
 class Config:
     SECRET_KEY = 'SECRET_KEY'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_PROFILE_PICTURE = 'app/static/images/profile_picture'
-    UPLOAD_CLOTHING_ITEM = 'app/static/images/clothing_items'
-    MAKE_OUTFIT = 'app/static/images/outfits'
+    UPLOAD_PROFILE_PICTURE = 'app/static/profile_picture'
+    UPLOAD_CLOTHING_ITEM = 'app/static/clothing_items'
+    MAKE_OUTFIT = 'app/static/outfits'
 
     # Mail server
     MAIL_SERVER = "smtp.gmail.com"
