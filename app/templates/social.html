@@ -1,44 +1,34 @@
 {% extends "base.html" %}
+{% block title %}Shared Outfits{% endblock %}
 
 {% block content %}
-<div class="social-container">
-  <div class="top-section">
-    <div class="social-title">Social</div>
-    <div class="filter-dropdown">
-      <select name="season" id="season-filter">
-        <option value="">Season</option>
-        <option value="Winter">Winter</option>
-        <option value="Spring">Spring</option>
-        <option value="Summer">Summer</option>
-        <option value="Autumn">Autumn</option>
-      </select>
-      <select name="style" id="style-filter">
-        <option value="">Style</option>
-        <option value="Casual">Casual</option>
-        <option value="Formal">Formal</option>
-        <option value="Sporty">Sporty</option>
-        <option value="Vintage">Vintage</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="user-grid-wrapper">
-    <div class="user-grid">
-      {% for i in range(1, 13) %}
-      <div class="user-card">
-        <div class="user-info">
-          <div class="profile-pic"></div>
-          <div class="username">Person{{ i }}</div>
-        </div>
-        <img src="{{ url_for('static', filename='images/Home-MockOutfit.jpg') }}" alt="Mock Outfit" class="outfit-preview">
-        <div class="tag-container">
-          <div class="tag winter">Winter</div>
-          <div class="tag casual">Casual</div>
-        </div>
-        <button class="save-button">Save</button>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+<div class="wardrobe-header">
+  <h2>Shared With Me</h2>
 </div>
+
+{% if shared_entries %}
+<div class="outfit-gallery">
+  {% for entry in shared_entries %}
+  <div class="outfit-item">
+    <h4>{{ entry.outfit.outfit_name }}</h4>
+    <img src="{{ url_for('static', filename=entry.outfit.preview_image or 'outfits/placeholder.png') }}" alt="Outfit from {{ entry.sender.username }}">
+
+    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #444;">
+      Shared by: <strong>{{ entry.sender.username }}</strong>
+    </p>
+
+    <div class="tag-container" style="margin-top: 0.5rem;">
+      <span class="filter-btn">{{ entry.outfit.season }}</span>
+      <span class="filter-btn">{{ entry.outfit.occasion }}</span>
+    </div>
+
+    <form action="{{ url_for('delete_shared_outfit', shared_id=entry.id) }}" method="POST" onsubmit="return confirm('Remove this shared outfit?');">
+      <button type="submit" class="delete-btn">Remove</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p style="margin: 2rem; text-align: center;">No outfits have been shared with you yet.</p>
+{% endif %}
 {% endblock %}

@@ -4,13 +4,26 @@
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </head>
 <body>
+    <!-- Warning block -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
     <header>
         <nav>
             <div class="navbar-container">
                 <div class="logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
+                    <a href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
+                    </a>
                     
                 </div>
                 <ul class="nav-links">

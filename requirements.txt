@@ -1,0 +1,21 @@
+# ----------------------------#
+# Requirements modules        #
+# ----------------------------#
+pip install flask
+pip install flask_wtf
+pip install flask_sqlalchemy
+pip install wtforms
+pip install flask_login
+pip install flask_migrate
+pip install rembg
+pip install Pillow
+#if have silicon mac:
+pip install onnxruntime-silicon
+#if not:
+pip install onnxruntime
+
+pip install numpy==1.24.4
+
+pip install email_validator
+pip install pyjwt    # token validator for reset password
+pip install flask_mail  # for sending email to user to reset password
