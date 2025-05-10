@@ -71,3 +71,14 @@ class OutfitItem(db.Model):
     # Optional: Relationship backrefs (if needed later)
     outfit = db.relationship("Outfit", backref=db.backref("outfit_items", cascade="all, delete-orphan"))
     clothing_item = db.relationship("ClothingItem")
+
+class SharedOutfit(db.Model):
+    __tablename__ = 'shared_outfit'
+    id = db.Column(db.Integer, primary_key=True)
+    outfit_id = db.Column(db.Integer, db.ForeignKey('outfits.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    outfit = db.relationship('Outfit', backref='shared_entries')
+    sender = db.relationship('User', foreign_keys=[sender_id])
+    receiver = db.relationship('User', foreign_keys=[receiver_id])
