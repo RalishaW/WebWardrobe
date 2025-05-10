@@ -1,8 +1,9 @@
 from app import app
-from flask import render_template, redirect, url_for, request, flash, session
+from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, login_user, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
-from app.models import db, User, ClothingItem, Outfit, SharedOutfit
+from sqlalchemy import func
+from app.models import db, User, ClothingItem, Outfit, SharedOutfit, OutfitItem
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from app.forms import LoginForm, SignupForm, RequestResetPasswordForm, ResetPasswordForm
@@ -14,10 +15,13 @@ from flask_mail import Message
 import os
 import random
 from PIL import Image
+from collections import Counter
 
 # Introductory / Landing Page
 @app.route("/")
 def home():
+    if current_user.is_authenticated:
+        return redirect(url_for('wardrobe'))
     return render_template("home.html")
 
 # Sign Up
@@ -114,7 +118,7 @@ def add_clothing_item():
     if image and allowed_file(image.filename) and size_limit(image):
         filename = f"{user_id}_{secure_filename(image.filename)}"
 
-        upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+        upload_folder = os.path.join(app.root_path, 'static', 'clothing_items')
         os.makedirs(upload_folder, exist_ok=True)
 
         filepath = os.path.join(upload_folder, filename)
@@ -415,7 +419,66 @@ def share_outfit():
 @app.route('/analysis')
 @login_required
 def analysis():
-    return render_template('analysis.html')
+    user_id = current_user.id
+
+    total_item_value = ClothingItem.query.filter_by(user_id=user_id).count()
+    outfits_created_value = Outfit.query.filter_by(user_id=user_id).count()
+
+    # Most used item in outfits combination
+    most_used_data = (
+        # Getting ClothingItem and the times that the item appeared
+        db.session.query(ClothingItem, func.count().label('usage_count'))
+        # Link the ClothingItem with the outfit they appeared in
+        .join(OutfitItem, ClothingItem.id == OutfitItem.clothing_item_id)
+        # Only choose the ClothingItem of the current user
+        .filter(ClothingItem.user_id == user_id)
+        # Sort the items by the number of appearances
+        .order_by(func.count().desc())
+        # Get the first result
+        .first()
+    )
+
+    if most_used_data is not None and most_used_data[0] is not None:
+        most_used_item, usage_count = most_used_data
+        item_image_url = url_for('static', filename=most_used_item.image_path)
+        item_name = most_used_item.item_name
+        number_of_mixed_outfits = usage_count
+    else:
+        item_image_url = url_for('static', filename='clothing_items/blank.png')
+        item_name = None
+        number_of_mixed_outfits = 0
+
+    return render_template('analysis.html', 
+                           total_item_value = total_item_value,
+                           outfits_created_value=outfits_created_value,
+                           item_image_url=item_image_url,
+                           item_name=item_name,
+                           number_of_mixed_outfits=number_of_mixed_outfits
+                           )
+
+
+# Analysis graph 
+@app.route('/analysis/data')
+@login_required
+def get_analysis_data():
+    user_id = current_user.id
+
+    items = ClothingItem.query.filter_by(user_id=user_id).all()
+
+    category_counts = Counter(item.type for item in items if item.type)
+    season_counts = Counter(item.season for item in items if item.season)
+    color_counts = Counter(item.color for item in items if item.color)
+
+    # Limit display for 6 most common categories
+    most_common_categories = dict(category_counts.most_common(6))
+    # Limit display for 6 most used color only
+    most_common_colors = dict(color_counts.most_common(6))
+
+    return jsonify({
+        'category_counts': most_common_categories,
+        'season_counts': dict(season_counts),
+        'color_counts': most_common_colors
+    })
 
 @app.route('/social')
 @login_required
