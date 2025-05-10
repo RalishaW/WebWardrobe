@@ -10,3 +10,6 @@ static/uploads
 app/static/image/clothing_items
 app/static/image/outfits
 app/static/profile_picture
+
+migrations/__pycache__
+migrations/versions/__pycache__

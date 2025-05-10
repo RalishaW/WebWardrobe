@@ -2,7 +2,7 @@ from app import app
 from flask import render_template, redirect, url_for, request, flash, session
 from flask_login import login_required, login_user, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
-from app.models import db, User, ClothingItem, Outfit
+from app.models import db, User, ClothingItem, Outfit, SharedOutfit
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from app.forms import LoginForm, SignupForm, RequestResetPasswordForm, ResetPasswordForm
@@ -327,6 +327,8 @@ def preview_outfit():
 def save_outfit():
     outfit_name = request.form.get('outfit_name')
     privacy = request.form.get('privacy')
+    occasion = request.form.get('occasion')
+    season = request.form.get('season')
 
     if not outfit_name or not privacy:
         flash('Please enter name and privacy.', 'error')
@@ -343,8 +345,8 @@ def save_outfit():
     new_outfit = Outfit(
         outfit_name=outfit_name,
         privacy=privacy,
-        occasion='N/A',
-        season='N/A',
+        occasion=occasion,
+        season=season,
         user_id=current_user.id
     )
     db.session.add(new_outfit)
@@ -388,6 +390,27 @@ def delete_outfit(outfit_id):
     flash("Outfit deleted successfully.", "success")
     return redirect(url_for('outfits'))
 
+@app.route("/outfits/share", methods=["POST"])
+def share_outfit():
+    outfit_id = request.form.get("outfit_id")
+    username = request.form.get("username")
+    
+    receiver = User.query.filter_by(username=username).first()
+    if not receiver:
+        flash("No user with that username found.", "error")
+        return redirect(url_for("outfits"))
+
+    shared = SharedOutfit(
+        outfit_id=outfit_id,
+        sender_id=current_user.id,
+        receiver_id=receiver.id
+    )
+    db.session.add(shared)
+    db.session.commit()
+    
+    flash("Outfit shared successfully!", "success")
+    return redirect(url_for("outfits"))
+
 
 @app.route('/analysis')
 @login_required
@@ -397,7 +420,25 @@ def analysis():
 @app.route('/social')
 @login_required
 def social():
-    return render_template('social.html')
+    shared_entries = SharedOutfit.query.filter_by(receiver_id=current_user.id).all()
+    return render_template('social.html', shared_entries=shared_entries)
+
+@app.route('/social/delete/<int:shared_id>', methods=['POST'])
+@login_required
+def delete_shared_outfit(shared_id):
+    shared = SharedOutfit.query.get_or_404(shared_id)
+
+    # Make sure the current user is the receiver
+    if shared.receiver_id != current_user.id:
+        flash("Unauthorized action.", "error")
+        return redirect(url_for('social'))
+
+    db.session.delete(shared)
+    db.session.commit()
+    flash("Shared outfit removed.", "success")
+    return redirect(url_for('social'))
+
+
 
 
 # # Disable in deployment
