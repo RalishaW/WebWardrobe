@@ -59,7 +59,7 @@ from app.models import User
 def load_user(user_id):  
     user = User.query.get(int(user_id))
     if user is None:
-        abort(404)
+        app.logger.warning(f"User ID {user_id} not found in DB during session loading.")
     return user
     
 # Import routes
