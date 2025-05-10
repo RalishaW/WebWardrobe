@@ -787,6 +787,7 @@ padding: 0rem 2rem;
 display: flex;
 align-items: center;
 justify-content: space-between;
+position: relative;
 }
 
 .home-page .logo {
@@ -810,8 +811,80 @@ font-weight: 600;
 font-size: 1.2rem;
 }
 
-.home-page .nav-links a:hover {
-color: #3B6ECA;
+
+.middle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; 
+}
+
+.middle-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1A2A4A;
+  font-style: italic;
+}
+
+.nav-btn {
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 999px;
+  /* transition: background-color 0.3s ease, color 0.3s ease; */
+  display: inline-block;
+}
+
+.nav-btn.outline {
+  color: #1A2A4A;
+  background-color: transparent;
+  border: 2px solid transparent;
+}
+
+.nav-btn.outline:hover {
+  text-decoration: underline;
+  color: #4a69d9;
+}
+
+.nav-btn.filled {
+  background-color: #000; 
+  color: white !important;
+}
+
+.nav-btn.filled:hover {
+  background-color: #97adff;
+  color: rgb(3, 3, 3) !important;
+}
+
+.get-started-btn {
+  display: inline-block;
+  background-color: #000000;
+  color: rgb(255, 255, 255);
+  padding: 12px 28px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.get-started-btn:hover {
+  background-color: #3e3c3c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tagline {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000000;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
 }
 
 /* Hero section */
@@ -822,6 +895,8 @@ justify-content: space-between;
 padding: 3rem 5%;
 flex-wrap: wrap;
 padding-top: 5rem;
+gap: 2rem; 
+background: linear-gradient(to right,#ffffff, #fff5e2);
 }
 
 .home-page .hero-text {
@@ -847,6 +922,22 @@ max-width: 500px;
 padding-bottom: 1rem;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-text {
+  animation: fadeIn 0.9s ease forwards;
+}
+
+.home-page .hero-subtext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .home-page .cta {
   margin-top: 1rem;
   display: flex;
@@ -862,14 +953,22 @@ padding-bottom: 1rem;
 .home-page .hero-image {
 flex: 1;
 min-width: 300px;
-text-align: right;
+text-align: left;
 padding-right: 2rem;
+margin-top: -100px;
 }
 
 .home-page .hero-image img {
+width: 750px;  
 max-width: 100%;
 max-height: 700px;
 object-fit: contain;
+animation: spin 60s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Steps section */
@@ -1120,6 +1219,57 @@ font-size: 0.9em;
   font-size: 1.1rem;
   padding: 0 1rem;
 }
+
+
+.home-page header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.header-left {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.header-left .logo img {
+  display: block;
+  margin: 0 auto;
+}
+
+.middle-text {
+  margin-top: 0.3rem;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.header-right {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-btn {
+  font-size: 0.85rem;
+  padding: 6px 14px;
+}
+
+
+.home-page .steps {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.home-page .step {
+  width: 140px;
+  padding: 2rem 1rem;
+}
 }
 
 /* --------------------------------------------------
@@ -1159,6 +1309,38 @@ font-size: 0.9em;
   font-size: 1.3rem;
   padding: 0 1rem;
 }
+
+.home-page .hero {
+  flex-direction: column;
+  text-align: center;
+  padding: 3rem 1rem;
+  gap: 2rem;
+}
+
+.home-page .hero-image {
+  order: 1;
+  margin-bottom: 1rem;
+}
+
+.home-page .hero-text {
+  order: 2;
+}
+
+
+.home-page .steps {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.home-page .step {
+  flex: 1 1 250px; 
+  max-width: 280px; 
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
 }
 
 
