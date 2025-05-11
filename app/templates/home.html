@@ -3,30 +3,40 @@
 
 {% block content %}
 <div class="home-page">
-  
+
   <!-- Navigation Bar -->
-  <header>
+<header>
+  <div class="header-left">
     <div class="logo">
       <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="150">
     </div>
-    <div class="nav-links">
-      <a href="{{ url_for('signup') }}">Join</a>
-      <a href="{{ url_for('login') }}">Login</a>
+    <div class="middle">
+      <p class="middle-text">Transform your closet experience!</p>
     </div>
-  </header>
+  </div>
+
+  <div class="nav-links header-right">
+    <a href="{{ url_for('signup') }}" class="nav-btn outline">Sign up</a>
+    <a href="{{ url_for('login') }}" class="nav-btn filled">Log in</a>
+  </div>
+</header>
 
   <!-- Hero Section -->
   <section class="hero">
+    <div class="hero-image">
+      <img src="{{ url_for('static', filename='images/CD.png') }}" alt="Outfit inspiration or wardrobe layout">
+    </div>
     <div class="hero-text">
       <h1>Fashanize</h1>
-      <p class="slogan">Slogan----------------------------------------------------</p>
-      <p class="description">What the app does-----------------------------------------------------------</p>
-      <div class="cta">
-        <a href="{{ url_for('signup') }}">Create Account</a>
+
+      <div class="hero-subtext">
+        <p class="tagline">Your Online Closet</p>
+        <br>
+        <p class="description">Digitize your wardrobe, generate looks, and discover what makes your style unique.</p>
+        <div class="cta">
+          <a href="{{ url_for('signup') }}" class="get-started-btn">Get Started</a>
+        </div>
       </div>
-    </div>
-    <div class="hero-image">
-      <img src="{{ url_for('static', filename='images/Home-MockOutfit.jpg') }}" alt="Outfit inspiration or wardrobe layout">
     </div>
   </section>
 

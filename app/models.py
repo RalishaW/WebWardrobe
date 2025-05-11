@@ -2,6 +2,7 @@ from app import db
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
 from sqlalchemy import Enum
+from datetime import datetime
 
 # ----------------------
 # User Model
@@ -50,6 +51,7 @@ class Outfit(db.Model):
     __tablename__ = 'outfits'
 
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.Date, default=datetime.utcnow)
     outfit_name = db.Column(db.String(100), nullable=False)
     privacy = db.Column(Enum('public', 'private', name='privacy-enum'), nullable=False)  # 'public' or 'private'
     preview_image = db.Column(db.String(200))           # file path to generated outfit preview
@@ -71,3 +73,14 @@ class OutfitItem(db.Model):
     # Optional: Relationship backrefs (if needed later)
     outfit = db.relationship("Outfit", backref=db.backref("outfit_items", cascade="all, delete-orphan"))
     clothing_item = db.relationship("ClothingItem")
+
+class SharedOutfit(db.Model):
+    __tablename__ = 'shared_outfit'
+    id = db.Column(db.Integer, primary_key=True)
+    outfit_id = db.Column(db.Integer, db.ForeignKey('outfits.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    outfit = db.relationship('Outfit', backref='shared_entries')
+    sender = db.relationship('User', foreign_keys=[sender_id])
+    receiver = db.relationship('User', foreign_keys=[receiver_id])

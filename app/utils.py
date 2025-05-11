@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from flask import current_app, flash, redirect, url_for
 from app import db
 from rembg import remove 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 from werkzeug.security import check_password_hash
 from app.models import User
@@ -45,13 +45,23 @@ def verify_reset_token(token):
 
 # Function to make image transparent for Outfit generator
 def make_image_transparent(input_path, output_path):
-    input_image = Image.open(input_path)
-    transparent = remove(input_image)
+    try:
+        input_image = Image.open(input_path)
+        transparent = remove(input_image)
 
-    output_path = os.path.splitext(output_path)[0] + '.png'
-    transparent.save(output_path)
+        output_path = os.path.splitext(output_path)[0] + '.png'
+        transparent.save(output_path)
 
-    return output_path   # <<== This return is important
+        return output_path
+
+    except UnidentifiedImageError:
+        print(f"[ERROR] Cannot identify image file: {input_path}")
+        return input_path
+
+    except Exception as e:
+        print(f"[ERROR] Failed to process image {input_path}: {e}")
+        return input_path
+   
 
 
 # Allowed file extensions function
