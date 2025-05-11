@@ -444,7 +444,7 @@ def analysis():
         item_name = most_used_item.item_name
         number_of_mixed_outfits = usage_count
     else:
-        item_image_url = url_for('static', filename='clothing_items/blank.png')
+        item_image_url = url_for('static', filename='logo.png')
         item_name = None
         number_of_mixed_outfits = 0
 
