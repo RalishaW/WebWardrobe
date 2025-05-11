@@ -2,6 +2,7 @@ from app import db
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
 from sqlalchemy import Enum
+from datetime import datetime
 
 # ----------------------
 # User Model
@@ -50,6 +51,7 @@ class Outfit(db.Model):
     __tablename__ = 'outfits'
 
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.Date, default=datetime.utcnow)
     outfit_name = db.Column(db.String(100), nullable=False)
     privacy = db.Column(Enum('public', 'private', name='privacy-enum'), nullable=False)  # 'public' or 'private'
     preview_image = db.Column(db.String(200))           # file path to generated outfit preview

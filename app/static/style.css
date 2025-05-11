@@ -704,72 +704,6 @@ input[type="submit"]:active {
   font-size: 20px;
 }
 
-.analysis {
-  padding: 2rem;
-}
-
-.analysis h1 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.analysis-card {
-  background-color: #dde7fb;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-}
-
-.analysis-card h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-
-.analysis-card .value {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.analysis-card .subtitle {
-  font-size: 1rem;
-  color: #555;
-}
-
-.section-title {
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.most-used-item-block {
-  background-color: #dde7fb;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-}
-
-.most-used-item-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  background-color: #ccc; /* fallback if no image */
-  border-radius: 8px;
-}
-
-.most-used-item-info h3 {
-  margin: 0;
-}
-
-.graph-style-analysis {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  justify-items: center;
-}
 
 /* --------------------------------------------------
  Home Page Specific Styles
@@ -1379,4 +1313,115 @@ font-size: 0.9em;
   float: right;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+
+/* --------------------------------------------------
+ Analysis.html
+-------------------------------------------------- */
+.analysis {
+  padding: 2rem;
+}
+
+.analysis h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.analysis-card {
+  background-color: #dde7fb;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.analysis-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.analysis .head {
+  text-align: left;
+  margin: 0;
+}
+
+.analysis-card .value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.analysis-card .subtitle {
+  font-size: 1rem;
+  color: #555;
+}
+
+.section-title {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.most-used-item-block {
+  background-color: #dde7fb;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.most-used-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  background-color: #ccc; /* fallback if no image */
+  border-radius: 8px;
+}
+
+.most-used-item-info h3 {
+  margin: 0;
+}
+
+.graph-style-analysis {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  justify-items: center;
+}
+
+canvas {
+  background-color: #ffffff92;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 60px;
+}
+/* Specific styling for canvas inside .graph-style-analysis */
+.graph-style-analysis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 20px;              
+  width: 100%;             
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#category-chart, #season-chart {
+  max-width: 45%;              /* Ensure the graphs on the left and right take up 45% width */
+  height: auto;                /* Allow the height to adjust based on the width */
+  aspect-ratio: 1;             /* Keep the original ratio of the graphs */
+  margin: 0 auto;   
+}
+
+#color-chart {
+  width: 100%;                 /* Make the color chart take up the full width */
+  height: 200px;               /* Set a fixed height for the color chart */
+  max-width: 90%;              /* Prevent the color chart from becoming too large */
+  margin-top: 20px;            /* Add space above the color chart */
+  margin-left: auto;           /* Center the color chart */
+  margin-right: auto;          /* Center the color chart */
+  aspect-ratio: 1.5;  
 }

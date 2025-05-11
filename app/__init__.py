@@ -15,9 +15,9 @@ mail = Mail()
 class Config:
     SECRET_KEY = 'SECRET_KEY'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_PROFILE_PICTURE = 'app/static/images/profile_picture'
-    UPLOAD_CLOTHING_ITEM = 'app/static/images/clothing_items'
-    MAKE_OUTFIT = 'app/static/images/outfits'
+    UPLOAD_PROFILE_PICTURE = 'app/static/profile_picture'
+    UPLOAD_CLOTHING_ITEM = 'app/static/clothing_items'
+    MAKE_OUTFIT = 'app/static/outfits'
 
     # Mail server
     MAIL_SERVER = "smtp.gmail.com"
@@ -59,7 +59,7 @@ from app.models import User
 def load_user(user_id):  
     user = User.query.get(int(user_id))
     if user is None:
-        abort(404)
+        app.logger.warning(f"User ID {user_id} not found in DB during session loading.")
     return user
     
 # Import routes
