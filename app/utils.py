@@ -3,6 +3,8 @@ from flask_login import login_user
 import jwt
 from datetime import datetime, timedelta 
 from flask import current_app, flash, redirect, url_for
+from flask_mail import Message
+from app import mail
 from app import db
 from rembg import remove 
 from PIL import Image, UnidentifiedImageError
@@ -89,3 +91,33 @@ def try_to_login(email, password, remember):
         return True
     else:
         return False
+    
+# Notification module functions
+def send_notification_welcome(email):
+    # send welcome email
+    msg = Message(
+        "Welcome to Fashanise!",
+        sender="noreply@fashanise.com",
+        recipients=[email]
+    )
+    msg.body = "Start your own journey here."
+    try:
+        mail.send(msg)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send email to {email}: {e}")
+
+def send_notification_shared_outfit(current_email, receiver_email):
+    msg = Message('An outfit has been shared to you', sender="noreply@fashanise.com", recipients=[receiver_email])
+    msg.body = f"{current_email} sent you an outfit that you would want to see. Congratulations!"
+    try:
+        mail.send(msg)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send email to {receiver_email}: {e}")
+
+def send_notification_delete(email):
+    msg = Message("Deleted account", sender="noreply@fashanise.com", recipients=[email])
+    msg.body = f"We are sorry that you deleted your account. Hope to see you again soon!"
+    try:
+        mail.send(msg)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send email to {email}: {e}")

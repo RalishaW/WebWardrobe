@@ -8,7 +8,9 @@ from .forms import (LoginForm, SignupForm,
                     RequestResetPasswordForm, ResetPasswordForm)
 from .utils import (
     allowed_file, size_limit, make_image_transparent,
-    generate_reset_token, verify_reset_token, try_to_login
+    generate_reset_token, verify_reset_token, try_to_login,
+    send_notification_welcome, send_notification_shared_outfit,
+    send_notification_delete,
 )
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -57,6 +59,9 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             flash('Registration successful! Please login.', 'success')
+
+            send_notification_welcome(new_user.email)
+
             return redirect(url_for('main.login'))
 
         except IntegrityError as e:
@@ -79,11 +84,37 @@ def login():
             flash("Login unsuccesful. Please check your username or password.", 'error')
     return render_template("login.html", form=form)
 
+# Logout
 @main.route("/logout")
 @login_required
 def logout():
     logout_user()
     flash('Logged out successfully.', 'info')
+    return redirect(url_for('main.home'))
+
+@main.route('/profile/delete-account')
+@login_required
+def delete_account():
+    user_email = current_user.email
+
+    try:
+        db.session.delete(current_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting user {user_email}: {e}")
+        flash("Could not delete your account. Please try again", 'error')
+        return redirect(url_for('main.wardrobe'))
+
+    logout_user()
+
+    # Send notification of deleting
+    try:
+        send_notification_delete(user_email)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
+
+    flash("Your account has been deleted. We’re sorry to see you go!", "info")
     return redirect(url_for('main.home'))
 
 # Core Pages
@@ -401,6 +432,7 @@ def delete_outfit(outfit_id):
     flash("Outfit deleted successfully.", "success")
     return redirect(url_for('main.outfits'))
 
+# Share outfit with a person using username
 @main.route("/outfits/share", methods=["POST"])
 @login_required
 def share_outfit():
@@ -419,7 +451,12 @@ def share_outfit():
     )
     db.session.add(shared)
     db.session.commit()
-    
+
+    try:
+        send_notification_shared_outfit(current_user.email, receiver.email)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send Share Outﬁt email to {receiver.email}: {e}")
+        
     flash("Outfit shared successfully!", "success")
     return redirect(url_for("main.outfits"))
 
