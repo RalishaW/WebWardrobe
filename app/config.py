@@ -34,3 +34,8 @@ class TestingConfig(Config):
     WTF_CSRF_ENABLED = False
     # in-memory DB for tests
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+
+    @staticmethod
+    def init_app(app):
+        # skip the folder-creation & default-db logic from the base Config
+        pass
