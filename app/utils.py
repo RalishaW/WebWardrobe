@@ -86,7 +86,6 @@ def try_to_login(email, password, remember):
 
     if user and check_password_hash(user.password, password):
         login_user(user, remember)
-        flash('Login successfully!', 'success')
         return True
     else:
         return False
