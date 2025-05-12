@@ -1,67 +1,37 @@
-from flask import Flask, abort
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
-import os
 
-# Initialize extensions 
+from .config import Config
+
+# Extension instances
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 mail = Mail()
 
-# Configs
-class Config:
-    SECRET_KEY = 'SECRET_KEY'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_PROFILE_PICTURE = 'app/static/profile_picture'
-    UPLOAD_CLOTHING_ITEM = 'app/static/clothing_items'
-    MAKE_OUTFIT = 'app/static/outfits'
+def create_app(config_object=Config):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(config_object)
+    config_object.init_app(app)
 
-    # Mail server
-    MAIL_SERVER = "smtp.gmail.com"
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = 'fashanize@gmail.com'
-    MAIL_PASSWORD = 'gikg xlif fdce qsmq'
-    
-    @staticmethod
-    def init_app(app):
-        os.makedirs(app.instance_path, exist_ok=True)
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'fashanise.db')
-        for folder in [
-            Config.UPLOAD_PROFILE_PICTURE,
-            Config.UPLOAD_CLOTHING_ITEM,
-            Config.MAKE_OUTFIT
-        ]: 
-            os.makedirs(folder, exist_ok=True)
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+    login_manager.login_view = 'main.login'
+    mail.init_app(app)
 
-# Initialize Flask App
-app = Flask(__name__)
-app.config.from_object(Config)
-Config.init_app(app)
+    # User loader for Flask-Login
+    from app.models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
+    # Register blueprint
+    from app.blueprints import main as main_bp
+    app.register_blueprint(main_bp)
 
-# Initialize binded app extensions 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-mail = Mail(app)
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-
-# Import models 
-from app.models import User
-
-# Load users for flask_login
-@login_manager.user_loader
-def load_user(user_id):  
-    user = User.query.get(int(user_id))
-    if user is None:
-        app.logger.warning(f"User ID {user_id} not found in DB during session loading.")
-    return user
-    
-# Import routes
-from app import routes
-
+    return app

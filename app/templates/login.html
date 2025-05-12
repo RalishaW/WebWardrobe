@@ -4,7 +4,7 @@
 <div class="container login-page">
   <div class="split left">
     <div class="centered">
-      <a href="{{ url_for('home') }}">
+      <a href="{{ url_for('main.home') }}">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
       </a>
       
@@ -42,12 +42,12 @@
     <div class="centered2">
       <div class="sign_up">
         <div class="tabs">
-          <a href="{{ url_for('signup') }}">Sign-Up</a>
-          <a href="{{ url_for('login') }}" class="selected">Log-In</a>
+          <a href="{{ url_for('main.signup') }}">Sign-Up</a>
+          <a href="{{ url_for('main.login') }}" class="selected">Log-In</a>
         </div>
 
         <div class="form_container">
-          <form method="POST" action="{{ url_for('login') }}">
+          <form method="POST" action="{{ url_for('main.login') }}">
             {{ form.hidden_tag() }}
             <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
             {{ form.email(size=32, class='form-control') }}
@@ -60,7 +60,7 @@
                 {{ form.remember() }}
                 <label for="remember">Remember Me</label>
               </div>
-              <a href="{{ url_for('request_reset_password') }}" class="Forgot">Forgot Password?</a>
+              <a href="{{ url_for('main.request_reset_password') }}" class="Forgot">Forgot Password?</a>
             </div>
 
             <div class="button_final">
@@ -68,7 +68,7 @@
               
               <p class="no_account">
                 <br>
-                Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a>
+                Don't have an account? <a href="{{ url_for('main.signup') }}">Sign Up</a>
               </p>
             </div>
           </form>

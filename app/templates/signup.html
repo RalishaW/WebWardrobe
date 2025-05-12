@@ -5,7 +5,7 @@
 <div class="container signup-page">
   <div class="split left">
     <div class="centered">
-      <a href="{{ url_for('home') }}">
+      <a href="{{ url_for('main.home') }}">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
       </a>
       
@@ -57,11 +57,11 @@
       <div class="sign_up">
 
         <div class="tabs">
-          <a href="{{ url_for('signup') }}" class="selected">Sign-Up</a>
-          <a href="{{ url_for('login') }}">Log-In</a>
+          <a href="{{ url_for('main.signup') }}" class="selected">Sign-Up</a>
+          <a href="{{ url_for('main.login') }}">Log-In</a>
         </div>
 
-        <form method="POST" action="{{url_for('signup')}}">
+        <form method="POST" action="{{url_for('main.signup')}}">
           {{ form.hidden_tag() }}
           <lable for="username"><i class="fa-solid fa-user"></i> Username: </lable>
           {{ form.username(class='form-control', id='username') }}
