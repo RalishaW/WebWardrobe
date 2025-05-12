@@ -15,8 +15,11 @@ from werkzeug.utils import secure_filename
 from flask_mail import Message
 from PIL import Image
 from collections import Counter
+
 from app import mail
 from app.blueprints import main
+from pathlib import Path
+
 
 # Introductory / Landing Page
 @main.route("/")
@@ -24,6 +27,7 @@ def home():
     if current_user.is_authenticated:
         return redirect(url_for('main.wardrobe'))
     return render_template("home.html")
+
 
 # Sign Up
 @main.route("/signup", methods=["GET", "POST"])
@@ -115,10 +119,23 @@ def add_clothing_item():
 
         image.save(filepath)
 
+        # Validate image
+        try:
+            Image.open(filepath).verify()
+        except Exception:
+            os.remove(filepath)
+            flash('Uploaded file is not a valid image.', 'error')
+            return redirect(url_for('wardrobe'))
+
+        
         new_filepath = make_image_transparent(filepath, filepath)
 
         # Get only the path relative to static/
-        relative_path = os.path.relpath(new_filepath, os.path.join(current_app.root_path, 'static'))
+        try:
+            relative_path = str(Path(new_filepath).relative_to(Path(current_app.root_path) / 'static'))
+        except ValueError:
+            relative_path = "clothing_items/" + filename
+
 
         new_item = ClothingItem(
             user_id=current_user.id,
@@ -132,8 +149,8 @@ def add_clothing_item():
 
         db.session.add(new_item)
         db.session.commit()
-
         flash('Item added successfully!', 'success')
+        
     else:
         flash('Invalid file type or file size exceeds limit.', 'error')
 
