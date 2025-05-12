@@ -114,7 +114,7 @@ def delete_account():
     except Exception as e:
         current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
 
-    flash("Your account has been deleted. We’re sorry to see you go!", "info")
+    flash("Your account has been deleted. We are sorry to see you go!", "info")
     return redirect(url_for('main.home'))
 
 # Core Pages
@@ -199,7 +199,7 @@ def delete_clothing_item(item_id):
         return redirect(url_for('wardrobe'))
 
     # Delete image from uploads
-    file_path = os.path.join(app.root_path, 'static', item.image_path)
+    file_path = os.path.join(current_app.root_path, 'static', item.image_path)
     if os.path.exists(file_path):
         os.remove(file_path)
 
