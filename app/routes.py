@@ -16,6 +16,7 @@ import os
 import random
 from PIL import Image
 from collections import Counter
+from pathlib import Path
 
 # Introductory / Landing Page
 @app.route("/")
@@ -130,10 +131,22 @@ def add_clothing_item():
 
         image.save(filepath)
 
+        # Validate image
+        try:
+            Image.open(filepath).verify()
+        except Exception:
+            os.remove(filepath)
+            flash('Uploaded file is not a valid image.', 'error')
+            return redirect(url_for('wardrobe'))
+
+        
         new_filepath = make_image_transparent(filepath, filepath)
 
         # Get only the path relative to static/
-        relative_path = os.path.relpath(new_filepath, os.path.join(app.root_path, 'static'))
+        try:
+            relative_path = str(Path(new_filepath).relative_to(Path(app.root_path) / 'static'))
+        except ValueError:
+            relative_path = "clothing_items/" + filename
 
         new_item = ClothingItem(
             user_id=current_user.id,
@@ -147,8 +160,8 @@ def add_clothing_item():
 
         db.session.add(new_item)
         db.session.commit()
-
         flash('Item added successfully!', 'success')
+        
     else:
         flash('Invalid file type or file size exceeds limit.', 'error')
 
