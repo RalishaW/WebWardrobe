@@ -6,27 +6,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="{{ url_for('static', filename='main.js') }}"></script>
+  <script src="{{ url_for('static', filename='main.js') }}" defer></script>
 </head>
 <body>
-  <!-- Warning block -->
+  <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <ul class="flashes">
-          {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-  {% block header %}{% endblock %}
+      <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Optional header block -->
+  {% block header %}
+  {% endblock %}
 
   <main>
     {% block content %}
-    <section class="cta">
-      <a href="{{ url_for('signup') }}" class="create-account-button">Create Account</a>
-    </section>
+      <!-- Default content block -->
+      <section class="cta">
+        <a href="{{ url_for('signup') }}" class="create-account-button">Create Account</a>
+      </section>
     {% endblock %}
+  </main>
 
 </body>
 </html>

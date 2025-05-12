@@ -22,16 +22,16 @@
         <nav>
             <div class="navbar-container">
                 <div class="logo">
-                    <a href="{{ url_for('home') }}">
+                    <a href="{{ url_for('main.home') }}">
                         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
                     </a>
                     
                 </div>
                 <ul class="nav-links">
-                    <li><a href="{{ url_for('wardrobe') }}">MyWardrobe</a></li>
-                    <li><a href="{{ url_for('outfits') }}">MyOutfits</a></li>
-                    <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
-                    <li><a href="{{ url_for('social') }}">Social</a></li>
+                    <li><a href="{{ url_for('main.wardrobe') }}">MyWardrobe</a></li>
+                    <li><a href="{{ url_for('main.outfits') }}">MyOutfits</a></li>
+                    <li><a href="{{ url_for('main.analysis') }}">Analysis</a></li>
+                    <li><a href="{{ url_for('main.social') }}">Social</a></li>
                 </ul>
             </div>
         </nav>

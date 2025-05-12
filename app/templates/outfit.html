@@ -10,7 +10,7 @@
 
 <!-- Create Outfit Form -->
 <div id="create-outfit-form" class="create-outfit-form" style="display: none;">
-    <form method="POST" action="{{ url_for('preview_outfit') }}">
+    <form method="POST" action="{{ url_for('main.preview_outfit') }}">
         <label>Occasion:</label>
         <select name="occasion" required>
             <option value="">Select</option>
@@ -46,7 +46,7 @@
     <h3>Outfit Preview</h3>
     <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
 
-    <form method="POST" action="{{ url_for('save_outfit') }}" class="outfit-form">
+    <form method="POST" action="{{ url_for('main.save_outfit') }}" class="outfit-form">
         <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
         <input type="hidden" name="season" value="{{ request.form.get('season') }}">
 
@@ -86,7 +86,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeShareModal()">&times;</span>
         <h3>Share Outfit</h3>
-        <form method="POST" action="{{ url_for('share_outfit') }}">
+        <form method="POST" action="{{ url_for('main.share_outfit') }}">
             <input type="hidden" name="outfit_id" id="modalOutfitId">
             <label>Username:</label>
             <input type="text" name="username" placeholder="Enter username" required>
