@@ -24,6 +24,11 @@ def home():
         return redirect(url_for('wardrobe'))
     return render_template("home.html")
 
+@app.route("/intro")
+def intro():
+    return render_template("home.html")
+
+
 # Sign Up
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
