@@ -31,6 +31,10 @@ def home():
     flash("Welcome to Fashanise!", "info")
     return render_template("home.html")
 
+@main.route("/intro")
+def intro():
+    return render_template("home.html")
+
 
 # Sign Up
 @main.route("/signup", methods=["GET", "POST"])
