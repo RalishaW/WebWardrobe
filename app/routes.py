@@ -28,6 +28,7 @@ from pathlib import Path
 def home():
     if current_user.is_authenticated:
         return redirect(url_for('main.wardrobe'))
+    flash("Welcome to Fashanise!", "info")
     return render_template("home.html")
 
 
@@ -81,7 +82,7 @@ def login():
             flash("Login successfully!", 'success')
             return redirect(url_for('main.wardrobe'))
         else:
-            flash("Login unsuccesful. Please check your username or password.", 'error')
+            flash("Login unsuccessful. Please check your username or password.", 'error')
     return render_template("login.html", form=form)
 
 # Logout
@@ -156,7 +157,7 @@ def add_clothing_item():
         except Exception:
             os.remove(filepath)
             flash('Uploaded file is not a valid image.', 'error')
-            return redirect(url_for('wardrobe'))
+            return redirect(url_for('main.wardrobe'))
 
         
         new_filepath = make_image_transparent(filepath, filepath)
@@ -536,10 +537,10 @@ def social():
 def delete_shared_outfit(shared_id):
     shared = SharedOutfit.query.get_or_404(shared_id)
 
-    # Make sure the current user is the receiver
-    if shared.receiver_id != current_user.id:
+    # Allowed both receiver and sender to delete 
+    if current_user.id not in (shared.sender_id, shared.receiver_id):
         flash("Unauthorized action.", "error")
-        return redirect(url_for('social'))
+        return redirect(url_for('main.social'))
 
     db.session.delete(shared)
     db.session.commit()

@@ -1,7 +1,7 @@
 import os
 from flask_login import login_user
 import jwt
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta, timezone
 from flask import current_app, flash, redirect, url_for
 from flask_mail import Message
 from app import mail
@@ -21,10 +21,11 @@ MAX_FILE_SIZE = 16 * 1024 * 1024
 # Encode JWT token for reset password
 #-------------------------------
 def generate_reset_token(user_id, expires_sec=1800): # expires within 30 minutes
+    now = datetime.now(timezone.utc)
     payload= {
         "user_id": user_id,
-        'exp': datetime.utcnow() + timedelta(seconds=expires_sec),
-        'iat': datetime.utcnow(),
+        'exp': now + timedelta(seconds=expires_sec),
+        'iat': now,
     }
     key = current_app.config['SECRET_KEY']
     token = jwt.encode(payload, key, algorithm='HS256')
