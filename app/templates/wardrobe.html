@@ -9,7 +9,7 @@
 
 <!-- Upload form -->
 <div id="upload-form" class="upload-form" style="display: none;">
-    <form action="{{ url_for('add_clothing_item') }}" method="post" enctype="multipart/form-data" class="upload-card">
+    <form action="{{ url_for('main.add_clothing_item') }}" method="post" enctype="multipart/form-data" class="upload-card">
         <div class="form-row">
             <div class="form-group">
                 <label>Image:</label>
@@ -109,7 +109,7 @@
         <p>{{ item.item_name }}</p>
 
         <!-- Delete Button (this should be inside the for loop!) -->
-        <form action="{{ url_for('delete_clothing_item', item_id=item.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+        <form action="{{ url_for('main.delete_clothing_item', item_id=item.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
             <button type="submit">Delete</button>
         </form>
     </div>

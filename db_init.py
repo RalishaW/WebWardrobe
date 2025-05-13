@@ -1,18 +1,22 @@
-import os
-from app import app, db, models
-
 #----------------------------------------------------------------------------------------------#
 # Script to delete previous database and making new one for testing purpose on local machine   #
 #----------------------------------------------------------------------------------------------#
 
-# Remove existing db 
-old_file = os.path.join('instance', 'fashanise.db')
+
+import os
+from app import create_app, db
+from app.config import Config
+
+# Create app with default (development) config
+app = create_app(Config)
+
+# Path to the SQLite file in the instance folder
+old_file = os.path.join(app.instance_path, 'fashanise.db')
 if os.path.exists(old_file):
-    os.remove('instance/fashanise.db')
-    print("[INFO] Deleted old db file")
+    os.remove(old_file)
+    print("[INFO] Deleted old db file at %s" % old_file)
 
-
-# Create new database
+# Recreate database tables
 with app.app_context():
     db.create_all()
     print("[INFO] Fresh database tables created")

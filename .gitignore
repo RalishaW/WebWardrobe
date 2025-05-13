@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .DS_Store
 app/.DS_Store
+app/__pycache__
 *.db
 instance/fashanise.db           # Ignore a SQLite database file
 migrations/__pycache__/

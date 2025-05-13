@@ -1,95 +1,124 @@
-from app import app
-from flask import render_template, redirect, url_for, request, flash, session
-from flask_login import login_required, login_user, current_user, logout_user
+import os, random
+from flask import current_app, render_template, redirect, url_for, request, flash, jsonify
+from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy.exc import IntegrityError
-from app.models import db, User, ClothingItem, Outfit, SharedOutfit
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import func
+from .models import db, User, ClothingItem, Outfit, SharedOutfit, OutfitItem
+from .forms import (LoginForm, SignupForm,
+                    RequestResetPasswordForm, ResetPasswordForm)
+from .utils import (
+    allowed_file, size_limit, make_image_transparent,
+    generate_reset_token, verify_reset_token, try_to_login,
+    send_notification_welcome, send_notification_shared_outfit,
+    send_notification_delete,
+)
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-from app.forms import LoginForm, SignupForm, RequestResetPasswordForm, ResetPasswordForm
-from app.utils import allowed_file, size_limit, make_image_transparent
-import os
-from app.utils import make_image_transparent, generate_reset_token, verify_reset_token
-from app import mail
 from flask_mail import Message
-import os
-import random
 from PIL import Image
+from collections import Counter
+
+from app import mail
+from app.blueprints import main
+from pathlib import Path
+
 
 # Introductory / Landing Page
-@app.route("/")
+@main.route("/")
 def home():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.wardrobe'))
     return render_template("home.html")
 
+
 # Sign Up
-@app.route("/signup", methods=["GET", "POST"])
+@main.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
     if form.validate_on_submit():
-        print('Form submitted and validated.')
-        username = form.username.data
-        firstname = form.firstname.data
-        lastname = form.lastname.data
-        email = form.email.data
-        password = generate_password_hash(form.password.data, method='pbkdf2:sha256')   
-
-        existing_username = User.query.filter_by(username=username).first()
-        existing_email = User.query.filter_by(email=email).first()
-
-        if existing_email and existing_username:
-            flash('Both email and username are already taken. Please use different ones.', 'error')
-            return render_template('signup.html', form=form)
-        elif existing_email:
-            flash('Email already exists. Please use another email.', 'error')
-            return render_template('signup.html', form=form)
-        elif existing_username:
-            flash('Username already taken. Please choose another one.', 'error')
-            return render_template('signup.html', form=form)
-        
-        new_user = User(
-            username = username,
-            firstname = firstname,
-            lastname = lastname,
-            email = email,
-            password = password,
-        )
-
         try:
+            existing_user = User.query.filter(
+                (User.username==form.username.data) | 
+                (User.email==form.email.data) 
+            ).first()
+
+            if existing_user:
+                if existing_user.username == form.username.data:
+                    flash('Username already taken. Please choose another one.', 'error')
+                elif existing_user.email == form.email.data:
+                    flash('Email already exists. Please use another email.', 'error')
+                return redirect(url_for('main.signup'))
+        
+            new_user = User(
+                username=form.username.data,
+                firstname=form.firstname.data,
+                lastname=form.lastname.data,
+                email=form.email.data,
+                password=generate_password_hash(form.password.data, method='pbkdf2:sha256')
+            )
             db.session.add(new_user)
             db.session.commit()
-            flash('Registration Successful! Please Login.', 'success')
-            return redirect(url_for('login'))
-        except IntegrityError:
+            flash('Registration successful! Please login.', 'success')
+
+            send_notification_welcome(new_user.email)
+
+            return redirect(url_for('main.login'))
+
+        except IntegrityError as e:
             db.session.rollback()
-            flash('Email or Username already existed. Please use another one!', 'error')
+            flash('Something went wrong. Please try again.', 'error')
 
     return render_template('signup.html', form=form)
 
 
 # Log In
-@app.route("/login", methods=["GET", "POST"])
+@main.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            flash('Login successfully!', 'success')
-            return redirect(url_for('wardrobe'))
+        success = try_to_login(form.email.data, form.password.data, form.remember.data)
+        if success:
+            flash("Login successfully!", 'success')
+            return redirect(url_for('main.wardrobe'))
         else:
-            flash('Login Unsuccessful. Please check username and password.', 'error')
-    
+            flash("Login unsuccesful. Please check your username or password.", 'error')
     return render_template("login.html", form=form)
 
-@app.route("/logout")
+# Logout
+@main.route("/logout")
 @login_required
 def logout():
     logout_user()
     flash('Logged out successfully.', 'info')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
+
+@main.route('/profile/delete-account')
+@login_required
+def delete_account():
+    user_email = current_user.email
+
+    try:
+        db.session.delete(current_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting user {user_email}: {e}")
+        flash("Could not delete your account. Please try again", 'error')
+        return redirect(url_for('main.wardrobe'))
+
+    logout_user()
+
+    # Send notification of deleting
+    try:
+        send_notification_delete(user_email)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
+
+    flash("Your account has been deleted. We are sorry to see you go!", "info")
+    return redirect(url_for('main.home'))
 
 # Core Pages
-@app.route('/wardrobe')
+@main.route('/wardrobe')
 @login_required
 def wardrobe():
     user = current_user
@@ -97,7 +126,7 @@ def wardrobe():
     return render_template('wardrobe.html', wardrobe_items=wardrobe_items)
 
 # Add Clothing Item
-@app.route('/wardrobe/add', methods=["POST"])
+@main.route('/wardrobe/add', methods=["POST"])
 @login_required
 def add_clothing_item():
 
@@ -114,17 +143,30 @@ def add_clothing_item():
     if image and allowed_file(image.filename) and size_limit(image):
         filename = f"{user_id}_{secure_filename(image.filename)}"
 
-        upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+        upload_folder = os.path.join(current_app.root_path, 'static', current_app.config['UPLOAD_CLOTHING_ITEM'])
         os.makedirs(upload_folder, exist_ok=True)
 
         filepath = os.path.join(upload_folder, filename)
 
         image.save(filepath)
 
+        # Validate image
+        try:
+            Image.open(filepath).verify()
+        except Exception:
+            os.remove(filepath)
+            flash('Uploaded file is not a valid image.', 'error')
+            return redirect(url_for('wardrobe'))
+
+        
         new_filepath = make_image_transparent(filepath, filepath)
 
         # Get only the path relative to static/
-        relative_path = os.path.relpath(new_filepath, os.path.join(app.root_path, 'static'))
+        try:
+            relative_path = str(Path(new_filepath).relative_to(Path(current_app.root_path) / 'static'))
+        except ValueError:
+            relative_path = "clothing_items/" + filename
+
 
         new_item = ClothingItem(
             user_id=current_user.id,
@@ -138,15 +180,15 @@ def add_clothing_item():
 
         db.session.add(new_item)
         db.session.commit()
-
         flash('Item added successfully!', 'success')
+        
     else:
         flash('Invalid file type or file size exceeds limit.', 'error')
 
-    return redirect(url_for('wardrobe'))
+    return redirect(url_for('main.wardrobe'))
 
 # Delete Clothing Item
-@app.route('/wardrobe/delete/<int:item_id>', methods=["POST"])
+@main.route('/wardrobe/delete/<int:item_id>', methods=["POST"])
 @login_required
 def delete_clothing_item(item_id):
     item = ClothingItem.query.get_or_404(item_id)
@@ -157,7 +199,7 @@ def delete_clothing_item(item_id):
         return redirect(url_for('wardrobe'))
 
     # Delete image from uploads
-    file_path = os.path.join(app.root_path, 'static', item.image_path)
+    file_path = os.path.join(current_app.root_path, 'static', item.image_path)
     if os.path.exists(file_path):
         os.remove(file_path)
 
@@ -166,10 +208,10 @@ def delete_clothing_item(item_id):
     db.session.commit()
 
     flash("Item deleted successfully.", "success")
-    return redirect(url_for('wardrobe'))
+    return redirect(url_for('main.wardrobe'))
 
 # Request Reset Password function
-@app.route('/request_reset_password', methods=['GET','POST'])
+@main.route('/request_reset_password', methods=['GET','POST'])
 def request_reset_password():
     request_form = RequestResetPasswordForm()
 
@@ -181,7 +223,7 @@ def request_reset_password():
             token = generate_reset_token(user.id)
 
             # Reset_password url
-            reset_password_url = url_for('reset_password', token=token, _external=True)
+            reset_password_url = url_for('main.reset_password', token=token, _external=True)
 
             # Send mail to the requested user
             msg = Message("Request Reset Password", sender='noreply@fashanise.com', recipients=[user.email])
@@ -192,7 +234,7 @@ def request_reset_password():
     return render_template('request_reset_password.html', form=request_form)
 
 # Reset password using JWT Token
-@app.route('/reset_password/token=<token>', methods=['GET', 'POST'])
+@main.route('/reset_password/token=<token>', methods=['GET', 'POST'])
 def reset_password(token):
     form = ResetPasswordForm()
 
@@ -201,7 +243,7 @@ def reset_password(token):
     if not user_id:
         flash('Invalid or expired token. Please try again.', 'error')
         # Return them back to request page
-        return redirect(url_for('request_reset_password'))
+        return redirect(url_for('main.request_reset_password'))
     
     user = User.query.filter_by(id=user_id).first()
 
@@ -213,7 +255,7 @@ def reset_password(token):
         # Update password for user on database
         db.session.commit()
         flash('Successfully changed your password. Please login again.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     
     if form.errors:
         print("Form errors", form.errors)
@@ -222,7 +264,7 @@ def reset_password(token):
 
 
 
-@app.route("/outfits", methods=["GET"])
+@main.route("/outfits", methods=["GET"])
 @login_required
 def outfits():
     user_id = current_user.id
@@ -230,7 +272,7 @@ def outfits():
     return render_template("outfit.html", outfits=user_outfits)
 
 
-@app.route('/preview_outfit', methods=['POST'])
+@main.route('/preview_outfit', methods=['POST'])
 @login_required
 def preview_outfit():
     occasion = request.form.get('occasion')
@@ -299,7 +341,7 @@ def preview_outfit():
     # Generate outfit preview image
     images = []
     for item in selected_items:
-        img_path = os.path.join(app.root_path, 'static', item.image_path)
+        img_path = os.path.join(current_app.root_path, 'static', item.image_path)
         img = Image.open(img_path).convert('RGBA')
 
         # Resize to smaller thumbnail size for preview
@@ -316,13 +358,13 @@ def preview_outfit():
         y_offset += img.height + 10
 
     preview_filename = f"preview_{current_user.id}.png"
-    preview_path = os.path.join(app.root_path, 'static', 'outfits', preview_filename)
+    preview_path = os.path.join(current_app.root_path, 'static', 'outfits', preview_filename)
     preview_img.save(preview_path)
 
     return render_template('outfit.html', preview_image=f"outfits/{preview_filename}", preview_items=selected_items, outfits=Outfit.query.filter_by(user_id=current_user.id).all())
 
 
-@app.route('/save_outfit', methods=['POST'])
+@main.route('/save_outfit', methods=['POST'])
 @login_required
 def save_outfit():
     outfit_name = request.form.get('outfit_name')
@@ -335,11 +377,11 @@ def save_outfit():
         return redirect(url_for('outfits'))
 
     preview_filename = f"preview_{current_user.id}.png"
-    preview_path = os.path.join(app.root_path, 'static', 'outfits', preview_filename)
+    preview_path = os.path.join(current_app.root_path, 'static', 'outfits', preview_filename)
 
     if not os.path.exists(preview_path):
         flash('No preview available to save.', 'error')
-        return redirect(url_for('outfits'))
+        return redirect(url_for('main.outfits'))
 
     # Save Outfit record
     new_outfit = Outfit(
@@ -354,7 +396,7 @@ def save_outfit():
 
     # Save preview permanently
     final_filename = f"{new_outfit.id}_outfit.png"
-    final_path = os.path.join(app.root_path, 'static', 'outfits', final_filename)
+    final_path = os.path.join(current_app.root_path, 'static', 'outfits', final_filename)
 
     os.rename(preview_path, final_path)
 
@@ -365,9 +407,9 @@ def save_outfit():
         os.remove(preview_path)
 
     flash("Outfit saved!", "success")
-    return redirect(url_for('outfits'))
+    return redirect(url_for('main.outfits'))
 
-@app.route('/outfits/delete/<int:outfit_id>', methods=["POST"])
+@main.route('/outfits/delete/<int:outfit_id>', methods=["POST"])
 @login_required
 def delete_outfit(outfit_id):
     outfit = Outfit.query.get_or_404(outfit_id)
@@ -375,11 +417,11 @@ def delete_outfit(outfit_id):
     # Check if outfit belongs to user
     if outfit.user_id != current_user.id:
         flash("You are not authorized to delete this outfit.", "error")
-        return redirect(url_for('outfits'))
+        return redirect(url_for('main.outfits'))
 
     # Delete preview image
     if outfit.preview_image:
-        file_path = os.path.join(app.root_path, 'static', outfit.preview_image)
+        file_path = os.path.join(current_app.root_path, 'static', outfit.preview_image)
         if os.path.exists(file_path):
             os.remove(file_path)
 
@@ -388,9 +430,11 @@ def delete_outfit(outfit_id):
     db.session.commit()
 
     flash("Outfit deleted successfully.", "success")
-    return redirect(url_for('outfits'))
+    return redirect(url_for('main.outfits'))
 
-@app.route("/outfits/share", methods=["POST"])
+# Share outfit with a person using username
+@main.route("/outfits/share", methods=["POST"])
+@login_required
 def share_outfit():
     outfit_id = request.form.get("outfit_id")
     username = request.form.get("username")
@@ -398,7 +442,7 @@ def share_outfit():
     receiver = User.query.filter_by(username=username).first()
     if not receiver:
         flash("No user with that username found.", "error")
-        return redirect(url_for("outfits"))
+        return redirect(url_for("main.outfits"))
 
     shared = SharedOutfit(
         outfit_id=outfit_id,
@@ -407,23 +451,87 @@ def share_outfit():
     )
     db.session.add(shared)
     db.session.commit()
-    
+
+    try:
+        send_notification_shared_outfit(current_user.email, receiver.email)
+    except Exception as e:
+        current_app.logger.error(f"Failed to send Share Outﬁt email to {receiver.email}: {e}")
+        
     flash("Outfit shared successfully!", "success")
-    return redirect(url_for("outfits"))
+    return redirect(url_for("main.outfits"))
 
 
-@app.route('/analysis')
+@main.route('/analysis')
 @login_required
 def analysis():
-    return render_template('analysis.html')
+    user_id = current_user.id
 
-@app.route('/social')
+    total_item_value = ClothingItem.query.filter_by(user_id=user_id).count()
+    outfits_created_value = Outfit.query.filter_by(user_id=user_id).count()
+
+    # Most used item in outfits combination
+    most_used_data = (
+        # Getting ClothingItem and the times that the item appeared
+        db.session.query(ClothingItem, func.count().label('usage_count'))
+        # Link the ClothingItem with the outfit they appeared in
+        .join(OutfitItem, ClothingItem.id == OutfitItem.clothing_item_id)
+        # Only choose the ClothingItem of the current user
+        .filter(ClothingItem.user_id == user_id)
+        # Sort the items by the number of appearances
+        .order_by(func.count().desc())
+        # Get the first result
+        .first()
+    )
+
+    if most_used_data is not None and most_used_data[0] is not None:
+        most_used_item, usage_count = most_used_data
+        item_image_url = url_for('static', filename=most_used_item.image_path)
+        item_name = most_used_item.item_name
+        number_of_mixed_outfits = usage_count
+    else:
+        item_image_url = url_for('static', filename='images/logo.png')
+        item_name = None
+        number_of_mixed_outfits = 0
+
+    return render_template('analysis.html', 
+                           total_item_value = total_item_value,
+                           outfits_created_value=outfits_created_value,
+                           item_image_url=item_image_url,
+                           item_name=item_name,
+                           number_of_mixed_outfits=number_of_mixed_outfits
+                           )
+
+
+# Analysis graph 
+@main.route('/analysis/data')
+@login_required
+def get_analysis_data():
+    user_id = current_user.id
+
+    items = ClothingItem.query.filter_by(user_id=user_id).all()
+
+    category_counts = Counter(item.type for item in items if item.type)
+    season_counts = Counter(item.season for item in items if item.season)
+    color_counts = Counter(item.color for item in items if item.color)
+
+    # Limit display for 6 most common categories
+    most_common_categories = dict(category_counts.most_common(6))
+    # Limit display for 6 most used color only
+    most_common_colors = dict(color_counts.most_common(6))
+
+    return jsonify({
+        'category_counts': most_common_categories,
+        'season_counts': dict(season_counts),
+        'color_counts': most_common_colors
+    })
+
+@main.route('/social')
 @login_required
 def social():
     shared_entries = SharedOutfit.query.filter_by(receiver_id=current_user.id).all()
     return render_template('social.html', shared_entries=shared_entries)
 
-@app.route('/social/delete/<int:shared_id>', methods=['POST'])
+@main.route('/social/delete/<int:shared_id>', methods=['POST'])
 @login_required
 def delete_shared_outfit(shared_id):
     shared = SharedOutfit.query.get_or_404(shared_id)
@@ -436,7 +544,7 @@ def delete_shared_outfit(shared_id):
     db.session.delete(shared)
     db.session.commit()
     flash("Shared outfit removed.", "success")
-    return redirect(url_for('social'))
+    return redirect(url_for('main.social'))
 
 
 #profile page
@@ -468,7 +576,7 @@ def upload_profile_pic():
 # # Only for testing purpose
 # # Test to send mail from fashanize@gmail.com to personal email, change accordingly
 # # Run http://127.0.0.1:5000/test-email
-# @app.route("/test-mail")
+# @main.route("/test-mail")
 # def test_mail():
 #     msg = Message(
 #         subject="Hello Fashanize",
