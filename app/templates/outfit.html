@@ -46,6 +46,17 @@
     <h3>Outfit Preview</h3>
     <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
 
+    <!--Regeneration Button-->
+
+    <form method="POST" action ="{{ url_for('main.preview_outfit') }}" >
+        <input type = "hidden" name = "occasion" value = "{{ request.form.get('occasion') }}">
+        <input type = "hidden" name = "season" value = "{{ request.form.get('season') }}">
+        <button type = "submit"> Regenerate Outfit </button>
+
+    </form>
+
+    <!--Saving Button-->
+
     <form method="POST" action="{{ url_for('main.save_outfit') }}" class="outfit-form">
         <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
         <input type="hidden" name="season" value="{{ request.form.get('season') }}">
