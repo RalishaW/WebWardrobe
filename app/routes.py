@@ -548,6 +548,31 @@ def delete_shared_outfit(shared_id):
     return redirect(url_for('main.social'))
 
 
+#profile page
+@main.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", user=current_user)
+
+#profile pic
+@main.route('/upload_profile_pic', methods=['POST'])
+@login_required
+def upload_profile_pic():
+    file = request.files['profile_pic']
+    if file and file.filename != '':
+        from werkzeug.utils import secure_filename
+
+        filename = secure_filename(f"{current_user.username}_profile.png")
+        file_path = os.path.join('profile_picture', filename)
+        upload_path = os.path.join('app', 'static', file_path)
+        file.save(upload_path)
+
+        current_user.profile_picture = file_path
+        db.session.commit()
+
+    return redirect(url_for('profile'))
+
+
 # # Disable in deployment
 # # Only for testing purpose
 # # Test to send mail from fashanize@gmail.com to personal email, change accordingly

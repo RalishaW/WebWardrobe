@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="profile-page">
+  <!-- Left Panel -->
+  <aside class="profile-sidebar">
+    <h2>Profile</h2>
+
+    <div class="profile-pic-container">
+      <form method="POST" action="/upload_profile_pic" enctype="multipart/form-data">
+        <label for="profilePicInput"
+          style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+          <img src="{{ url_for('static', filename=user.profile_picture) }}" alt="Profile Picture" class="profile-pic">
+          <h3>@{{ user.username }}</h3>
+        </label>
+        <input type="file" name="profile_pic" id="profilePicInput" accept="image/*" style="display: none;"
+          onchange="this.form.submit()">
+      </form>
+    </div>
+
+    <div class="profile-info">
+      <label for="email">Email:</label>
+      <input type="text" id="email" value="{{ user.email }}" disabled>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="text" id="dob" value="Not set" disabled>
+
+      <label for="height">Height:</label>
+      <input type="text" id="height" value="Not set" disabled>
+
+      <div class="profile-edit-buttons">
+        <button class="btn edit-info" onclick="enableProfileEditing()">Edit</button>
+        <button class="btn save-info" onclick="saveProfileInfo()" style="display: none;">Save</button>
+      </div>
+    </div>
+
+    <div class="sidebar-buttons">
+      <button class="btn logout">Log Out</button>
+      <button class="btn delete">Delete Account</button>
+    </div>
+  </aside>
+
+  <!-- Right Section -->
+  <section class="profile-main">
+
+    <div class="personalization-box">
+      <h2>Personalization</h2>
+      <p><strong>Style Tags:</strong> winter, formal etc</p>
+      <p>from analysis...</p>
+    </div>
+
+    <div class="password-box">
+      <h2>Password Management</h2>
+      <button class="btn reset" onclick="togglePasswordForm()">Change Password</button>
+
+      <div id="password-form" style="display: none; margin-top: 1rem;">
+        <div class="profile-info">
+          <label for="current-password">Current Password:</label>
+          <input type="password" id="current-password" placeholder="Current Password">
+
+          <label for="new-password">New Password:</label>
+          <input type="password" id="new-password" placeholder="New Password">
+
+          <label for="confirm-password">Confirm New Password:</label>
+          <input type="password" id="confirm-password" placeholder="Confirm New Password">
+        </div>
+
+        <button class="btn save-info" style="margin-top: 0.75rem;">Confirm</button>
+      </div>
+    </div>
+
+
+  </section>
+
+</div>
+
+
+<script>
+  function enableProfileEditing() {
+    document.getElementById('dob').disabled = false;
+    document.getElementById('height').disabled = false;
+
+    document.querySelector('.edit-info').style.display = 'none';
+    document.querySelector('.save-info').style.display = 'inline-block';
+  }
+
+  function saveProfileInfo() {
+    const dob = document.getElementById('dob').value;
+    const height = document.getElementById('height').value;
+
+    document.getElementById('dob').disabled = true;
+    document.getElementById('height').disabled = true;
+
+    document.querySelector('.edit-info').style.display = 'inline-block';
+    document.querySelector('.save-info').style.display = 'none';
+
+    alert("Changes saved! (not stored yet)");
+  }
+
+  function togglePasswordForm() {
+    const form = document.getElementById("password-form");
+    if (form) {
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+  }
+
+</script>
+
+{% endblock %}
