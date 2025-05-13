@@ -548,13 +548,13 @@ def delete_shared_outfit(shared_id):
 
 
 #profile page
-@app.route("/profile")
+@main.route("/profile")
 @login_required
 def profile():
     return render_template("profile.html", user=current_user)
 
 #profile pic
-@app.route('/upload_profile_pic', methods=['POST'])
+@main.route('/upload_profile_pic', methods=['POST'])
 @login_required
 def upload_profile_pic():
     file = request.files['profile_pic']
