@@ -63,7 +63,7 @@
 
 <!-- Outfit Preview -->
 {% if preview_image %}
-<div class="outfit-preview-container">
+<div class="outfit-preview-container" id='preview-container'>
     <h3>Outfit Preview</h3>
     <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
 
@@ -87,6 +87,8 @@
 
         <button type="submit">Save Outfit</button>
     </form>
+
+    <button onclick="hidePreview()" type="button" class="cancel-btn">Cancel</button>
 </div>
 {% endif %}
 
@@ -154,10 +156,6 @@
         });
     }
 
-
-
-
-
     function openShareModal(outfitId) {
     document.getElementById('modalOutfitId').value = outfitId;
     document.getElementById('shareModal').style.display = 'flex';
@@ -166,6 +164,10 @@
     function closeShareModal() {
         document.getElementById('shareModal').style.display = 'none';
     }
+
+    function hidePreview() {
+    document.getElementById('preview-container').style.display = 'none';
+}
 
 
 
