@@ -1,5 +1,5 @@
 import os, random
-from flask import current_app, render_template, redirect, url_for, request, flash, jsonify
+from flask import current_app, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
@@ -343,6 +343,8 @@ def preview_outfit():
     if not selected_items:
         flash('No matching items found!', 'error')
         return redirect(url_for('outfits'))
+    
+    session['selected_item_ids'] = [item.id for item in selected_items]
 
     # Generate outfit preview image
     images = []
@@ -387,6 +389,24 @@ def save_outfit():
     if not os.path.exists(preview_path):
         flash('No preview available to save.', 'error')
         return redirect(url_for('main.outfits'))
+    
+    #check for duplicate name
+    existing_name = Outfit.query.filter_by(user_id=current_user.id, outfit_name=outfit_name).first()
+    if existing_name:
+        flash('You already have an outfit with this name. Please choose a different one.', 'error')
+        return redirect(url_for('main.outfits'))
+    
+    selected_item_ids = session.get('selected_item_ids', [])
+    if not selected_item_ids:
+        flash("No selected items found. Please generate a preview again.", "error")
+        return redirect(url_for('main.outfits'))
+
+    existing_outfits = Outfit.query.filter_by(user_id=current_user.id, occasion=occasion, season=season).all()
+    for outfit in existing_outfits:
+        outfit_item_ids = [item.clothing_item_id for item in OutfitItem.query.filter_by(outfit_id=outfit.id).all()]
+        if set(outfit_item_ids) == set(selected_item_ids):
+            flash("You've already saved this exact outfit. Try generating a different one!", "error")
+            return redirect(url_for('main.outfits'))
 
     # Save Outfit record
     new_outfit = Outfit(
@@ -405,6 +425,10 @@ def save_outfit():
     os.rename(preview_path, final_path)
 
     new_outfit.preview_image = f"outfits/{final_filename}"
+    db.session.commit()
+
+    for item_id in selected_item_ids:
+        db.session.add(OutfitItem(outfit_id=new_outfit.id, clothing_item_id=item_id))
     db.session.commit()
 
     if os.path.exists(preview_path):
