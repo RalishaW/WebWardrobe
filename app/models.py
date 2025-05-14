@@ -53,7 +53,6 @@ class Outfit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     outfit_name = db.Column(db.String(100), nullable=False)
-    privacy = db.Column(Enum('public', 'private', name='privacy-enum'), nullable=False)  # 'public' or 'private'
     preview_image = db.Column(db.String(200))           # file path to generated outfit preview
     occasion = db.Column(db.String(50))
     season = db.Column(db.String(50))

@@ -16,7 +16,12 @@
             <option value="">Select</option>
             <option value="Casual">Casual</option>
             <option value="Formal">Formal</option>
+            <option value="Work">Work</option>
             <option value="Party">Party</option>
+            <option value="Gym">Gym</option>
+            <option value="Beach">Beach</option>
+            <option value="Travel">Travel</option>
+            <option value="Other">Other</option>
         </select>
 
         <label>Season:</label>
@@ -80,12 +85,6 @@
         <label>Outfit Name:</label>
         <input type="text" name="outfit_name" required>
 
-        <label>Privacy:</label>
-        <select name="privacy" required>
-            <option value="private">Private</option>
-            <option value="public">Public</option>
-        </select>
-
         <button type="submit">Save Outfit</button>
     </form>
 </div>
@@ -129,32 +128,32 @@
 
     let selectedSeason = "all";
     let selectedOccasion = "all";
-    
+
     function filterOutfits(value, filterType, event) {
         // Toggle active class
         const filterButtons = document.querySelectorAll(`.filters[data-type="${filterType}"] .filter-btn`);
         filterButtons.forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-    
+
         // Update selected filter
         if (filterType === 'season') {
             selectedSeason = value.toLowerCase();
         } else if (filterType === 'occasion') {
             selectedOccasion = value.toLowerCase();
         }
-    
+
         // Apply combined filtering
         document.querySelectorAll(".outfit-item").forEach(item => {
             const itemSeason = item.dataset.season?.toLowerCase() || '';
             const itemOccasion = item.dataset.occasion?.toLowerCase() || '';
-        
+
             const matchSeason = (selectedSeason === "all" || itemSeason === selectedSeason);
             const matchOccasion = (selectedOccasion === "all" || itemOccasion === selectedOccasion);
-        
+
             item.style.display = (matchSeason && matchOccasion) ? "" : "none";
         });
     }
-    
+
 
 
 

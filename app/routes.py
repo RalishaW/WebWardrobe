@@ -374,12 +374,11 @@ def preview_outfit():
 @login_required
 def save_outfit():
     outfit_name = request.form.get('outfit_name')
-    privacy = request.form.get('privacy')
     occasion = request.form.get('occasion')
     season = request.form.get('season')
 
-    if not outfit_name or not privacy:
-        flash('Please enter name and privacy.', 'error')
+    if not outfit_name:
+        flash('Please enter name.', 'error')
         return redirect(url_for('outfits'))
 
     preview_filename = f"preview_{current_user.id}.png"
@@ -392,7 +391,6 @@ def save_outfit():
     # Save Outfit record
     new_outfit = Outfit(
         outfit_name=outfit_name,
-        privacy=privacy,
         occasion=occasion,
         season=season,
         user_id=current_user.id
