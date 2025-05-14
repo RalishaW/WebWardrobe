@@ -16,7 +16,12 @@
             <option value="">Select</option>
             <option value="Casual">Casual</option>
             <option value="Formal">Formal</option>
+            <option value="Work">Work</option>
             <option value="Party">Party</option>
+            <option value="Gym">Gym</option>
+            <option value="Beach">Beach</option>
+            <option value="Travel">Travel</option>
+            <option value="Other">Other</option>
         </select>
 
         <label>Season:</label>
@@ -32,19 +37,46 @@
     </form>
 </div>
 
-<!-- Filter by Privacy -->
-<div class="filters" data-type="privacy">
-    <span>Filter by Privacy:</span>
-    <button class="filter-btn active" onclick="filterOutfits(event, 'all')">All</button>
-    <button class="filter-btn" onclick="filterOutfits(event, 'public')">Public</button>
-    <button class="filter-btn" onclick="filterOutfits(event, 'private')">Private</button>
+<!-- Filter by Season -->
+<div class="filters" data-type="season">
+    <span>Filter by Season:</span>
+    <button class="filter-btn active" onclick="filterOutfits('all', 'season', event)">All</button>
+    <button class="filter-btn" onclick="filterOutfits('Spring', 'season', event)">Spring</button>
+    <button class="filter-btn" onclick="filterOutfits('Summer', 'season', event)">Summer</button>
+    <button class="filter-btn" onclick="filterOutfits('Autumn', 'season', event)">Autumn</button>
+    <button class="filter-btn" onclick="filterOutfits('Winter', 'season', event)">Winter</button>
+</div>
+
+<!-- Filter by Occasion -->
+<div class="filters" data-type="occasion">
+    <span>Filter by Occasion:</span>
+    <button class="filter-btn active" onclick="filterOutfits('all', 'occasion', event)">All</button>
+    <button class="filter-btn" onclick="filterOutfits('Casual', 'occasion', event)">Casual</button>
+    <button class="filter-btn" onclick="filterOutfits('Formal', 'occasion', event)">Formal</button>
+    <button class="filter-btn" onclick="filterOutfits('Work', 'occasion', event)">Work</button>
+    <button class="filter-btn" onclick="filterOutfits('Party', 'occasion', event)">Party</button>
+    <button class="filter-btn" onclick="filterOutfits('Gym', 'occasion', event)">Gym</button>
+    <button class="filter-btn" onclick="filterOutfits('Beach', 'occasion', event)">Beach</button>
+    <button class="filter-btn" onclick="filterOutfits('Travel', 'occasion', event)">Travel</button>
+    <button class="filter-btn" onclick="filterOutfits('Other', 'occasion', event)">Other</button>
 </div>
 
 <!-- Outfit Preview -->
 {% if preview_image %}
-<div class="outfit-preview-container">
+<div class="outfit-preview-container" id='preview-container'>
     <h3>Outfit Preview</h3>
     <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
+
+    <!--Regeneration Button-->
+
+    <form method="POST" action ="{{ url_for('main.preview_outfit') }}" >
+        <input type = "hidden" name = "occasion" value = "{{ request.form.get('occasion') }}">
+        <input type = "hidden" name = "season" value = "{{ request.form.get('season') }}">
+        <button type = "submit"> Regenerate Outfit </button>
+
+    </form>
+
+    <!--Saving Button-->
 
     <form method="POST" action="{{ url_for('main.save_outfit') }}" class="outfit-form">
         <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
@@ -53,21 +85,17 @@
         <label>Outfit Name:</label>
         <input type="text" name="outfit_name" required>
 
-        <label>Privacy:</label>
-        <select name="privacy" required>
-            <option value="private">Private</option>
-            <option value="public">Public</option>
-        </select>
-
         <button type="submit">Save Outfit</button>
     </form>
+
+    <button onclick="hidePreview()" type="button" class="cancel-btn">Cancel</button>
 </div>
 {% endif %}
 
 <!-- Saved Outfits -->
 <div class="outfit-gallery">
     {% for outfit in outfits %}
-    <div class="outfit-item" data-privacy="{{ outfit.privacy }}">
+    <div class="outfit-item" data-season="{{ outfit.season | lower }}" data-occasion="{{ outfit.occasion | lower }}" >
         <h4>{{ outfit.outfit_name }}</h4>
         <img src="{{ url_for('static', filename=outfit.preview_image or 'outfits/placeholder.png') }}" alt="Outfit Image">
 
@@ -99,24 +127,34 @@
   
 
 <script>
-function filterOutfits(event, type) {
-    
-    const buttons = document.querySelectorAll('.filters[data-type="privacy"] .filter-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
 
-    const normalizedType = type.toLowerCase();
+    let selectedSeason = "all";
+    let selectedOccasion = "all";
 
-    document.querySelectorAll('.outfit-item').forEach(item => {
-        const itemPrivacy = item.getAttribute('data-privacy')?.toLowerCase();
+    function filterOutfits(value, filterType, event) {
+        // Toggle active class
+        const filterButtons = document.querySelectorAll(`.filters[data-type="${filterType}"] .filter-btn`);
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
 
-        if (normalizedType === 'all' || itemPrivacy === normalizedType) {
-            item.style.display = '';
-        } else {
-            item.style.display = 'none';
+        // Update selected filter
+        if (filterType === 'season') {
+            selectedSeason = value.toLowerCase();
+        } else if (filterType === 'occasion') {
+            selectedOccasion = value.toLowerCase();
         }
-    });
-}
+
+        // Apply combined filtering
+        document.querySelectorAll(".outfit-item").forEach(item => {
+            const itemSeason = item.dataset.season?.toLowerCase() || '';
+            const itemOccasion = item.dataset.occasion?.toLowerCase() || '';
+
+            const matchSeason = (selectedSeason === "all" || itemSeason === selectedSeason);
+            const matchOccasion = (selectedOccasion === "all" || itemOccasion === selectedOccasion);
+
+            item.style.display = (matchSeason && matchOccasion) ? "" : "none";
+        });
+    }
 
     function openShareModal(outfitId) {
     document.getElementById('modalOutfitId').value = outfitId;
@@ -126,6 +164,10 @@ function filterOutfits(event, type) {
     function closeShareModal() {
         document.getElementById('shareModal').style.display = 'none';
     }
+
+    function hidePreview() {
+    document.getElementById('preview-container').style.display = 'none';
+}
 
 
 
