@@ -16,6 +16,8 @@ flask_testing
 rembg
 Pillow
 
+selenium
+
 # Conditional dependency (choose one depending on your system)
 onnxruntime-silicon; platform_system == "Darwin" and platform_machine == "arm64"
 onnxruntime; platform_system != "Darwin" or platform_machine != "arm64"
@@ -24,3 +26,4 @@ onnxruntime; platform_system != "Darwin" or platform_machine != "arm64"
 numpy==1.24.4
 email_validator
 pyjwt
+

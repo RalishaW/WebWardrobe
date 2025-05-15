@@ -317,7 +317,7 @@ def preview_outfit():
 
     if not selected_items:
         flash('No matching items found!', 'error')
-        return redirect(url_for('outfits'))
+        return redirect(url_for('main.outfits'))
     
     session['selected_item_ids'] = [item.id for item in selected_items]
 
@@ -356,7 +356,7 @@ def save_outfit():
 
     if not outfit_name:
         flash('Please enter name.', 'error')
-        return redirect(url_for('outfits'))
+        return redirect(url_for('main.outfits'))
 
     preview_filename = f"preview_{current_user.id}.png"
     preview_path = os.path.join(current_app.root_path, 'static', 'outfits', preview_filename)

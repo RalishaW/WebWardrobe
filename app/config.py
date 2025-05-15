@@ -46,3 +46,7 @@ class TestingConfig(Config):
     def init_app(app):
         # skip the folder-creation & default-db logic from the base Config
         pass
+config_dict = {
+    'default': Config,
+    'testing': TestingConfig,
+}
