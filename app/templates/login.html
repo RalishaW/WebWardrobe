@@ -50,10 +50,17 @@
           <form method="POST" action="{{ url_for('main.login') }}">
             {{ form.hidden_tag() }}
             <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
-            {{ form.email(size=32, class='form-control') }}
+            {{ form.email(class='form-control', id='email') }}
+            {% for err in form.email.errors %}
+              <div class="error">{{ err }}</div>
+            {% endfor %}
+
 
             <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
-            {{ form.password(size=32, class='form-control') }}
+            {{ form.password(class='form-control', id='password') }}
+            {% for err in form.password.errors %}
+              <div class="error">{{ err }}</div>
+            {% endfor %}
 
             <div class="remember">
               <div class="remember-left">
