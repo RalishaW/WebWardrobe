@@ -23,6 +23,8 @@ from app import mail
 from app.blueprints import main
 from pathlib import Path
 from datetime import datetime
+from hashlib import sha256
+
 
 
 # Introductory / Landing Page
@@ -122,6 +124,13 @@ def add_clothing_item():
 
     image = request.files['image']
 
+    existing_named = ClothingItem.query. filter_by(user_id=user_id, item_name=item_name).first()
+    if existing_named:
+        flash ("You already have an item with this name. Please use another name.", "error")
+        return redirect(url_for('main.wardrobe' ))
+    
+
+
     if image and allowed_file(image.filename) and size_limit(image):
         filename = f"{user_id}_{secure_filename(image.filename)}"
 
@@ -142,6 +151,20 @@ def add_clothing_item():
 
         
         new_filepath = make_image_transparent(filepath, filepath)
+
+        with open (new_filepath, 'rb') as f:
+            uploaded_hash = sha256(f.read()).hexdigest()
+
+        user_items = ClothingItem.query. filter_by(user_id=user_id) .all ()
+        for item in user_items:
+            existing_path = os.path.join(current_app. root_path, 'static', item. image_path)
+            if os.path.exists (existing_path) :
+                with open(existing_path, 'rb') as existing_file:
+                    existing_hash = sha256(existing_file. read()).hexdigest()
+                    if uploaded_hash == existing_hash:
+                        os.remove(filepath)
+                        flash ("This image already exists in your wardrobe.", "error") 
+                        return redirect(url_for('main.wardrobe' ))
 
         # Get only the path relative to static/
         try:
