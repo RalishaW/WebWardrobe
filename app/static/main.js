@@ -28,6 +28,66 @@ function fixCanvasResolution(canvas) {
   ctx.scale(dpr, dpr);
 }
 
+function colorNameToHex(name) {
+  const colorMap = {
+    white: "#F5F5F5",
+    black: "#2E2E2E",
+    gray: "#B0B0B0",
+    red: "#E74C3C",
+    blue: "#3498DB",
+    green: "#27AE60",
+    yellow: "#F1C40F",
+    purple: "#9B59B6",
+    brown: "#8D6E63",
+    multicolor: "#FF69B4", // Hot pink - playful
+    other: "#95A5A6",       // Soft gray-blue
+    default: "#CCCCCC"
+  };
+
+  return colorMap[name.toLowerCase()] || colorMap["default"];
+}
+
+function seasonNameToColor(name) {
+  const seasonMap = {
+    spring: "#B4E197",      // Soft green
+    summer: "#FFF7AE",      // Warm yellow
+    fall: "#FFBC97",        // Earthy orange
+    autumn: "#FFBC97",      // (alias)
+    winter: "#A0D2EB",      // Cool blue
+    "all season": "#A3D5D3", // Pastel teal – upgraded!
+    default: "#CCCCCC"
+  };
+
+  return seasonMap[name.toLowerCase()] || seasonMap["default"];
+}
+
+function categoryNameToColor(name) {
+  const categoryMap = {
+    "t-shirt": "#87CEEB",
+    "shirt": "#48D1CC",
+    "blouse": "#DA70D6",
+    "sweater": "#808000",
+    "hoodie": "#DDA0DD",
+    "coat": "#000080",
+    "pant": "#F0E68C",
+    "jeans": "#4169E1",
+    "shorts": "#FF7F50",
+    "skirt": "#FA8072",
+    "dress": "#E6E6FA",
+    "shoes": "#8B4513",
+    "jackets": "#708090",
+    "accessory": "#FFD700",
+    "other": "#D3D3D3",
+    "default": "#CCCCCC"
+  };
+
+  return categoryMap[name.toLowerCase()] || categoryMap["default"];
+}
+
+
+
+
+
 async function fetchDataAndRenderCharts() {
   const response = await fetch("/analysis/data");
   const data = await response.json();
@@ -98,13 +158,10 @@ async function fetchDataAndRenderCharts() {
           datasets: [
             {
               data: Object.values(data.category_counts),
-              backgroundColor: [
-                "#4F81BD",
-                "#A6A6A6",
-                "#F79646",
-                "#9BBB59",
-                "#8064A2"
-              ]
+              backgroundColor: 
+                Object.keys(data.category_counts).map(type =>
+                  categoryNameToColor(type)
+              )
             }
           ]
         }
@@ -120,12 +177,10 @@ async function fetchDataAndRenderCharts() {
           datasets: [
             {
               data: Object.values(data.season_counts),
-              backgroundColor: [
-                "#92D050",
-                "#FFD966",
-                "#F4B183",
-                "#9DC3E6"
-              ]
+              backgroundColor:
+                Object.keys(data.season_counts).map(season =>
+                seasonNameToColor(season)
+              )
             }
           ]
         }
@@ -141,12 +196,14 @@ async function fetchDataAndRenderCharts() {
     type: "bar",
     data: Object.keys(data.color_counts).length
       ? {
-          labels: Object.keys(data.color_counts),
+          labels: Object.keys(data.color_counts).map(label =>
+            label.charAt(0).toUpperCase() + label.slice(1)
+          ),
           datasets: [
             {
               data: Object.values(data.color_counts),
-              backgroundColor: Object.keys(data.color_counts).map((color) =>
-                color.toLowerCase()
+              backgroundColor: Object.keys(data.color_counts).map(color =>
+                colorNameToHex(color)
               ),
               borderColor: "#ccc",
               borderWidth: 1
@@ -190,7 +247,7 @@ async function fetchDataAndRenderCharts() {
         tooltip: {
           callbacks: {
             label: function (context) {
-              return `${context.parsed.y} items`;
+              return `${context.label || ""}: ${context.parsed.y} items`;
             }
           }
         }

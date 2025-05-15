@@ -1521,10 +1521,17 @@ body {
 }
 
 .analysis-card {
-  background-color: #dde7fb;
-  padding: 1.5rem;
-  border-radius: 12px;
+  background-color: #e1ebfd;
+  padding: 1.5rem 1.2rem;
+  border-radius: 14px;
   margin-bottom: 1.5rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analysis-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 }
 
 .analysis-card h2 {
@@ -1539,13 +1546,14 @@ body {
 }
 
 .analysis-card .value {
-  font-size: 2rem;
-  font-weight: 500;
-  padding: 1rem 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0.3rem 0;
 }
 
 .analysis-card .subtitle {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #555;
 }
 
@@ -1557,13 +1565,20 @@ body {
 }
 
 .most-used-item-block {
-  background-color: #dde7fb;
+  background-color: #e1ebfd;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 1.2rem;
+  border-radius: 14px;
   margin-bottom: 2rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.most-used-item-info p {
+  font-size: 0.95rem;
+  color: #555;
 }
 
 .most-used-item-image {
