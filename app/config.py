@@ -35,6 +35,13 @@ class TestingConfig(Config):
     # in-memory DB for tests
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
+    # Disable email functionality in testing
+    MAIL_SERVER = None
+    MAIL_PORT = None
+    MAIL_USE_TLS = False
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+
     @staticmethod
     def init_app(app):
         # skip the folder-creation & default-db logic from the base Config
