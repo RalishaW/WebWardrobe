@@ -1566,3 +1566,14 @@ canvas {
   margin-right: auto;          /* Center the color chart */
   aspect-ratio: 1.5;  
 }
+
+.chart-slide {
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+.chart-slideshow-container button {
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
