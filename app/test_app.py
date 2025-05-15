@@ -240,14 +240,14 @@ class UnitTest(unittest.TestCase):
         db.session.add_all(items)
         db.session.commit()
         response = self.client.post(
-            '/save_outfit', data={'outfit_name':'O1','privacy':'public','occasion':'O','season':'S'}, follow_redirects=True
+            '/save_outfit', data={'outfit_name':'O1','occasion':'O','season':'S'}, follow_redirects=True
         )
         # ensure route completes successfully
         self.assertEqual(response.status_code, 200)
     
     def test_delete_outfit(self):
         self.client.post("/login", data={"email":"test@gmail.com","password":"password"}, follow_redirects=True)
-        of = Outfit(outfit_name='D1',privacy='private',occasion='O',season='S',user_id=1)
+        of = Outfit(outfit_name='D1',occasion='O',season='S',user_id=1)
 
         db.session.add(of); db.session.commit()
 
@@ -260,7 +260,7 @@ class UnitTest(unittest.TestCase):
         self.client.post('/login', data={'email':'test@gmail.com','password':'password'}, follow_redirects=True)
         u2 = User(username='u2',firstname='U',lastname='Two',
                   email='u2@example.com',password=generate_password_hash('pw'))
-        of = Outfit(outfit_name='S1',privacy='public',occasion='O',season='S',user_id=1)
+        of = Outfit(outfit_name='S1',occasion='O',season='S',user_id=1)
 
         db.session.add_all([u2,of])
         db.session.commit()
@@ -273,7 +273,7 @@ class UnitTest(unittest.TestCase):
         self.client.post('/login', data={'email':'test@gmail.com','password':'password'}, follow_redirects=True)
         u2 = User(username='u2',firstname='U',lastname='Two',
                   email='u2@example.com',password=generate_password_hash('pw'))
-        of = Outfit(outfit_name='S2',privacy='public',occasion='O',season='S',user_id=1)
+        of = Outfit(outfit_name='S2',occasion='O',season='S',user_id=1)
 
         db.session.add_all([u2,of])
         db.session.commit()
