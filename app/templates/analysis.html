@@ -26,10 +26,21 @@
     </div>
 
     <h2 class="section-title">Style Analysis</h2>
-    <div class="graph-style-analysis">
-        <canvas id="category-chart" width="400" height="400"></canvas>
-        <canvas id="season-chart" width="400" height="400"></canvas>
-        <canvas id="color-chart" width="400" height="400"></canvas>
+    <div class="chart-slideshow-container">
+    <div class="chart-slide">
+        <canvas id="category-chart" width="600" height="450"></canvas>
+    </div>
+    <div class="chart-slide" style="display: none;">
+        <canvas id="season-chart" width="600" height="450"></canvas>
+    </div>
+    <div class="chart-slide" style="display: none;">
+        <canvas id="color-chart" style="max-width: 80%; max-height: 500;"></canvas>
+    </div>
+
+    <div style="text-align: center; margin-top: 1rem;">
+        <button onclick="prevSlide()">⟨ Prev</button>
+        <button onclick="nextSlide()">Next ⟩</button>
+    </div>
     </div>
 </section>
 {% endblock %}
