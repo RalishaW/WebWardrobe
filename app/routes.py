@@ -5,14 +5,15 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 from .models import db, User, ClothingItem, Outfit, SharedOutfit, OutfitItem
 from .forms import (LoginForm, SignupForm,
-                    RequestResetPasswordForm, ResetPasswordForm)
+                    RequestResetPasswordForm, ResetPasswordForm,
+                    ResetPasswordFormProfile, DeleteAccountForm)
 from .utils import (
     allowed_file, size_limit, make_image_transparent,
     generate_reset_token, verify_reset_token, try_to_login,
     send_notification_welcome, send_notification_shared_outfit,
     send_notification_delete,
 )
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Message
 from PIL import Image
@@ -96,31 +97,6 @@ def login():
 def logout():
     logout_user()
     flash('Logged out successfully.', 'info')
-    return redirect(url_for('main.home'))
-
-@main.route('/profile/delete-account')
-@login_required
-def delete_account():
-    user_email = current_user.email
-
-    try:
-        db.session.delete(current_user)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.error(f"Error deleting user {user_email}: {e}")
-        flash("Could not delete your account. Please try again", 'error')
-        return redirect(url_for('main.wardrobe'))
-
-    logout_user()
-
-    # Send notification of deleting
-    try:
-        send_notification_delete(user_email)
-    except Exception as e:
-        current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
-
-    flash("Your account has been deleted. We are sorry to see you go!", "info")
     return redirect(url_for('main.home'))
 
 # Core Pages
@@ -239,7 +215,7 @@ def request_reset_password():
         flash("If email is registed, an email will be sent to your inbox.", "info")
     return render_template('request_reset_password.html', form=request_form)
 
-# Reset password using JWT Token
+# Reset password using JWT Token from /request_reset_password
 @main.route('/reset_password/token=<token>', methods=['GET', 'POST'])
 def reset_password(token):
     form = ResetPasswordForm()
@@ -268,8 +244,7 @@ def reset_password(token):
 
     return render_template('reset_password.html', form=form, token=token)
 
-
-
+# Outfit page
 @main.route("/outfits", methods=["GET"])
 @login_required
 def outfits():
@@ -277,7 +252,7 @@ def outfits():
     user_outfits = Outfit.query.filter_by(user_id=user_id).all()
     return render_template("outfit.html", outfits=user_outfits)
 
-
+# Preview image generator
 @main.route('/preview_outfit', methods=['POST'])
 @login_required
 def preview_outfit():
@@ -371,7 +346,7 @@ def preview_outfit():
 
     return render_template('outfit.html', preview_image=f"outfits/{preview_filename}", preview_items=selected_items, outfits=Outfit.query.filter_by(user_id=current_user.id).all())
 
-
+# Save outfit
 @main.route('/save_outfit', methods=['POST'])
 @login_required
 def save_outfit():
@@ -437,6 +412,7 @@ def save_outfit():
     flash("Outfit saved!", "success")
     return redirect(url_for('main.outfits'))
 
+# Delete outfit
 @main.route('/outfits/delete/<int:outfit_id>', methods=["POST"])
 @login_required
 def delete_outfit(outfit_id):
@@ -488,7 +464,7 @@ def share_outfit():
     flash("Outfit shared successfully!", "success")
     return redirect(url_for("main.outfits"))
 
-
+# Analysis page
 @main.route('/analysis')
 @login_required
 def analysis():
@@ -553,6 +529,7 @@ def get_analysis_data():
         'color_counts': most_common_colors
     })
 
+# Social page
 @main.route('/social')
 @login_required
 def social():
@@ -575,29 +552,120 @@ def delete_shared_outfit(shared_id):
     return redirect(url_for('main.social'))
 
 
-#profile page
-@main.route("/profile")
+# Profile page
+@main.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template("profile.html", user=current_user)
+    form = ResetPasswordFormProfile()
+    delete_form = DeleteAccountForm()
 
-#profile pic
+    # ----------------------
+    #  Delete Account Form 
+    # ----------------------
+    if delete_form.validate_on_submit():
+        if not check_password_hash(current_user.password, delete_form.password.data):
+            flash('Incorrect password. Account not deleted', 'error')
+            return redirect(url_for('main.delete_account'))
+        
+        user_email = current_user.email
+        try:
+            db.session.delete(current_user)
+            db.session.commit()
+            logout_user
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Error deleting user {user_email}: {e}")
+            flash("Could not delete your account. Please try again", 'error')
+            return redirect(url_for('main.profile'))
+
+        logout_user()
+        # Send notification of deleting
+        try:
+            send_notification_delete(user_email)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
+
+        flash("Your account has been deleted. We are sorry to see you go!", "info")
+        return redirect(url_for('main.home'))
+
+    # ----------------------
+    #  Personal information
+    # ----------------------
+    if request.method == 'POST' and request.form.get('action') == 'save_info':
+        dob_str = request.form.get('dob')
+        height_str = request.form.get('height')
+        try:
+            current_user.dob    = datetime.strptime(dob_str, "%Y-%m-%d").date() if dob_str else None
+            current_user.height = int(height_str) if height_str else None
+            db.session.commit()
+            flash('Personal information updated.', 'success')
+        except Exception:
+            db.session.rollback()
+            flash('Failed to update personal information.', 'error')
+        
+        return redirect(url_for('main.profile'))
+    
+    # ----------------------
+    #  Password Reset Form
+    # ----------------------
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.current_password.data):
+            flash("Incorrect password. Please try again", 'error')
+        else:
+            current_user.password = generate_password_hash(
+                form.password.data, method="pbkdf2:sha256"
+            )
+            db.session.commit()
+            flash("Password updated successfully", 'success')
+
+        return redirect(url_for('main.profile'))
+
+    # ----------------------
+    #  Style tags ClothingItem
+    # ----------------------
+    items = ClothingItem.query.filter_by(user_id=current_user.id).all()
+    # count each attribute
+    type_counts   = Counter(item.type   for item in items if item.type)
+    color_counts  = Counter(item.color  for item in items if item.color)
+    season_counts = Counter(item.season for item in items if item.season)
+
+    # only choose 3
+    top_types   = [t for t,_ in type_counts.most_common(3)]
+    top_colors  = [c for c,_ in color_counts.most_common(3)]
+    top_seasons = [s for s,_ in season_counts.most_common(3)]
+
+    style_tags = top_types + top_colors + top_seasons
+
+    # ----------------------
+    #  Display the page
+    # ----------------------
+    return render_template(
+        "profile.html",
+        user=current_user,
+        form=form,
+        delete_form=delete_form,
+        style_tags=", ".join(style_tags)
+    )
+
+# Profile - picture upload
 @main.route('/upload_profile_pic', methods=['POST'])
 @login_required
 def upload_profile_pic():
-    file = request.files['profile_pic']
-    if file and file.filename != '':
-        from werkzeug.utils import secure_filename
+    file = request.files.get('profile_pic')
+    if not file or not allowed_file(file.filename):
+        flash('Please select a valid image file (png/jpg/jpeg/webp).', 'error')
+        return redirect(url_for('main.profile'))
 
-        filename = secure_filename(f"{current_user.username}_profile.png")
-        file_path = os.path.join('profile_picture', filename)
-        upload_path = os.path.join('app', 'static', file_path)
-        file.save(upload_path)
+    filename = secure_filename(f"{current_user.username}_profile.png")
+    file_path = os.path.join('profile_picture', filename)
+    upload_path = os.path.join('app', 'static', file_path)
+    file.save(upload_path)
 
-        current_user.profile_picture = file_path
-        db.session.commit()
+    current_user.profile_picture = file_path
+    db.session.commit()
+    flash('Your profile picture has been updated!', 'success')
 
-    return redirect(url_for('profile'))
+    return redirect(url_for('main.profile'))
 
 
 # # Disable in deployment

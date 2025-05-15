@@ -7,7 +7,7 @@
     <h2>Profile</h2>
 
     <div class="profile-pic-container">
-      <form method="POST" action="/upload_profile_pic" enctype="multipart/form-data">
+      <form method="POST" action="{{ url_for('main.upload_profile_pic') }}" enctype="multipart/form-data">
         <label for="profilePicInput"
           style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
           <img src="{{ url_for('static', filename=user.profile_picture) }}" alt="Profile Picture" class="profile-pic">
@@ -22,21 +22,53 @@
       <label for="email">Email:</label>
       <input type="text" id="email" value="{{ user.email }}" disabled>
 
-      <label for="dob">Date of Birth:</label>
-      <input type="text" id="dob" value="Not set" disabled>
+      <form method="POST" action="{{ url_for('main.profile') }}">
+        <input type="hidden" name="action" value="save_info">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob"
+          value="{{ user.dob and user.dob.isoformat() }}" />
 
-      <label for="height">Height:</label>
-      <input type="text" id="height" value="Not set" disabled>
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height"
+          value="{{ user.height or '' }}" />
 
-      <div class="profile-edit-buttons">
-        <button class="btn edit-info" onclick="enableProfileEditing()">Edit</button>
-        <button class="btn save-info" onclick="saveProfileInfo()" style="display: none;">Save</button>
-      </div>
+        <button type="submit" class="btn save-info">Save</button>
+      </form>
     </div>
 
     <div class="sidebar-buttons">
-      <button class="btn logout">Log Out</button>
-      <button class="btn delete">Delete Account</button>
+      <!-- Logout -->
+      <form action="{{url_for('main.logout')}}" method="GET" style="display:inline;">
+        <button class="btn logout">
+          Log Out
+        </button>
+      </form>
+
+      <!-- Delete Account-->
+      <button type="button" class="btn delete" id="trigger-delete">
+        Delete Account
+      </button>
+
+      <!-- Delete Account Confirmation pop-up (hidden by default) -->
+      <div id="delete-modal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <h2>Confirm Account Deletion</h2>
+            <p>Please enter your password to confirm:</p>
+
+            <form method="POST" action="{{ url_for('main.profile') }}">
+              {{ delete_form.hidden_tag() }}
+              <div>
+                {{ delete_form.password(class="form-control", placeholder="Your Password") }}
+                {% for err in delete_form.password.errors %}
+                  <div class="error">{{ err }}</div>
+                {% endfor %}
+              </div>
+              <button type="submit" name="{{ delete_form.submit.name }}">{{ delete_form.submit.label.text }}</button>
+              <button type="button" id="cancel-delete">Cancel</button>
+            </form>
+
+          </div>
+        </div>
     </div>
   </aside>
 
@@ -45,65 +77,43 @@
 
     <div class="personalization-box">
       <h2>Personalization</h2>
-      <p><strong>Style Tags:</strong> winter, formal etc</p>
-      <p>from analysis...</p>
+      <p><strong>Style Tags:</strong> {{ style_tags }} </p>
     </div>
 
+    <!-- Reset Password in Profile Page -->
     <div class="password-box">
       <h2>Password Management</h2>
-      <button class="btn reset" onclick="togglePasswordForm()">Change Password</button>
+      <button type="button" class="btn reset" onclick="togglePasswordForm()">Change Password</button>
 
-      <div id="password-form" style="display: none; margin-top: 1rem;">
+      <form id="password-form"
+            method="POST"
+            style="display: none; margin-top: 1rem;"
+            onsubmit="return confirm('Are you sure you want to change your password?');">
+        {{ form.hidden_tag() }}
         <div class="profile-info">
-          <label for="current-password">Current Password:</label>
-          <input type="password" id="current-password" placeholder="Current Password">
+          <label for="current_password"><i class="fa-solid fa-lock"></i> Current Password:</label>
+          {{ form.current_password(class="form-control", id="current_password") }}
+          {% for err in form.current_password.errors %}
+            <div class="error">{{ err }}</div>
+          {% endfor %}
 
-          <label for="new-password">New Password:</label>
-          <input type="password" id="new-password" placeholder="New Password">
+          <label for="password"><i class="fa-solid fa-lock"></i> New Password:</label>
+          {{ form.password(class="form-control", id="password") }}
+          {% for err in form.password.errors %}
+            <div class="error">{{ err }}</div>
+          {% endfor %}
 
-          <label for="confirm-password">Confirm New Password:</label>
-          <input type="password" id="confirm-password" placeholder="Confirm New Password">
+          <label for="confirm_password"><i class="fa-solid fa-lock"></i> Confirm New Password:</label>
+          {{ form.confirm_password(class="form-control", id="confirm_password") }}
+          {% for err in form.confirm_password.errors %}
+            <div class="error">{{ err }}</div>
+          {% endfor %}
         </div>
 
-        <button class="btn save-info" style="margin-top: 0.75rem;">Confirm</button>
-      </div>
+        <button type="submit" class="btn save-info" style="margin-top: 0.75rem;">Confirm</button>
+      </form>
     </div>
-
-
   </section>
-
 </div>
-
-
-<script>
-  function enableProfileEditing() {
-    document.getElementById('dob').disabled = false;
-    document.getElementById('height').disabled = false;
-
-    document.querySelector('.edit-info').style.display = 'none';
-    document.querySelector('.save-info').style.display = 'inline-block';
-  }
-
-  function saveProfileInfo() {
-    const dob = document.getElementById('dob').value;
-    const height = document.getElementById('height').value;
-
-    document.getElementById('dob').disabled = true;
-    document.getElementById('height').disabled = true;
-
-    document.querySelector('.edit-info').style.display = 'inline-block';
-    document.querySelector('.save-info').style.display = 'none';
-
-    alert("Changes saved! (not stored yet)");
-  }
-
-  function togglePasswordForm() {
-    const form = document.getElementById("password-form");
-    if (form) {
-      form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-  }
-
-</script>
 
 {% endblock %}
