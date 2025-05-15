@@ -132,3 +132,23 @@ async function fetchDataAndRenderCharts() {
     });
   }
 }
+
+// profile.html
+// togglePasswordForm: view password form
+function togglePasswordForm() {
+  const form = document.getElementById("password-form");
+  form.style.display = form.style.display === "none" ? "block" : "none";
+}
+// Delete account confirmation pop-up
+function showDeleteModal() {
+  document.getElementById("delete-modal").style.display = "block";
+}
+
+function hideDeleteModal() {
+  document.getElementById("delete-modal").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("trigger-delete")?.addEventListener("click", showDeleteModal);
+  document.getElementById("cancel-delete")?.addEventListener("click",  hideDeleteModal);
+});
