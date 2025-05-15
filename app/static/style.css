@@ -86,7 +86,7 @@ nav {
 h2 {
   font-size: 2.2rem;
   margin: 1.5rem 0 1rem 0;
-  padding: 0.8rem 1.6rem;
+  padding: 0.8rem 0rem;
   
 }
 
@@ -1508,7 +1508,6 @@ body {
   background: linear-gradient(to right, #fefaf6, #f0f4ff);
 }
 
-
 /* --------------------------------------------------
  Analysis.html
 -------------------------------------------------- */
@@ -1531,6 +1530,7 @@ body {
 .analysis-card h2 {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
+  padding: initial;
 }
 
 .analysis .head {
@@ -1540,7 +1540,8 @@ body {
 
 .analysis-card .value {
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 500;
+  padding: 1rem 0;
 }
 
 .analysis-card .subtitle {
@@ -1575,49 +1576,61 @@ body {
 
 .most-used-item-info h3 {
   margin: 0;
+  padding: 0.6rem 0;
+  font-size: 1.5rem;
 }
 
-.graph-style-analysis {
-  display: grid;
-  grid-template-columns: 1fr;
+/* ------------------------------
+ Responsive chart layout
+------------------------------ */
+#analysis-charts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 2rem;
-  justify-items: center;
+  margin-bottom: 2rem;
+  max-width: 1200px;
+  width: 100%;
 }
 
+#analysis-charts .chart-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.4rem;
+  justify-content: center;
+  width: 100%;
+}
+
+#analysis-charts .chart-row-top canvas {
+  flex: 1 1 300px;
+  max-width: 360px;
+  height: auto;
+  aspect-ratio: 1;
+  max-height: 300px;
+}
+
+.chart-row-bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#color-chart {
+  flex: 1;
+  max-width: 760px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2.5; 
+  max-height: 320px;   
+}
+
+/* General canvas styling */
 canvas {
   background-color: #ffffff92;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 60px;
-}
-/* Specific styling for canvas inside .graph-style-analysis */
-.graph-style-analysis {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  gap: 20px;              
-  width: 100%;             
-  padding: 20px;
-  box-sizing: border-box;
 }
 
-#category-chart, #season-chart {
-  max-width: 45%;              /* Ensure the graphs on the left and right take up 45% width */
-  height: auto;                /* Allow the height to adjust based on the width */
-  aspect-ratio: 1;             /* Keep the original ratio of the graphs */
-  margin: 0 auto;   
-}
-
-#color-chart {
-  width: 100%;                 /* Make the color chart take up the full width */
-  height: 200px;               /* Set a fixed height for the color chart */
-  max-width: 90%;              /* Prevent the color chart from becoming too large */
-  margin-top: 20px;            /* Add space above the color chart */
-  margin-left: auto;           /* Center the color chart */
-  margin-right: auto;          /* Center the color chart */
-  aspect-ratio: 1.5;  
-}
 
 /* --------------------------------------------------
  Styling - Wardrobe

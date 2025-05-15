@@ -1,22 +1,26 @@
-# ----------------------------#
-# Requirements modules        #
-# ----------------------------#
-pip install flask
-pip install flask_wtf
-pip install flask_sqlalchemy
-pip install wtforms
-pip install flask_login
-pip install flask_migrate
-pip install rembg
-pip install Pillow
-#if have silicon mac:
-pip install onnxruntime-silicon
-#if not:
-pip install onnxruntime
+# -------------------------------- #
+# Requirements modules             #
+# pip install -r requirements.txt     #
+# -------------------------------- #
+# Flask and extensions
+flask
+flask_wtf
+flask_sqlalchemy
+wtforms
+flask_login
+flask_migrate
+flask_mail
+flask_testing
 
-pip install numpy==1.24.4
+# Image processing
+rembg
+Pillow
 
-pip install email_validator
-pip install pyjwt    # token validator for reset password
-pip install flask_mail  # for sending email to user to reset password
-pip install flask_testing
+# Conditional dependency (choose one depending on your system)
+onnxruntime-silicon; platform_system == "Darwin" and platform_machine == "arm64"
+onnxruntime; platform_system != "Darwin" or platform_machine != "arm64"
+
+# Others
+numpy==1.24.4
+email_validator
+pyjwt

@@ -1,9 +1,23 @@
 {% extends "base.html" %}
+{% block title %}Analysis - Fashanize{% endblock %}
 
 {% block content %}
 <div class="analysis-page">
     <section class="analysis">
         <h1>Wardrobe Analysis</h1>
+
+    <div id="analysis-charts">
+        <div class="chart-row-top">
+            <canvas id="category-chart"></canvas>
+            <canvas id="season-chart"></canvas>
+        </div>
+        <div class="chart-row-bottom">
+            <canvas id="color-chart"></canvas>
+        </div>
+          
+    </div>
+
+    <h2 class="section-title">Style Analysis</h2>
 
         <div class="analysis-card">
             <h2 class="head">Total Items</h2>
