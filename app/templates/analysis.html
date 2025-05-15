@@ -4,6 +4,19 @@
 <section class="analysis">
     <h1>Wardrobe Analysis</h1>
 
+    <div id="analysis-charts">
+        <div class="chart-row-top">
+            <canvas id="category-chart"></canvas>
+            <canvas id="season-chart"></canvas>
+        </div>
+        <div class="chart-row-bottom">
+            <canvas id="color-chart"></canvas>
+        </div>
+          
+    </div>
+
+    <h2 class="section-title">Style Analysis</h2>
+
     <div class="analysis-card">
         <h2 class="head">Total Items</h2>
         <p class="value">{{ total_item_value }}</p>
@@ -25,22 +38,5 @@
         </div>
     </div>
 
-    <h2 class="section-title">Style Analysis</h2>
-    <div class="chart-slideshow-container">
-    <div class="chart-slide">
-        <canvas id="category-chart" width="600" height="450"></canvas>
-    </div>
-    <div class="chart-slide" style="display: none;">
-        <canvas id="season-chart" width="600" height="450"></canvas>
-    </div>
-    <div class="chart-slide" style="display: none;">
-        <canvas id="color-chart" style="max-width: 80%; max-height: 500;"></canvas>
-    </div>
-
-    <div style="text-align: center; margin-top: 1rem;">
-        <button onclick="prevSlide()">⟨ Prev</button>
-        <button onclick="nextSlide()">Next ⟩</button>
-    </div>
-    </div>
 </section>
 {% endblock %}
