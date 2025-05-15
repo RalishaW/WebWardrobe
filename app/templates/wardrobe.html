@@ -2,190 +2,195 @@
 {% block title %}My Wardrobe - Fashonsie{% endblock %}
 
 {% block content %}
-<div class="wardrobe-header">
-    <h2>MyWardrobe</h2>
-    <button onclick="toggleUploadForm()">+ Add Item</button>
-</div>
 
-<!-- Upload form -->
-<div id="upload-form" class="upload-form" style="display: none;">
-    <form action="{{ url_for('main.add_clothing_item') }}" method="post" enctype="multipart/form-data" class="upload-card">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Image:</label>
-                <input type="file" name="image" onchange="previewImage(event)" required>
-                <img id="image-preview" style="max-width: 100px; margin-top: 10px;" />
-                
-                <label>Item name:</label>
-                <input type="text" name="item_name" required>
+<div class="wardrobe-page">
+    <div class="wardrobe-header">
+        <h2>MyWardrobe</h2>
+        <button class="transparent-outline-btn" onclick="toggleUploadForm()">+ Add Item</button>
+    </div>
 
-                <label>Color:</label>
-                <select name="color" required>
-                    <option value="">Select Type</option>
-                    <option value="White">White</option>
-                    <option value="Black">Black</option>
-                    <option value="Gray">Gray</option>
-                    <option value="Red">Red</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Green">Green</option>
-                    <option value="Yellow">Yellow</option>
-                    <option value="Purple">Purple</option>
-                    <option value="Brown">Brown</option>
-                    <option value="Multicolor">Multicolor</option>
-                    <option value="Other">Other</option>
-                </select>
+    <!-- Upload form -->
+    <div id="upload-form" class="upload-form" style="display: none;">
+        <form action="{{ url_for('main.add_clothing_item') }}" method="post" enctype="multipart/form-data"
+            class="upload-card">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Image:</label>
+                    <input type="file" name="image" onchange="previewImage(event)" required>
+                    <img id="image-preview" style="max-width: 100px; margin-top: 10px;" />
 
-                <label>Season:</label>
-                <select name="season" required>
-                    <option value="">Select season</option>
-                    <option value="Spring">Spring</option>
-                    <option value="Summer">Summer</option>
-                    <option value="Fall">Fall</option>
-                    <option value="Winter">Winter</option>
-                    <option value="All Season"> All Season</option>
-                </select>
+                    <label>Item name:</label>
+                    <input type="text" name="item_name" required>
+
+                    <label>Color:</label>
+                    <select name="color" required>
+                        <option value="">Select Type</option>
+                        <option value="White">White</option>
+                        <option value="Black">Black</option>
+                        <option value="Gray">Gray</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Purple">Purple</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Multicolor">Multicolor</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <label>Season:</label>
+                    <select name="season" required>
+                        <option value="">Select season</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                        <option value="Fall">Fall</option>
+                        <option value="Winter">Winter</option>
+                        <option value="All Season"> All Season</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Clothing Type:</label>
+                    <select name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="Top">Top</option>
+                        <option value="T-Shirt">T-Shirt</option>
+                        <option value="Shirt">Shirt</option>
+                        <option value="Blouse">Blouse</option>
+                        <option value="Sweater">Sweater</option>
+                        <option value="Hoodie">Hoodie</option>
+                        <option value="Coat">Coat</option>
+                        <option value="Pant">Pant</option>
+                        <option value="Jeans">Jeans</option>
+                        <option value="Shorts">Shorts</option>
+                        <option value="Skirt">Skirt</option>
+                        <option value="Dress">Dress</option>
+                        <option value="Shoes">Shoes</option>
+                        <option value="Jackets">Jackets</option>
+                        <option value="Accessory">Accessory</option>
+                        <option value="Other">Other</option>
+
+
+                    </select>
+
+                    <label>Occasion:</label>
+                    <select name="occasion" required>
+                        <option value="">Select Occasion</option>
+                        <option value="Casual">Casual</option>
+                        <option value="Formal">Formal</option>
+                        <option value="Work">Work</option>
+                        <option value="Party">Party</option>
+                        <option value="Gym">Gym</option>
+                        <option value="Beach">Beach</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <input type="submit" value="Upload Item" id="submit-btn">
+                </div>
             </div>
-
-            <div class="form-group">
-                <label>Clothing Type:</label>
-                <select name="type" required>
-                    <option value="">Select Type</option>
-                    <option value="Top">Top</option>
-                    <option value="T-Shirt">T-Shirt</option>
-                    <option value="Shirt">Shirt</option>
-                    <option value="Blouse">Blouse</option>
-                    <option value="Sweater">Sweater</option>
-                    <option value="Hoodie">Hoodie</option>
-                    <option value="Coat">Coat</option>
-                    <option value="Pant">Pant</option>
-                    <option value="Jeans">Jeans</option>
-                    <option value="Shorts">Shorts</option>
-                    <option value="Skirt">Skirt</option>
-                    <option value="Dress">Dress</option>
-                    <option value="Shoes">Shoes</option>
-                    <option value="Jackets">Jackets</option>
-                    <option value="Accessory">Accessory</option>
-                    <option value="Other">Other</option>
-                    
-
-                </select>
-
-                <label>Occasion:</label>
-                <select name="occasion" required>
-                    <option value="">Select Occasion</option>
-                    <option value="Casual">Casual</option>
-                    <option value="Formal">Formal</option>
-                    <option value="Work">Work</option>
-                    <option value="Party">Party</option>
-                    <option value="Gym">Gym</option>
-                    <option value="Beach">Beach</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Other">Other</option>
-                </select>
-
-                <input type="submit" value="Upload Item" id="submit-btn">
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- Filter Buttons -->
-<div class="filters" data-type="type">
-    <span>Filter by Type:</span>
-    <button class="filter-btn active" onclick="filterWardrobe('all', event)">All</button>
-    <button class="filter-btn" onclick="filterWardrobe('Tops', event)">Tops</button>
-    <button class="filter-btn" onclick="filterWardrobe('Pants', event)">Pants</button>
-    <button class="filter-btn" onclick="filterWardrobe('Jackets',event)">Jackets</button>
-    <button class="filter-btn" onclick="filterWardrobe('Dresses', event)">Dresses</button>
-    <button class="filter-btn" onclick="filterWardrobe('Shoes', event)">Shoes</button>
-    <button class="filter-btn" onclick="filterWardrobe('Accessories', event)">Accessories</button>
-</div>
-
-<!-- Item Gallery -->
-<div class="wardrobe-gallery">
-    {% for item in wardrobe_items %}
-    <div class="wardrobe-item" data-type="{{ item.type }}">
-        <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.item_name }}">
-        <p>{{ item.item_name }}</p>
-
-        <!-- Delete Button (this should be inside the for loop!) -->
-        <form action="{{ url_for('main.delete_clothing_item', item_id=item.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
-            <button type="submit">Delete</button>
         </form>
     </div>
-    {% endfor %}
-</div>
+
+    <!-- Filter Buttons -->
+    <div class="filters" data-type="type">
+        <span>Filter by Type:</span>
+        <button class="filter-btn active" onclick="filterWardrobe('all', event)">All</button>
+        <button class="filter-btn" onclick="filterWardrobe('Tops', event)">Tops</button>
+        <button class="filter-btn" onclick="filterWardrobe('Pants', event)">Pants</button>
+        <button class="filter-btn" onclick="filterWardrobe('Jackets',event)">Jackets</button>
+        <button class="filter-btn" onclick="filterWardrobe('Dresses', event)">Dresses</button>
+        <button class="filter-btn" onclick="filterWardrobe('Shoes', event)">Shoes</button>
+        <button class="filter-btn" onclick="filterWardrobe('Accessories', event)">Accessories</button>
+    </div>
+
+    <!-- Item Gallery -->
+    <div class="wardrobe-gallery">
+        {% for item in wardrobe_items %}
+        <div class="wardrobe-item" data-type="{{ item.type }}">
+            <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.item_name }}">
+            <p>{{ item.item_name }}</p>
+
+            <!-- Delete Button (this should be inside the for loop!) -->
+            <form action="{{ url_for('main.delete_clothing_item', item_id=item.id) }}" method="post"
+                onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
 
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('#upload-form form');
-    const submitBtn = document.getElementById('submit-btn');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#upload-form form');
+            const submitBtn = document.getElementById('submit-btn');
 
-    form.addEventListener('submit', function() {
-        submitBtn.disabled = true;
-        submitBtn.value = 'Uploading...'; // Optional: change button text
-    });
-});
-
-function toggleUploadForm() {
-    const form = document.getElementById("upload-form");
-    form.style.display = form.style.display === "none" ? "flex" : "none";
-}
-
-// Image preview on upload
-function previewImage(event) {
-    const preview = document.getElementById('image-preview');
-    preview.src = URL.createObjectURL(event.target.files[0]);
-}
-
-const filterGroups = {
-    "Tops": ["Top", "T-Shirt", "Shirt", "Blouse", "Sweater", "Hoodie"],
-    "Pants": ["Pant", "Jeans", "Shorts"],
-    "Jackets": ["Jackets", "Coat"],
-    "Dresses": ["Dress"],
-    "Shoes": ["Shoes"],
-    "Accessories": ["Accessory"]
-};
-
-// Wardrobe item filter
-function filterWardrobe(type, event) {
-    const buttons = document.querySelectorAll('.filters[data-type="type"] .filter-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-
-    // Normalize filter type
-    const normalizedType = type.toLowerCase().trim();
-
-    document.querySelectorAll('.wardrobe-item').forEach(item => {
-        const itemType = item.getAttribute('data-type')?.toLowerCase().trim();
-
-        if (normalizedType === 'all') {
-            item.style.display = '';
-            return;
-        }
-
-        let showItem = false;
-
-        // Check if filter group exists
-        Object.keys(filterGroups).forEach(groupName => {
-            const groupItems = filterGroups[groupName].map(t => t.toLowerCase().trim());
-
-            if (groupName.toLowerCase() === normalizedType && groupItems.includes(itemType)) {
-                showItem = true;
-            }
+            form.addEventListener('submit', function () {
+                submitBtn.disabled = true;
+                submitBtn.value = 'Uploading...'; // Optional: change button text
+            });
         });
 
-        // If not in group, directly compare type
-        if (!showItem && normalizedType === itemType) {
-            showItem = true;
+        function toggleUploadForm() {
+            const form = document.getElementById("upload-form");
+            form.style.display = form.style.display === "none" ? "flex" : "none";
         }
 
-        item.style.display = showItem ? '' : 'none';
-    });
-}
+        // Image preview on upload
+        function previewImage(event) {
+            const preview = document.getElementById('image-preview');
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
+
+        const filterGroups = {
+            "Tops": ["Top", "T-Shirt", "Shirt", "Blouse", "Sweater", "Hoodie"],
+            "Pants": ["Pant", "Jeans", "Shorts"],
+            "Jackets": ["Jackets", "Coat"],
+            "Dresses": ["Dress"],
+            "Shoes": ["Shoes"],
+            "Accessories": ["Accessory"]
+        };
+
+        // Wardrobe item filter
+        function filterWardrobe(type, event) {
+            const buttons = document.querySelectorAll('.filters[data-type="type"] .filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Normalize filter type
+            const normalizedType = type.toLowerCase().trim();
+
+            document.querySelectorAll('.wardrobe-item').forEach(item => {
+                const itemType = item.getAttribute('data-type')?.toLowerCase().trim();
+
+                if (normalizedType === 'all') {
+                    item.style.display = '';
+                    return;
+                }
+
+                let showItem = false;
+
+                // Check if filter group exists
+                Object.keys(filterGroups).forEach(groupName => {
+                    const groupItems = filterGroups[groupName].map(t => t.toLowerCase().trim());
+
+                    if (groupName.toLowerCase() === normalizedType && groupItems.includes(itemType)) {
+                        showItem = true;
+                    }
+                });
+
+                // If not in group, directly compare type
+                if (!showItem && normalizedType === itemType) {
+                    showItem = true;
+                }
+
+                item.style.display = showItem ? '' : 'none';
+            });
+        }
 
 
-</script>
+    </script>
+</div>
 {% endblock %}

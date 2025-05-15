@@ -1,35 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="analysis">
-    <h1>Wardrobe Analysis</h1>
+<div class="analysis-page">
+    <section class="analysis">
+        <h1>Wardrobe Analysis</h1>
 
-    <div class="analysis-card">
-        <h2 class="head">Total Items</h2>
-        <p class="value">{{ total_item_value }}</p>
-        <p class="subtitle">Items in your wardrobe</p>
-    </div>
-
-    <div class="analysis-card">
-        <h2 class="head">Outfits Created</h2>
-        <p class="value">{{ outfits_created_value }}</p>
-        <p class="subtitle">Saved outfit combinations</p>
-    </div>
-
-    <h2 class="section-title">Most Used Item</h2>
-    <div class="most-used-item-block">
-        <img src="{{ item_image_url }}" alt="Most used item" class="most-used-item-image">
-        <div class="most-used-item-info">
-            <h3>{{ item_name | default('No item yet') }}</h3>
-            <p>Used in {{ number_of_mixed_outfits | default(0) }} outfits</p>
+        <div class="analysis-card">
+            <h2 class="head">Total Items</h2>
+            <p class="value">{{ total_item_value }}</p>
+            <p class="subtitle">Items in your wardrobe</p>
         </div>
-    </div>
 
-    <h2 class="section-title">Style Analysis</h2>
-    <div class="graph-style-analysis">
-        <canvas id="category-chart" width="400" height="400"></canvas>
-        <canvas id="season-chart" width="400" height="400"></canvas>
-        <canvas id="color-chart" width="400" height="400"></canvas>
-    </div>
-</section>
+        <div class="analysis-card">
+            <h2 class="head">Outfits Created</h2>
+            <p class="value">{{ outfits_created_value }}</p>
+            <p class="subtitle">Saved outfit combinations</p>
+        </div>
+
+        <h2 class="section-title">Most Used Item</h2>
+        <div class="most-used-item-block">
+            <img src="{{ item_image_url }}" alt="Most used item" class="most-used-item-image">
+            <div class="most-used-item-info">
+                <h3>{{ item_name | default('No item yet') }}</h3>
+                <p>Used in {{ number_of_mixed_outfits | default(0) }} outfits</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Style Analysis</h2>
+        <div class="graph-style-analysis">
+            <canvas id="category-chart" width="400" height="400"></canvas>
+            <canvas id="season-chart" width="400" height="400"></canvas>
+            <canvas id="color-chart" width="400" height="400"></canvas>
+        </div>
+    </section>
+
+</div>
 {% endblock %}

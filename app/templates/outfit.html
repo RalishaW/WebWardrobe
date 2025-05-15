@@ -3,176 +3,181 @@
 
 {% block content %}
 
-<div class="wardrobe-header">
-    <h2>MyOutfits</h2>
-    <button onclick="document.getElementById('create-outfit-form').style.display='block'">+ Create Outfit</button>
-</div>
+<div class="outfit-page">
+    <div class="wardrobe-header">
+        <h2>MyOutfits</h2>
+        <button class="transparent-outline-btn"
+            onclick="document.getElementById('create-outfit-form').style.display='block'">+ Create Outfit</button>
+    </div>
 
-<!-- Create Outfit Form -->
-<div id="create-outfit-form" class="create-outfit-form" style="display: none;">
-    <form method="POST" action="{{ url_for('main.preview_outfit') }}">
-        <label>Occasion:</label>
-        <select name="occasion" required>
-            <option value="">Select</option>
-            <option value="Casual">Casual</option>
-            <option value="Formal">Formal</option>
-            <option value="Work">Work</option>
-            <option value="Party">Party</option>
-            <option value="Gym">Gym</option>
-            <option value="Beach">Beach</option>
-            <option value="Travel">Travel</option>
-            <option value="Other">Other</option>
-        </select>
+    <!-- Create Outfit Form -->
+    <div id="create-outfit-form" class="create-outfit-form" style="display: none;">
+        <form method="POST" action="{{ url_for('main.preview_outfit') }}">
+            <label>Occasion:</label>
+            <select name="occasion" required>
+                <option value="">Select</option>
+                <option value="Casual">Casual</option>
+                <option value="Formal">Formal</option>
+                <option value="Work">Work</option>
+                <option value="Party">Party</option>
+                <option value="Gym">Gym</option>
+                <option value="Beach">Beach</option>
+                <option value="Travel">Travel</option>
+                <option value="Other">Other</option>
+            </select>
 
-        <label>Season:</label>
-        <select name="season" required>
-            <option value="">Select</option>
-            <option value="Summer">Summer</option>
-            <option value="Winter">Winter</option>
-            <option value="Spring">Spring</option>
-            <option value="Autumn">Autumn</option>
-        </select>
+            <label>Season:</label>
+            <select name="season" required>
+                <option value="">Select</option>
+                <option value="Summer">Summer</option>
+                <option value="Winter">Winter</option>
+                <option value="Spring">Spring</option>
+                <option value="Autumn">Autumn</option>
+            </select>
 
-        <button type="submit">Generate Preview</button>
-    </form>
-</div>
+            <button type="submit">Generate Preview</button>
+        </form>
+    </div>
 
-<!-- Filter by Season -->
-<div class="filters" data-type="season">
-    <span>Filter by Season:</span>
-    <button class="filter-btn active" onclick="filterOutfits('all', 'season', event)">All</button>
-    <button class="filter-btn" onclick="filterOutfits('Spring', 'season', event)">Spring</button>
-    <button class="filter-btn" onclick="filterOutfits('Summer', 'season', event)">Summer</button>
-    <button class="filter-btn" onclick="filterOutfits('Autumn', 'season', event)">Autumn</button>
-    <button class="filter-btn" onclick="filterOutfits('Winter', 'season', event)">Winter</button>
-</div>
+    <!-- Filter by Season -->
+    <div class="filters" data-type="season">
+        <span>Filter by Season:</span>
+        <button class="filter-btn active" onclick="filterOutfits('all', 'season', event)">All</button>
+        <button class="filter-btn" onclick="filterOutfits('Spring', 'season', event)">Spring</button>
+        <button class="filter-btn" onclick="filterOutfits('Summer', 'season', event)">Summer</button>
+        <button class="filter-btn" onclick="filterOutfits('Autumn', 'season', event)">Autumn</button>
+        <button class="filter-btn" onclick="filterOutfits('Winter', 'season', event)">Winter</button>
+    </div>
 
-<!-- Filter by Occasion -->
-<div class="filters" data-type="occasion">
-    <span>Filter by Occasion:</span>
-    <button class="filter-btn active" onclick="filterOutfits('all', 'occasion', event)">All</button>
-    <button class="filter-btn" onclick="filterOutfits('Casual', 'occasion', event)">Casual</button>
-    <button class="filter-btn" onclick="filterOutfits('Formal', 'occasion', event)">Formal</button>
-    <button class="filter-btn" onclick="filterOutfits('Work', 'occasion', event)">Work</button>
-    <button class="filter-btn" onclick="filterOutfits('Party', 'occasion', event)">Party</button>
-    <button class="filter-btn" onclick="filterOutfits('Gym', 'occasion', event)">Gym</button>
-    <button class="filter-btn" onclick="filterOutfits('Beach', 'occasion', event)">Beach</button>
-    <button class="filter-btn" onclick="filterOutfits('Travel', 'occasion', event)">Travel</button>
-    <button class="filter-btn" onclick="filterOutfits('Other', 'occasion', event)">Other</button>
-</div>
+    <!-- Filter by Occasion -->
+    <div class="filters" data-type="occasion">
+        <span>Filter by Occasion:</span>
+        <button class="filter-btn active" onclick="filterOutfits('all', 'occasion', event)">All</button>
+        <button class="filter-btn" onclick="filterOutfits('Casual', 'occasion', event)">Casual</button>
+        <button class="filter-btn" onclick="filterOutfits('Formal', 'occasion', event)">Formal</button>
+        <button class="filter-btn" onclick="filterOutfits('Work', 'occasion', event)">Work</button>
+        <button class="filter-btn" onclick="filterOutfits('Party', 'occasion', event)">Party</button>
+        <button class="filter-btn" onclick="filterOutfits('Gym', 'occasion', event)">Gym</button>
+        <button class="filter-btn" onclick="filterOutfits('Beach', 'occasion', event)">Beach</button>
+        <button class="filter-btn" onclick="filterOutfits('Travel', 'occasion', event)">Travel</button>
+        <button class="filter-btn" onclick="filterOutfits('Other', 'occasion', event)">Other</button>
+    </div>
 
-<!-- Outfit Preview -->
-{% if preview_image %}
-<div class="outfit-preview-container" id='preview-container'>
-    <h3>Outfit Preview</h3>
-    <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
+    <!-- Outfit Preview -->
+    {% if preview_image %}
+    <div class="outfit-preview-container" id='preview-container'>
+        <h3>Outfit Preview</h3>
+        <img src="{{ url_for('static', filename=preview_image) }}" alt="Outfit Preview">
 
-    <!--Regeneration Button-->
+        <!--Regeneration Button-->
 
-    <form method="POST" action ="{{ url_for('main.preview_outfit') }}" >
-        <input type = "hidden" name = "occasion" value = "{{ request.form.get('occasion') }}">
-        <input type = "hidden" name = "season" value = "{{ request.form.get('season') }}">
-        <button type = "submit"> Regenerate Outfit </button>
+        <form method="POST" action="{{ url_for('main.preview_outfit') }}">
+            <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
+            <input type="hidden" name="season" value="{{ request.form.get('season') }}">
+            <button type="submit"> Regenerate Outfit </button>
 
-    </form>
-
-    <!--Saving Button-->
-
-    <form method="POST" action="{{ url_for('main.save_outfit') }}" class="outfit-form">
-        <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
-        <input type="hidden" name="season" value="{{ request.form.get('season') }}">
-
-        <label>Outfit Name:</label>
-        <input type="text" name="outfit_name" required>
-
-        <button type="submit">Save Outfit</button>
-    </form>
-
-    <button onclick="hidePreview()" type="button" class="cancel-btn">Cancel</button>
-</div>
-{% endif %}
-
-<!-- Saved Outfits -->
-<div class="outfit-gallery">
-    {% for outfit in outfits %}
-    <div class="outfit-item" data-season="{{ outfit.season | lower }}" data-occasion="{{ outfit.occasion | lower }}" >
-        <h4>{{ outfit.outfit_name }}</h4>
-        <img src="{{ url_for('static', filename=outfit.preview_image or 'outfits/placeholder.png') }}" alt="Outfit Image">
-
-        <form action="{{ url_for('main.delete_outfit', outfit_id=outfit.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this outfit?');">
-            <button type="submit" class="delete-btn">Delete</button>
         </form>
 
-        <button onclick="openShareModal('{{ outfit.id }}')">Share</button>
+        <!--Saving Button-->
 
+        <form method="POST" action="{{ url_for('main.save_outfit') }}" class="outfit-form">
+            <input type="hidden" name="occasion" value="{{ request.form.get('occasion') }}">
+            <input type="hidden" name="season" value="{{ request.form.get('season') }}">
+
+            <label>Outfit Name:</label>
+            <input type="text" name="outfit_name" required>
+
+            <button type="submit">Save Outfit</button>
+        </form>
+
+        <button onclick="hidePreview()" type="button" class="cancel-btn">Cancel</button>
     </div>
-    {% endfor %}
-</div>
+    {% endif %}
+
+    <!-- Saved Outfits -->
+    <div class="outfit-gallery">
+        {% for outfit in outfits %}
+        <div class="outfit-item" data-season="{{ outfit.season | lower }}"
+            data-occasion="{{ outfit.occasion | lower }}">
+            <h4>{{ outfit.outfit_name }}</h4>
+            <img src="{{ url_for('static', filename=outfit.preview_image or 'outfits/placeholder.png') }}"
+                alt="Outfit Image">
+
+            <form action="{{ url_for('main.delete_outfit', outfit_id=outfit.id) }}" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this outfit?');">
+                <button type="submit" class="delete-btn">Delete</button>
+            </form>
+
+            <button onclick="openShareModal('{{ outfit.id }}')">Share</button>
+
+        </div>
+        {% endfor %}
+    </div>
 
     <!-- Share Modal -->
-<div id="shareModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeShareModal()">&times;</span>
-        <h3>Share Outfit</h3>
-        <form method="POST" action="{{ url_for('main.share_outfit') }}">
-            <input type="hidden" name="outfit_id" id="modalOutfitId">
-            <label>Username:</label>
-            <input type="text" name="username" placeholder="Enter username" required>
-            <button type="submit">Share</button>
-        </form>
+    <div id="shareModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeShareModal()">&times;</span>
+            <h3>Share Outfit</h3>
+            <form method="POST" action="{{ url_for('main.share_outfit') }}">
+                <input type="hidden" name="outfit_id" id="modalOutfitId">
+                <label>Username:</label>
+                <input type="text" name="username" placeholder="Enter username" required>
+                <button type="submit">Share</button>
+            </form>
+        </div>
     </div>
-</div>
-  
-  
-  
 
-<script>
 
-    let selectedSeason = "all";
-    let selectedOccasion = "all";
 
-    function filterOutfits(value, filterType, event) {
-        // Toggle active class
-        const filterButtons = document.querySelectorAll(`.filters[data-type="${filterType}"] .filter-btn`);
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
 
-        // Update selected filter
-        if (filterType === 'season') {
-            selectedSeason = value.toLowerCase();
-        } else if (filterType === 'occasion') {
-            selectedOccasion = value.toLowerCase();
+    <script>
+
+        let selectedSeason = "all";
+        let selectedOccasion = "all";
+
+        function filterOutfits(value, filterType, event) {
+            // Toggle active class
+            const filterButtons = document.querySelectorAll(`.filters[data-type="${filterType}"] .filter-btn`);
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update selected filter
+            if (filterType === 'season') {
+                selectedSeason = value.toLowerCase();
+            } else if (filterType === 'occasion') {
+                selectedOccasion = value.toLowerCase();
+            }
+
+            // Apply combined filtering
+            document.querySelectorAll(".outfit-item").forEach(item => {
+                const itemSeason = item.dataset.season?.toLowerCase() || '';
+                const itemOccasion = item.dataset.occasion?.toLowerCase() || '';
+
+                const matchSeason = (selectedSeason === "all" || itemSeason === selectedSeason);
+                const matchOccasion = (selectedOccasion === "all" || itemOccasion === selectedOccasion);
+
+                item.style.display = (matchSeason && matchOccasion) ? "" : "none";
+            });
         }
 
-        // Apply combined filtering
-        document.querySelectorAll(".outfit-item").forEach(item => {
-            const itemSeason = item.dataset.season?.toLowerCase() || '';
-            const itemOccasion = item.dataset.occasion?.toLowerCase() || '';
+        function openShareModal(outfitId) {
+            document.getElementById('modalOutfitId').value = outfitId;
+            document.getElementById('shareModal').style.display = 'flex';
+        }
 
-            const matchSeason = (selectedSeason === "all" || itemSeason === selectedSeason);
-            const matchOccasion = (selectedOccasion === "all" || itemOccasion === selectedOccasion);
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
 
-            item.style.display = (matchSeason && matchOccasion) ? "" : "none";
-        });
-    }
-
-    function openShareModal(outfitId) {
-    document.getElementById('modalOutfitId').value = outfitId;
-    document.getElementById('shareModal').style.display = 'flex';
-    }
-
-    function closeShareModal() {
-        document.getElementById('shareModal').style.display = 'none';
-    }
-
-    function hidePreview() {
-    document.getElementById('preview-container').style.display = 'none';
-}
+        function hidePreview() {
+            document.getElementById('preview-container').style.display = 'none';
+        }
 
 
 
 
 
-</script>
-
+    </script>
+</div>
 {% endblock %}

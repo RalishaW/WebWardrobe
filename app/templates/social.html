@@ -2,33 +2,40 @@
 {% block title %}Shared Outfits{% endblock %}
 
 {% block content %}
-<div class="wardrobe-header">
-  <h2>Shared With Me</h2>
-</div>
 
-{% if shared_entries %}
-<div class="outfit-gallery">
-  {% for entry in shared_entries %}
-  <div class="outfit-item">
-    <h4>{{ entry.outfit.outfit_name }}</h4>
-    <img src="{{ url_for('static', filename=entry.outfit.preview_image or 'outfits/placeholder.png') }}" alt="Outfit from {{ entry.sender.username }}">
-
-    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #444;">
-      Shared by: <strong>{{ entry.sender.username }}</strong>
-    </p>
-
-    <div class="tag-container" style="margin-top: 0.5rem;">
-      <span class="filter-btn">{{ entry.outfit.season }}</span>
-      <span class="filter-btn">{{ entry.outfit.occasion }}</span>
-    </div>
-
-    <form action="{{ url_for('main.delete_shared_outfit', shared_id=entry.id) }}" method="POST" onsubmit="return confirm('Remove this shared outfit?');">
-      <button type="submit" class="delete-btn">Remove</button>
-    </form>
+<div class="social-page">
+  <div class="wardrobe-header">
+    <h2>Shared With Me</h2>
   </div>
-  {% endfor %}
+
+  {% if shared_entries %}
+  <div class="outfit-gallery">
+    {% for entry in shared_entries %}
+    <div class="outfit-item">
+      <h4>{{ entry.outfit.outfit_name }}</h4>
+      <img src="{{ url_for('static', filename=entry.outfit.preview_image or 'outfits/placeholder.png') }}"
+        alt="Outfit from {{ entry.sender.username }}">
+
+      <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #444;">
+        Shared by: <strong>{{ entry.sender.username }}</strong>
+      </p>
+
+      <div class="tag-container" style="margin-top: 0.5rem;">
+        <span class="filter-btn">{{ entry.outfit.season }}</span>
+        <span class="filter-btn">{{ entry.outfit.occasion }}</span>
+      </div>
+
+      <form action="{{ url_for('main.delete_shared_outfit', shared_id=entry.id) }}" method="POST"
+        onsubmit="return confirm('Remove this shared outfit?');">
+        <button type="submit" class="delete-btn">Remove</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="margin: 2rem; text-align: center;">No outfits have been shared with you yet.</p>
+
+
+  {% endif %}
 </div>
-{% else %}
-<p style="margin: 2rem; text-align: center;">No outfits have been shared with you yet.</p>
-{% endif %}
 {% endblock %}
