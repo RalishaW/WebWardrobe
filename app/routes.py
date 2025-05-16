@@ -598,10 +598,10 @@ def profile():
     # ----------------------
     #  Delete Account Form 
     # ----------------------
-    if delete_form.validate_on_submit():
+    if request.form.get('form-name') == 'delete-form' and delete_form.validate_on_submit():
         if not check_password_hash(current_user.password, delete_form.password.data):
             flash('Incorrect password. Account not deleted', 'error')
-            return redirect(url_for('main.delete_account'))
+            return redirect(url_for('main.profile'))
         
         user_email = current_user.email
         try:
@@ -645,7 +645,7 @@ def profile():
     # ----------------------
     #  Password Reset Form
     # ----------------------
-    if form.validate_on_submit():
+    if request.form.get('form-name') == 'reset-password-form' and form.validate_on_submit():
         if not check_password_hash(current_user.password, form.current_password.data):
             flash("Incorrect password. Please try again", 'error')
         else:
