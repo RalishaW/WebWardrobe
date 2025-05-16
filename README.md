@@ -147,3 +147,10 @@ python -m unittest selenium_tests/Sele_tests.py
 - Get inspiration and see how they’re styling their wardrobes.
 
 ---
+## .env structure
+```bash
+SECRET_KEY=SECRET_KEY 
+FLASK_APP=fashanise.py
+MAIL_USERNAME=somemail@gmail.com
+MAIL_PASSWORD=sixteen-character-smtp-pwd
+```
