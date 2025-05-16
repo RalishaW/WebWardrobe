@@ -134,7 +134,7 @@ def add_clothing_item():
     if image and allowed_file(image.filename) and size_limit(image):
         filename = f"{user_id}_{secure_filename(image.filename)}"
 
-        upload_folder = os.path.join(current_app.root_path, 'static', current_app.config['UPLOAD_CLOTHING_ITEM'])
+        upload_folder = os.path.join(current_app.config['UPLOAD_CLOTHING_ITEM'])
         os.makedirs(upload_folder, exist_ok=True)
 
         filepath = os.path.join(upload_folder, filename)
