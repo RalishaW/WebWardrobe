@@ -752,49 +752,34 @@ Wardrobe page
 -------------------------------------------------- */
 
 .home-page {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header styles */
+/* --------------------------
+ Header Styles
+--------------------------- */
 .home-page header {
-background-color: #dde7fb;
-padding: 0rem 2rem;
-display: flex;
-align-items: center;
-justify-content: space-between;
-position: relative;
+  background-color: #dde7fb;
+  padding: 0rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
 .home-page .logo {
-display: flex;
-align-items: center;
-gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-
-.home-page .nav-links {
-display: flex;
-gap: 1.5rem;
-align-items: center;
-margin-left: auto;
-justify-content: flex-end;
-}
-
-.home-page .nav-links a {
-text-decoration: none;
-color: #1A2A4A;
-font-weight: 600;
-font-size: 1.2rem;
-}
-
 
 .middle {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
-  top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10; 
+  top: 50%;
+  z-index: 10;
 }
 
 .middle-text {
@@ -804,13 +789,27 @@ font-size: 1.2rem;
   font-style: italic;
 }
 
+.home-page .nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.home-page .nav-links a {
+  text-decoration: none;
+  color: #1A2A4A;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
 .nav-btn {
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   padding: 10px 24px;
   border-radius: 999px;
-  /* transition: background-color 0.3s ease, color 0.3s ease; */
   display: inline-block;
 }
 
@@ -826,7 +825,7 @@ font-size: 1.2rem;
 }
 
 .nav-btn.filled {
-  background-color: #000; 
+  background-color: #000;
   color: white !important;
 }
 
@@ -835,10 +834,74 @@ font-size: 1.2rem;
   color: rgb(3, 3, 3) !important;
 }
 
+/* --------------------------
+ Hero Section
+--------------------------- */
+.home-page .hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 5%;
+  padding-top: 5rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background: linear-gradient(to right, #ffffff, #fff5e2);
+}
+
+.home-page .hero-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.home-page .hero-text h1 {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+}
+
+.home-page .hero-text p.slogan {
+  font-size: 1.8rem;
+  color: #3B6ECA;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.home-page .hero-text p.description {
+  font-size: 1.3rem;
+  max-width: 500px;
+  padding-bottom: 1rem;
+}
+
+.hero-text {
+  animation: fadeIn 0.9s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.home-page .hero-subtext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home-page .cta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.home-page .cta form {
+  width: max-content;
+  margin: inherit;
+}
+
 .get-started-btn {
   display: inline-block;
   background-color: #000000;
-  color: rgb(255, 255, 255);
+  color: white;
   padding: 12px 28px;
   font-size: 1.2rem;
   font-weight: 600;
@@ -863,83 +926,23 @@ font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
-/* Hero section */
-.home-page .hero {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 3rem 5%;
-flex-wrap: wrap;
-padding-top: 5rem;
-gap: 2rem; 
-background: linear-gradient(to right,#ffffff, #fff5e2);
-}
-
-.home-page .hero-text {
-flex: 1;
-min-width: 300px;
-}
-
-.home-page .hero-text h1 {
-font-size: 6rem;
-margin-bottom: 1rem;
-}
-
-.home-page .hero-text p.slogan {
-font-size: 1.8rem;
-color: #3B6ECA;
-margin-bottom: 1rem;
-display: inline-block;
-}
-
-.home-page .hero-text p.description {
-font-size: 1.3rem;
-max-width: 500px;
-padding-bottom: 1rem;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.hero-text {
-  animation: fadeIn 0.9s ease forwards;
-}
-
-.home-page .hero-subtext {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.home-page .cta {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.home-page .cta form {
-  width: max-content;
-  margin: inherit;
-}
-
-/* Hero image */
+/* --------------------------
+ Hero Image
+--------------------------- */
 .home-page .hero-image {
-flex: 1;
-min-width: 300px;
-text-align: left;
-padding-right: 2rem;
-margin-top: -100px;
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+  padding-right: 2rem;
+  margin-top: -100px;
 }
 
 .home-page .hero-image img {
-width: 750px;  
-max-width: 100%;
-max-height: 700px;
-object-fit: contain;
-animation: spin 60s linear infinite;
+  width: 750px;
+  max-width: 100%;
+  max-height: 700px;
+  object-fit: contain;
+  animation: spin 60s linear infinite;
 }
 
 @keyframes spin {
@@ -947,42 +950,81 @@ animation: spin 60s linear infinite;
   100% { transform: rotate(360deg); }
 }
 
-/* Steps section */
+/* --------------------------
+ Steps Section (Old)
+--------------------------- */
 .home-page .steps {
-display: flex;
-justify-content: center;
-gap: 2rem;
-margin: 4rem auto;
-max-width: 1450px;
-max-height: 900px;
-text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 4rem auto;
+  max-width: 1450px;
+  max-height: 900px;
+  text-align: center;
 }
 
 .home-page .step {
-background-color: #eef2ff;
-border-radius: 12px;
-padding: 4rem 3rem;
-width: 400px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-transition: transform 0.2s ease-in-out;
+  background-color: #eef2ff;
+  border-radius: 12px;
+  padding: 4rem 3rem;
+  width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease-in-out;
 }
 
 .home-page .step h3 {
-font-size: 2rem;
-margin-bottom: 1rem;
-color: #4a69d9;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #4a69d9;
 }
 
 .home-page .step p {
-font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .home-page .step i {
-font-size: 3rem;
-margin-bottom: 0.8rem;
-color: #4a69d9;
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  color: #4a69d9;
 }
 
+/* --------------------------
+ Info Section (Mobbin-style Feature Cards)
+--------------------------- */
+.info-section {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 4rem 5%;
+  background-color: #e8d5d0;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.info-step {
+  max-width: 300px;
+  padding: 1rem;
+}
+
+.info-step img {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 1rem;
+}
+
+.info-step h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.info-step p {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.5;
+}
 /* --------------------------------------------------
  Social Page Styles
 -------------------------------------------------- */
@@ -1749,3 +1791,26 @@ input[type="file"] {
   box-shadow: 0 0 10px rgba(74, 105, 217, 0.3);
 }
 
+.footer {
+  
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+  border-top: none; /* optional */
+  margin-top: 0;
+}
+
+.footer a {
+  color: black;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-content p {
+  margin: 0.3rem 0;
+}
