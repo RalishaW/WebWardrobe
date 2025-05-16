@@ -151,7 +151,7 @@ async function fetchDataAndRenderCharts() {
   }
 
   renderChart("category", () => ({
-    type: "doughnut",
+    type: "pie",
     data: Object.keys(data.category_counts).length
       ? {
           labels: Object.keys(data.category_counts),
@@ -382,3 +382,46 @@ function filterWardrobe(type, event) {
       item.style.display = showItem ? '' : 'none';
   });
 }
+
+
+//Outfit.html
+let selectedSeason = "all";
+        let selectedOccasion = "all";
+
+        function filterOutfits(value, filterType, event) {
+            // Toggle active class
+            const filterButtons = document.querySelectorAll(`.filters[data-type="${filterType}"] .filter-btn`);
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update selected filter
+            if (filterType === 'season') {
+                selectedSeason = value.toLowerCase();
+            } else if (filterType === 'occasion') {
+                selectedOccasion = value.toLowerCase();
+            }
+
+            // Apply combined filtering
+            document.querySelectorAll(".outfit-item").forEach(item => {
+                const itemSeason = item.dataset.season?.toLowerCase() || '';
+                const itemOccasion = item.dataset.occasion?.toLowerCase() || '';
+
+                const matchSeason = (selectedSeason === "all" || itemSeason === selectedSeason);
+                const matchOccasion = (selectedOccasion === "all" || itemOccasion === selectedOccasion);
+
+                item.style.display = (matchSeason && matchOccasion) ? "" : "none";
+            });
+        }
+
+        function openShareModal(outfitId) {
+            document.getElementById('modalOutfitId').value = outfitId;
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function hidePreview() {
+            document.getElementById('preview-container').style.display = 'none';
+        }
