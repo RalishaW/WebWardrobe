@@ -462,6 +462,9 @@ def delete_outfit(outfit_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
+    SharedOutfit.query.filter_by(outfit_id=outfit.id).delete()
+
+
     # Delete outfit
     db.session.delete(outfit)
     db.session.commit()
@@ -551,10 +554,10 @@ def get_analysis_data():
     season_counts = Counter(item.season for item in items if item.season)
     color_counts = Counter(item.color for item in items if item.color)
 
-    # Limit display for 6 most common categories
-    most_common_categories = dict(category_counts.most_common(6))
+    # Limit display for 15 most common categories
+    most_common_categories = dict(category_counts.most_common(15))
     # Limit display for 6 most used color only
-    most_common_colors = dict(color_counts.most_common(6))
+    most_common_colors = dict(color_counts.most_common(11))
 
     return jsonify({
         'category_counts': most_common_categories,
