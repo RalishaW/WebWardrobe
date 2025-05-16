@@ -1,10 +1,12 @@
+import os 
+import sys 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
 
-from .config import Config
+from .config import Config, config_dict
 
 # Extension instances
 db = SQLAlchemy()
@@ -14,8 +16,19 @@ mail = Mail()
 
 def create_app(config_object=Config):
     app = Flask(__name__, instance_relative_config=True)
+
+    #Use TestingConfig if running via unittest
+    if 'unittest' in sys.modules:
+        config_object = config_dict['testing']
+    else:
+        config_object = config_dict['default']
+
     app.config.from_object(config_object)
-    config_object.init_app(app)
+
+    app.config['CONFIG_CLASS'] = config_object
+
+    if hasattr(config_object, 'init_app'):
+        config_object.init_app(app)
 
     # Initialize extensions
     db.init_app(app)

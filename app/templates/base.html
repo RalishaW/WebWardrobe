@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -22,7 +22,7 @@
         <nav>
             <div class="navbar-container">
                 <div class="logo">
-                    <a href="{{ url_for('main.home') }}">
+                    <a href="{{ url_for('main.intro') }}">
                         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
                     </a>
                     

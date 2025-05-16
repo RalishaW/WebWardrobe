@@ -1,18 +1,19 @@
 import os, random
-from flask import current_app, render_template, redirect, url_for, request, flash, jsonify
+from flask import current_app, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 from .models import db, User, ClothingItem, Outfit, SharedOutfit, OutfitItem
 from .forms import (LoginForm, SignupForm,
-                    RequestResetPasswordForm, ResetPasswordForm)
+                    RequestResetPasswordForm, ResetPasswordForm,
+                    ResetPasswordFormProfile, DeleteAccountForm)
 from .utils import (
     allowed_file, size_limit, make_image_transparent,
     generate_reset_token, verify_reset_token, try_to_login,
     send_notification_welcome, send_notification_shared_outfit,
     send_notification_delete,
 )
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Message
 from PIL import Image
@@ -21,6 +22,9 @@ from collections import Counter
 from app import mail
 from app.blueprints import main
 from pathlib import Path
+from datetime import datetime
+from hashlib import sha256
+
 
 
 # Introductory / Landing Page
@@ -29,6 +33,10 @@ def home():
     if current_user.is_authenticated:
         return redirect(url_for('main.wardrobe'))
     flash("Welcome to Fashanise!", "info")
+    return render_template("home.html")
+
+@main.route("/intro")
+def intro():
     return render_template("home.html")
 
 
@@ -93,31 +101,6 @@ def logout():
     flash('Logged out successfully.', 'info')
     return redirect(url_for('main.home'))
 
-@main.route('/profile/delete-account')
-@login_required
-def delete_account():
-    user_email = current_user.email
-
-    try:
-        db.session.delete(current_user)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.error(f"Error deleting user {user_email}: {e}")
-        flash("Could not delete your account. Please try again", 'error')
-        return redirect(url_for('main.wardrobe'))
-
-    logout_user()
-
-    # Send notification of deleting
-    try:
-        send_notification_delete(user_email)
-    except Exception as e:
-        current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
-
-    flash("Your account has been deleted. We are sorry to see you go!", "info")
-    return redirect(url_for('main.home'))
-
 # Core Pages
 @main.route('/wardrobe')
 @login_required
@@ -141,10 +124,17 @@ def add_clothing_item():
 
     image = request.files['image']
 
+    existing_named = ClothingItem.query. filter_by(user_id=user_id, item_name=item_name).first()
+    if existing_named:
+        flash ("You already have an item with this name. Please use another name.", "error")
+        return redirect(url_for('main.wardrobe' ))
+    
+
+
     if image and allowed_file(image.filename) and size_limit(image):
         filename = f"{user_id}_{secure_filename(image.filename)}"
 
-        upload_folder = os.path.join(current_app.root_path, 'static', current_app.config['UPLOAD_CLOTHING_ITEM'])
+        upload_folder = os.path.join(current_app.config['UPLOAD_CLOTHING_ITEM'])
         os.makedirs(upload_folder, exist_ok=True)
 
         filepath = os.path.join(upload_folder, filename)
@@ -162,11 +152,35 @@ def add_clothing_item():
         
         new_filepath = make_image_transparent(filepath, filepath)
 
+        # If the transparent version was saved to a different file (like PNG), delete the original
+        if not new_filepath.endswith(os.path.splitext(filepath)[1]):
+            try:
+                os.remove(filepath)
+                current_app.logger.info(f"Deleted original file: {filepath}")
+            except Exception as e:
+                current_app.logger.warning(f"Could not delete original file {filepath}: {e}")
+
+
+        with open (new_filepath, 'rb') as f:
+            uploaded_hash = sha256(f.read()).hexdigest()
+
+        user_items = ClothingItem.query. filter_by(user_id=user_id) .all ()
+        for item in user_items:
+            existing_path = os.path.join(current_app. root_path, 'static', item. image_path)
+            if os.path.exists (existing_path) :
+                with open(existing_path, 'rb') as existing_file:
+                    existing_hash = sha256(existing_file. read()).hexdigest()
+                    if uploaded_hash == existing_hash:
+                        os.remove(filepath)
+                        flash ("This image already exists in your wardrobe.", "error") 
+                        return redirect(url_for('main.wardrobe' ))
+
         # Get only the path relative to static/
+        static_folder = os.path.join(current_app.root_path, 'static')
         try:
-            relative_path = str(Path(new_filepath).relative_to(Path(current_app.root_path) / 'static'))
+            relative_path = str(Path(new_filepath).relative_to(static_folder))
         except ValueError:
-            relative_path = "clothing_items/" + filename
+            relative_path = f"clothing_items/{Path(new_filepath).name}"
 
 
         new_item = ClothingItem(
@@ -234,7 +248,7 @@ def request_reset_password():
         flash("If email is registed, an email will be sent to your inbox.", "info")
     return render_template('request_reset_password.html', form=request_form)
 
-# Reset password using JWT Token
+# Reset password using JWT Token from /request_reset_password
 @main.route('/reset_password/token=<token>', methods=['GET', 'POST'])
 def reset_password(token):
     form = ResetPasswordForm()
@@ -263,8 +277,7 @@ def reset_password(token):
 
     return render_template('reset_password.html', form=form, token=token)
 
-
-
+# Outfit page
 @main.route("/outfits", methods=["GET"])
 @login_required
 def outfits():
@@ -272,7 +285,7 @@ def outfits():
     user_outfits = Outfit.query.filter_by(user_id=user_id).all()
     return render_template("outfit.html", outfits=user_outfits)
 
-
+# Preview image generator
 @main.route('/preview_outfit', methods=['POST'])
 @login_required
 def preview_outfit():
@@ -337,7 +350,9 @@ def preview_outfit():
 
     if not selected_items:
         flash('No matching items found!', 'error')
-        return redirect(url_for('outfits'))
+        return redirect(url_for('main.outfits'))
+    
+    session['selected_item_ids'] = [item.id for item in selected_items]
 
     # Generate outfit preview image
     images = []
@@ -364,18 +379,17 @@ def preview_outfit():
 
     return render_template('outfit.html', preview_image=f"outfits/{preview_filename}", preview_items=selected_items, outfits=Outfit.query.filter_by(user_id=current_user.id).all())
 
-
+# Save outfit
 @main.route('/save_outfit', methods=['POST'])
 @login_required
 def save_outfit():
     outfit_name = request.form.get('outfit_name')
-    privacy = request.form.get('privacy')
     occasion = request.form.get('occasion')
     season = request.form.get('season')
 
-    if not outfit_name or not privacy:
-        flash('Please enter name and privacy.', 'error')
-        return redirect(url_for('outfits'))
+    if not outfit_name:
+        flash('Please enter name.', 'error')
+        return redirect(url_for('main.outfits'))
 
     preview_filename = f"preview_{current_user.id}.png"
     preview_path = os.path.join(current_app.root_path, 'static', 'outfits', preview_filename)
@@ -383,11 +397,28 @@ def save_outfit():
     if not os.path.exists(preview_path):
         flash('No preview available to save.', 'error')
         return redirect(url_for('main.outfits'))
+    
+    #check for duplicate name
+    existing_name = Outfit.query.filter_by(user_id=current_user.id, outfit_name=outfit_name).first()
+    if existing_name:
+        flash('You already have an outfit with this name. Please choose a different one.', 'error')
+        return redirect(url_for('main.outfits'))
+    
+    selected_item_ids = session.get('selected_item_ids', [])
+    if not selected_item_ids:
+        flash("No selected items found. Please generate a preview again.", "error")
+        return redirect(url_for('main.outfits'))
+
+    existing_outfits = Outfit.query.filter_by(user_id=current_user.id, occasion=occasion, season=season).all()
+    for outfit in existing_outfits:
+        outfit_item_ids = [item.clothing_item_id for item in OutfitItem.query.filter_by(outfit_id=outfit.id).all()]
+        if set(outfit_item_ids) == set(selected_item_ids):
+            flash("You've already saved this exact outfit. Try generating a different one!", "error")
+            return redirect(url_for('main.outfits'))
 
     # Save Outfit record
     new_outfit = Outfit(
         outfit_name=outfit_name,
-        privacy=privacy,
         occasion=occasion,
         season=season,
         user_id=current_user.id
@@ -404,12 +435,17 @@ def save_outfit():
     new_outfit.preview_image = f"outfits/{final_filename}"
     db.session.commit()
 
+    for item_id in selected_item_ids:
+        db.session.add(OutfitItem(outfit_id=new_outfit.id, clothing_item_id=item_id))
+    db.session.commit()
+
     if os.path.exists(preview_path):
         os.remove(preview_path)
 
     flash("Outfit saved!", "success")
     return redirect(url_for('main.outfits'))
 
+# Delete outfit
 @main.route('/outfits/delete/<int:outfit_id>', methods=["POST"])
 @login_required
 def delete_outfit(outfit_id):
@@ -461,7 +497,7 @@ def share_outfit():
     flash("Outfit shared successfully!", "success")
     return redirect(url_for("main.outfits"))
 
-
+# Analysis page
 @main.route('/analysis')
 @login_required
 def analysis():
@@ -526,6 +562,7 @@ def get_analysis_data():
         'color_counts': most_common_colors
     })
 
+# Social page
 @main.route('/social')
 @login_required
 def social():
@@ -548,29 +585,121 @@ def delete_shared_outfit(shared_id):
     return redirect(url_for('main.social'))
 
 
-#profile page
-@main.route("/profile")
+# Profile page
+@main.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template("profile.html", user=current_user)
+    form = ResetPasswordFormProfile()
+    delete_form = DeleteAccountForm()
 
-#profile pic
+    # ----------------------
+    #  Delete Account Form 
+    # ----------------------
+    if delete_form.validate_on_submit():
+        if not check_password_hash(current_user.password, delete_form.password.data):
+            flash('Incorrect password. Account not deleted', 'error')
+            return redirect(url_for('main.delete_account'))
+        
+        user_email = current_user.email
+        try:
+            db.session.delete(current_user)
+            db.session.commit()
+            
+            logout_user()
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Error deleting user {user_email}: {e}")
+            flash("Could not delete your account. Please try again", 'error')
+            return redirect(url_for('main.profile'))
+
+        logout_user()
+        # Send notification of deleting
+        try:
+            send_notification_delete(user_email)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send delete-account to {user_email}: {e}")
+
+        flash("Your account has been deleted. We are sorry to see you go!", "info")
+        return redirect(url_for('main.home'))
+
+    # ----------------------
+    #  Personal information
+    # ----------------------
+    if request.method == 'POST' and request.form.get('action') == 'save_info':
+        dob_str = request.form.get('dob')
+        height_str = request.form.get('height')
+        try:
+            current_user.dob    = datetime.strptime(dob_str, "%Y-%m-%d").date() if dob_str else None
+            current_user.height = int(height_str) if height_str else None
+            db.session.commit()
+            flash('Personal information updated.', 'success')
+        except Exception:
+            db.session.rollback()
+            flash('Failed to update personal information.', 'error')
+        
+        return redirect(url_for('main.profile'))
+    
+    # ----------------------
+    #  Password Reset Form
+    # ----------------------
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.current_password.data):
+            flash("Incorrect password. Please try again", 'error')
+        else:
+            current_user.password = generate_password_hash(
+                form.password.data, method="pbkdf2:sha256"
+            )
+            db.session.commit()
+            flash("Password updated successfully", 'success')
+
+        return redirect(url_for('main.profile'))
+
+    # ----------------------
+    #  Style tags ClothingItem
+    # ----------------------
+    items = ClothingItem.query.filter_by(user_id=current_user.id).all()
+    # count each attribute
+    type_counts   = Counter(item.type   for item in items if item.type)
+    color_counts  = Counter(item.color  for item in items if item.color)
+    season_counts = Counter(item.season for item in items if item.season)
+
+    # only choose 3
+    top_types   = [t for t,_ in type_counts.most_common(3)]
+    top_colors  = [c for c,_ in color_counts.most_common(3)]
+    top_seasons = [s for s,_ in season_counts.most_common(3)]
+
+    style_tags = top_types + top_colors + top_seasons
+
+    # ----------------------
+    #  Display the page
+    # ----------------------
+    return render_template(
+        "profile.html",
+        user=current_user,
+        form=form,
+        delete_form=delete_form,
+        style_tags=", ".join(style_tags)
+    )
+
+# Profile - picture upload
 @main.route('/upload_profile_pic', methods=['POST'])
 @login_required
 def upload_profile_pic():
-    file = request.files['profile_pic']
-    if file and file.filename != '':
-        from werkzeug.utils import secure_filename
+    file = request.files.get('profile_pic')
+    if not file or not allowed_file(file.filename):
+        flash('Please select a valid image file (png/jpg/jpeg/webp).', 'error')
+        return redirect(url_for('main.profile'))
 
-        filename = secure_filename(f"{current_user.username}_profile.png")
-        file_path = os.path.join('profile_picture', filename)
-        upload_path = os.path.join('app', 'static', file_path)
-        file.save(upload_path)
+    filename = secure_filename(f"{current_user.username}_profile.png")
+    file_path = os.path.join('profile_picture', filename)
+    upload_path = os.path.join('app', 'static', file_path)
+    file.save(upload_path)
 
-        current_user.profile_picture = file_path
-        db.session.commit()
+    current_user.profile_picture = file_path
+    db.session.commit()
+    flash('Your profile picture has been updated!', 'success')
 
-    return redirect(url_for('profile'))
+    return redirect(url_for('main.profile'))
 
 
 # # Disable in deployment

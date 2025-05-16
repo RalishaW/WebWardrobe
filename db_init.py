@@ -6,6 +6,7 @@
 import os
 from app import create_app, db
 from app.config import Config
+from flask_migrate import upgrade
 
 # Create app with default (development) config
 app = create_app(Config)
@@ -18,7 +19,7 @@ if os.path.exists(old_file):
 
 # Recreate database tables
 with app.app_context():
-    db.create_all()
+    upgrade()
     print("[INFO] Fresh database tables created")
 
 

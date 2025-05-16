@@ -25,6 +25,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)  # Will store hashed password later
     profile_picture = db.Column(db.String, default='images/empty-profile-pic.png')
+    dob = db.Column(db.Date, nullable=True)
+    height = db.Column(db.Integer, nullable=True)
 
     wardrobe_items = db.relationship('ClothingItem', backref='user', lazy='dynamic')
     outfits = db.relationship('Outfit', backref='user', lazy='dynamic')
@@ -53,7 +55,6 @@ class Outfit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     outfit_name = db.Column(db.String(100), nullable=False)
-    privacy = db.Column(Enum('public', 'private', name='privacy-enum'), nullable=False)  # 'public' or 'private'
     preview_image = db.Column(db.String(200))           # file path to generated outfit preview
     occasion = db.Column(db.String(50))
     season = db.Column(db.String(50))
