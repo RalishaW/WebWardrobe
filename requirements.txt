@@ -2,28 +2,47 @@
 # Requirements modules             #
 # pip install -r requirements.txt     #
 # -------------------------------- #
-# Flask and extensions
-flask
-flask_wtf
-flask_sqlalchemy
-wtforms
-flask_login
-flask_migrate
-flask_mail
-flask_testing
+# Core Flask and extensions
+Flask==3.1.1
+Flask-Login==0.6.3
+Flask-Mail==0.10.0
+Flask-Migrate==4.1.0
+Flask-SQLAlchemy==3.1.1
+Flask-Testing==0.8.1
+Flask-WTF==1.2.2
+WTForms==3.2.1
+SQLAlchemy==2.0.40
+
+# Utility
+email_validator==2.2.0
+python-dotenv==1.1.0
+click==8.1.8
+itsdangerous==2.2.0
+Jinja2==3.1.6
+Werkzeug==3.1.3
+MarkupSafe==3.0.2
 
 # Image processing
-rembg
-Pillow
-
-selenium
-
-# Conditional dependency (choose one depending on your system)
-onnxruntime-silicon; platform_system == "Darwin" and platform_machine == "arm64"
-onnxruntime; platform_system != "Darwin" or platform_machine != "arm64"
-
-# Others
+rembg==2.0.61
+Pillow==11.2.1
 numpy==1.24.4
-email_validator
-pyjwt
+onnxruntime-silicon==1.16.0 ; platform_system == "Darwin" and platform_machine == "arm64"
+onnxruntime==1.16.0 ; platform_system != "Darwin" or platform_machine != "arm64"
 
+# Charts and math
+scipy==1.13.1
+sympy==1.14.0
+
+# Web + requests
+requests==2.32.3
+urllib3==2.4.0
+certifi==2025.4.26
+charset-normalizer==3.4.2
+idna==3.10
+
+# Testing
+selenium==4.32.0
+
+# Dev Tools (optional)
+alembic==1.15.2
+Mako==1.3.10
