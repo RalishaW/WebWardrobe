@@ -59,7 +59,20 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Launch the application
+## 4 .env structure
+- Create .env file (This is an example)
+```bash
+SECRET_KEY=SECRET_KEY 
+FLASK_APP=fashanise.py
+MAIL_USERNAME=somemail@gmail.com
+MAIL_PASSWORD=sixteen-character-smtp-pwd
+```
+### 5. Initialise a clean database
+```bash
+python3 db.init.py
+```
+
+### 6. Launch the application
 
 ```bash
 flask run
@@ -145,12 +158,3 @@ python -m unittest selenium_tests/Sele_tests.py
 
 - Head to the **Social** page to browse outfits shared by other users to you.
 - Get inspiration and see how they’re styling their wardrobes.
-
----
-## .env structure
-```bash
-SECRET_KEY=SECRET_KEY 
-FLASK_APP=fashanise.py
-MAIL_USERNAME=somemail@gmail.com
-MAIL_PASSWORD=sixteen-character-smtp-pwd
-```
