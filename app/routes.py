@@ -176,10 +176,11 @@ def add_clothing_item():
                         return redirect(url_for('main.wardrobe' ))
 
         # Get only the path relative to static/
+        static_folder = os.path.join(current_app.root_path, 'static')
         try:
-            relative_path = str(Path(new_filepath).relative_to(Path(current_app.root_path) / 'static'))
+            relative_path = str(Path(new_filepath).relative_to(static_folder))
         except ValueError:
-            relative_path = "clothing_items/" + filename
+            relative_path = f"clothing_items/{Path(new_filepath).name}"
 
 
         new_item = ClothingItem(
