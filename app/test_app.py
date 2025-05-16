@@ -253,7 +253,7 @@ class UnitTest(unittest.TestCase):
 
         response = self.client.post(f'/outfits/delete/{of.id}', follow_redirects=True)
 
-        self.assertIsNone(Outfit.query.get(of.id))
+        self.assertIsNone(db.session.get(Outfit, of.id))
     
     ### SOCIAL TEST CASES
     def test_share_outfit(self):
@@ -285,8 +285,8 @@ class UnitTest(unittest.TestCase):
         response = self.client.post(
             f'/social/delete/{so.id}', 
             follow_redirects=True)
-
-        self.assertIsNone(SharedOutfit.query.get(so.id))
+        
+        self.assertIsNone(db.session.get(SharedOutfit, so.id))
     
     ### CHANGE PASSWORD TEST CASE
     def test_change_password(self):
