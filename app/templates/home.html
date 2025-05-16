@@ -41,23 +41,31 @@
   </section>
 
   <!-- Steps Section -->
-  <section class="steps">
-    <div class="step">
-      <i class="fa-solid fa-shirt"></i>
-      <h3>Step 1:</h3>
-      <p>Add Your Clothes</p>
+  <section class="info-section">
+    <div class="info-step">
+      <img src="{{ url_for('static', filename='images/smiley.png') }}" alt="Smiley Icon">
+      <h3>Find Your Style</h3>
+      <p>Outfit generator for fashion inspiration. Mix, match, and flaunt.</p>
     </div>
-    <div class="step">
-      <i class="fa-solid fa-wand-magic-sparkles"></i>
-      <h3>Step 2:</h3>
-      <p>Get Outfit Ideas</p>
+    <div class="info-step">
+      <img src="{{ url_for('static', filename='images/clock1.png') }}" alt="Clock Icon">
+      <h3>List instantly</h3>
+      <p>Cataloging is a breeze. From wardrobe to web in moments.</p>
     </div>
-    <div class="step">
-      <i class="fa-solid fa-chart-simple"></i>
-      <h3>Step 3:</h3>
-      <p>Learn Your Style</p>
+    <div class="info-step">
+      <img src="{{ url_for('static', filename='images/refresh.png') }}" alt="Refresh Icon">
+      <h3>Refresh your closet</h3>
+      <p>One-stop app to declutter & discover. Sell, shop, and swap seamlessly.</p>
     </div>
   </section>
-
 </div>
+
+<footer class="footer">
+  <div class="footer-content">
+    <p>&copy; 2025 Fashanize</p>
+    <p><a href="mailto:fashanize@gmail.com">fashanize@gmail.com</a></p>
+  </div>
+</footer>
+
 {% endblock %}
+
