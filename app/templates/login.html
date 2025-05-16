@@ -1,88 +1,65 @@
 {% extends "base2.html" %}
 
 {% block content %}
-<div class="container login-page">
-  <div class="split left">
-    <div class="centered">
-      <a href="{{ url_for('main.home') }}">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" />
-      </a>
-      
-      <p class="Welcome"><b>Welcome Back!</b></p>
-      <br>
-      <p>Login to access your virtual wardrobe and <br>style recommendations </p>
+<div class="auth-background">
+  <div class="floating-icons">
+    <img src="{{ url_for('static', filename='icons/1_puff1.png') }}" class="float-icon" style="top: 8%; left: 15%;">
+    <img src="{{ url_for('static', filename='icons/1_puff2.png') }}" class="float-icon" style="top: 12%; right: 10%;">
+    <img src="{{ url_for('static', filename='icons/1_puff3.png') }}" class="float-icon" style="top: 45%; left: 7%;">  
+    <img src="{{ url_for('static', filename='icons/1_puff4.png') }}" class="float-icon" style="bottom: 10%; right: 6%;">
+    <img src="{{ url_for('static', filename='icons/1_puff6.png') }}" class="float-icon" style="top: 35%; right: 4%;">
 
-      <br>
+    <img src="{{ url_for('static', filename='icons/1_puff7.png') }}" class="float-icon" style="top: 29%; left: 20%;">
+    <img src="{{ url_for('static', filename='icons/1_puff9.png') }}" class="float-icon" style="top: 53%; left: 20%;">  
 
-      <div class="star_row">
-        <div class="pic"></div>
-        <p>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-        </p>
-      </div>
-      
-      <br> 
-
-      <div class="star_row">
-        <div class="pic"></div>
-        <p>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-        </p>
-      </div>
-    </div>
+    <img src="{{ url_for('static', filename='icons/1_puff12.png') }}" class="float-icon" style="top: 71%; left: 15%;">
+    <img src="{{ url_for('static', filename='icons/1_puff13.png') }}" class="float-icon" style="top: 55%; right: 23%;">
+    <img src="{{ url_for('static', filename='icons/1_puff14.png') }}" class="float-icon" style="top: 21%; left: 5%;">  
+    <img src="{{ url_for('static', filename='icons/1_puff15.png') }}" class="float-icon" style="bottom: 64%; right: 20%;">
+    <img src="{{ url_for('static', filename='icons/1_puff16.png') }}" class="float-icon" style="top: 67%; right: 12%;">
+  
   </div>
 
-  <div class="split right">
-    <div class="centered2">
-      <div class="sign_up">
-        <div class="tabs">
-          <a href="{{ url_for('main.signup') }}">Sign-Up</a>
-          <a href="{{ url_for('main.login') }}" class="selected">Log-In</a>
-        </div>
+  <div class="auth-box">
+    <a href="{{ url_for('main.home') }}">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Fashonise Logo" class="auth-logo" />
+    </a>
 
-        <div class="form_container">
-          <form method="POST" action="{{ url_for('main.login') }}">
-            {{ form.hidden_tag() }}
-            <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
-            {{ form.email(class='form-control', id='email') }}
-            {% for err in form.email.errors %}
-              <div class="error">{{ err }}</div>
-            {% endfor %}
-
-
-            <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
-            {{ form.password(class='form-control', id='password') }}
-            {% for err in form.password.errors %}
-              <div class="error">{{ err }}</div>
-            {% endfor %}
-
-            <div class="remember">
-              <div class="remember-left">
-                {{ form.remember() }}
-                <label for="remember">Remember Me</label>
-              </div>
-              <a href="{{ url_for('main.request_reset_password') }}" class="Forgot">Forgot Password?</a>
-            </div>
-
-            <div class="button_final">
-              <button type="submit">Log In</button>
-              
-              <p class="no_account">
-                <br>
-                Don't have an account? <a href="{{ url_for('main.signup') }}">Sign Up</a>
-              </p>
-            </div>
-          </form>
-        </div>
-
-      </div>
+    <div class="tabs">
+      <a href="{{ url_for('main.signup') }}">Sign-Up</a>
+      <a href="{{ url_for('main.login') }}" class="selected">Log-In</a>
     </div>
+
+    <form method="POST" action="{{ url_for('main.login') }}">
+      {{ form.hidden_tag() }}
+
+      <label for="email"><i class="fa-solid fa-envelope"></i> Email:</label>
+      {{ form.email(class='form-control', id='email') }}
+      {% for err in form.email.errors %}
+        <div class="error">{{ err }}</div>
+      {% endfor %}
+
+      <label for="password"><i class="fa-solid fa-lock"></i> Password:</label>
+      {{ form.password(class='form-control', id='password') }}
+      {% for err in form.password.errors %}
+        <div class="error">{{ err }}</div>
+      {% endfor %}
+
+      <div class="remember">
+        <div class="remember-left">
+          {{ form.remember() }}
+          <label for="remember">Remember Me</label>
+        </div>
+        <a href="{{ url_for('main.request_reset_password') }}" class="Forgot">Forgot Password?</a>
+      </div>
+
+      <button type="submit">Log In</button>
+
+      <p class="no_account">
+        <br>
+        Don't have an account? <a href="{{ url_for('main.signup') }}">Sign Up</a>
+      </p>
+    </form>
   </div>
 </div>
 {% endblock %}
