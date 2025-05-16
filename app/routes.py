@@ -206,7 +206,7 @@ def add_clothing_item():
 @main.route('/wardrobe/delete/<int:item_id>', methods=["POST"])
 @login_required
 def delete_clothing_item(item_id):
-    item = ClothingItem.query.get_or_404(item_id)
+    item = db.session.get(ClothingItem, item_id)
 
     # Check if the item belongs to the logged-in user
     if item.user_id != current_user.id:
@@ -449,7 +449,7 @@ def save_outfit():
 @main.route('/outfits/delete/<int:outfit_id>', methods=["POST"])
 @login_required
 def delete_outfit(outfit_id):
-    outfit = Outfit.query.get_or_404(outfit_id)
+    outfit = db.session.get(Outfit, outfit_id)
 
     # Check if outfit belongs to user
     if outfit.user_id != current_user.id:
@@ -575,7 +575,7 @@ def social():
 @main.route('/social/delete/<int:shared_id>', methods=['POST'])
 @login_required
 def delete_shared_outfit(shared_id):
-    shared = SharedOutfit.query.get_or_404(shared_id)
+    shared = db.session.get(SharedOutfit, shared_id)
 
     # Allowed both receiver and sender to delete 
     if current_user.id not in (shared.sender_id, shared.receiver_id):
