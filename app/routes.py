@@ -596,7 +596,6 @@ def profile():
             db.session.commit()
             
             logout_user()
-            
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error deleting user {user_email}: {e}")
