@@ -312,3 +312,73 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("trigger-delete")?.addEventListener("click", showDeleteModal);
   document.getElementById("cancel-delete")?.addEventListener("click",  hideDeleteModal);
 });
+
+
+//wardrobe.html
+
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('#upload-form form');
+  const submitBtn = document.getElementById('submit-btn');
+
+  form.addEventListener('submit', function () {
+      submitBtn.disabled = true;
+      submitBtn.value = 'Uploading...'; // Optional: change button text
+  });
+});
+
+function toggleUploadForm() {
+  const form = document.getElementById("upload-form");
+  form.style.display = form.style.display === "none" ? "flex" : "none";
+}
+
+// Image preview on upload
+function previewImage(event) {
+  const preview = document.getElementById('image-preview');
+  preview.src = URL.createObjectURL(event.target.files[0]);
+}
+
+const filterGroups = {
+  "Tops": ["Top", "T-Shirt", "Shirt", "Blouse", "Sweater", "Hoodie"],
+  "Pants": ["Pant", "Jeans", "Shorts"],
+  "Jackets": ["Jackets", "Coat"],
+  "Dresses": ["Dress"],
+  "Shoes": ["Shoes"],
+  "Accessories": ["Accessory"]
+};
+
+// Wardrobe item filter
+function filterWardrobe(type, event) {
+  const buttons = document.querySelectorAll('.filters[data-type="type"] .filter-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Normalize filter type
+  const normalizedType = type.toLowerCase().trim();
+
+  document.querySelectorAll('.wardrobe-item').forEach(item => {
+      const itemType = item.getAttribute('data-type')?.toLowerCase().trim();
+
+      if (normalizedType === 'all') {
+          item.style.display = '';
+          return;
+      }
+
+      let showItem = false;
+
+      // Check if filter group exists
+      Object.keys(filterGroups).forEach(groupName => {
+          const groupItems = filterGroups[groupName].map(t => t.toLowerCase().trim());
+
+          if (groupName.toLowerCase() === normalizedType && groupItems.includes(itemType)) {
+              showItem = true;
+          }
+      });
+
+      // If not in group, directly compare type
+      if (!showItem && normalizedType === itemType) {
+          showItem = true;
+      }
+
+      item.style.display = showItem ? '' : 'none';
+  });
+}
