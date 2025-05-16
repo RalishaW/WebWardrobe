@@ -152,6 +152,15 @@ def add_clothing_item():
         
         new_filepath = make_image_transparent(filepath, filepath)
 
+        # If the transparent version was saved to a different file (like PNG), delete the original
+        if not new_filepath.endswith(os.path.splitext(filepath)[1]):
+            try:
+                os.remove(filepath)
+                current_app.logger.info(f"Deleted original file: {filepath}")
+            except Exception as e:
+                current_app.logger.warning(f"Could not delete original file {filepath}: {e}")
+
+
         with open (new_filepath, 'rb') as f:
             uploaded_hash = sha256(f.read()).hexdigest()
 
@@ -167,10 +176,11 @@ def add_clothing_item():
                         return redirect(url_for('main.wardrobe' ))
 
         # Get only the path relative to static/
+        static_folder = os.path.join(current_app.root_path, 'static')
         try:
-            relative_path = str(Path(new_filepath).relative_to(Path(current_app.root_path) / 'static'))
+            relative_path = str(Path(new_filepath).relative_to(static_folder))
         except ValueError:
-            relative_path = "clothing_items/" + filename
+            relative_path = f"clothing_items/{Path(new_filepath).name}"
 
 
         new_item = ClothingItem(
