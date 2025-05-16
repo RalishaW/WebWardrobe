@@ -28,8 +28,8 @@ class User(db.Model, UserMixin):
     dob = db.Column(db.Date, nullable=True)
     height = db.Column(db.Integer, nullable=True)
 
-    wardrobe_items = db.relationship('ClothingItem', backref='user', lazy='dynamic')
-    outfits = db.relationship('Outfit', backref='user', lazy='dynamic')
+    wardrobe_items = db.relationship('ClothingItem', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    outfits = db.relationship('Outfit', backref='user', lazy='dynamic', cascade='all, delete-orphan')
 
 # ----------------------
 # Clothing Item Model

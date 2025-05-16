@@ -44,7 +44,7 @@
         </button>
       </form>
 
-      <!-- Delete Account-->
+      <!-- Delete Account Field -->
       <button type="button" class="btn delete" id="trigger-delete">
         Delete Account
       </button>
@@ -56,6 +56,7 @@
             <p>Please enter your password to confirm:</p>
 
             <form method="POST" action="{{ url_for('main.profile') }}">
+              <input type="hidden" name="form-name" value="delete-form">
               {{ delete_form.hidden_tag() }}
               <div>
                 {{ delete_form.password(class="form-control", placeholder="Your Password") }}
@@ -80,7 +81,7 @@
       <p><strong>Style Tags:</strong> {{ style_tags }} </p>
     </div>
 
-    <!-- Reset Password in Profile Page -->
+    <!-- Reset Password Field -->
     <div class="password-box">
       <h2>Password Management</h2>
       <button type="button" class="btn reset" onclick="togglePasswordForm()">Change Password</button>
@@ -89,6 +90,7 @@
             method="POST"
             style="display: none; margin-top: 1rem;"
             onsubmit="return confirm('Are you sure you want to change your password?');">
+        <input type="hidden" name="form-name" value="reset-password-form">
         {{ form.hidden_tag() }}
         <div class="profile-info">
           <label for="current_password"><i class="fa-solid fa-lock"></i> Current Password:</label>
