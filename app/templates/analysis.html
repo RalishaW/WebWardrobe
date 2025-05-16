@@ -6,42 +6,52 @@
     <section class="analysis">
         <h1>Wardrobe Analysis</h1>
 
-    <div id="analysis-charts">
-        <div class="chart-row-top">
-            <canvas id="category-chart"></canvas>
-            <canvas id="season-chart"></canvas>
-        </div>
-        <div class="chart-row-bottom">
-            <canvas id="color-chart"></canvas>
-        </div>
-          
-    </div>
+        <h2 class="section-title"><b>Style Analysis</b></h2>
 
-    <h2 class="section-title">Style Analysis</h2>
+        <div class="style-analysis-wrapper">
+            <!-- Total Items -->
+            <div class="metric-card">
+                <h3 class="card-title">Total Items</h3>
+                <div class="card-middle">
+                    <img src="{{ url_for('static', filename='images/bar-icon.png') }}" alt="Bar graph" />
+                    <div class="card-value">{{ total_item_value }}</div>
+                </div>
+                <p class="card-desc">Items in your wardrobe</p>
+            </div>
 
-        <div class="analysis-card">
-            <h2 class="head">Total Items</h2>
-            <p class="value">{{ total_item_value }}</p>
-            <p class="subtitle">Items in your wardrobe</p>
-        </div>
+            <!-- Outfits Created -->
+            <div class="metric-card">
+                <h3 class="card-title">Outfits Created</h3>
+                <div class="card-middle">
+                    <img src="{{ url_for('static', filename='images/line-chart-icon.png') }}" alt="Line chart" />
+                    <div class="card-value">{{ outfits_created_value }}</div>
+                </div>
+                <p class="card-desc">Saved outfit combinations</p>
+            </div>
 
-        <div class="analysis-card">
-            <h2 class="head">Outfits Created</h2>
-            <p class="value">{{ outfits_created_value }}</p>
-            <p class="subtitle">Saved outfit combinations</p>
-        </div>
-
-        <h2 class="section-title">Most Used Item</h2>
-        <div class="most-used-item-block">
-            <img src="{{ item_image_url }}" alt="Most used item" class="most-used-item-image">
-            <div class="most-used-item-info">
-                <h3>{{ item_name | default('No item yet') }}</h3>
-                <p>Used in {{ number_of_mixed_outfits | default(0) }} outfits</p>
+            <!-- Most Used Item -->
+            <div class="metric-card">
+                <h3 class="card-title">Most Used Item</h3>
+                <div class="card-middle">
+                    <img src="{{ item_image_url or url_for('static', filename='images/hanger-icon.png') }}"
+                        alt="Most used item" class="most-used-item-image" />
+                    <div class="card-value">{{ item_name | default('None') }}</div>
+                </div>
+                <p class="card-desc">Most worn item</p>
             </div>
         </div>
 
-        
-    </section>
+        <div id="analysis-charts">
+            <div class="chart-row-top">
+                <canvas id="category-chart"></canvas>
+                <canvas id="season-chart"></canvas>
+            </div>
+            <div class="chart-row-bottom">
+                <canvas id="color-chart"></canvas>
+            </div>
+        </div>
 
+
+    </section>
 </div>
 {% endblock %}
