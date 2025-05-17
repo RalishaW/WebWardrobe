@@ -39,7 +39,7 @@ cd WebWardrobe
 
 ### 2. Set up a virtual environment
 
-**Note**: This app needs the python to be 3.11 to work.
+**Note**: This app needs the python to be 3.11 or less to work.
 
 #### macOS/Linux
 
