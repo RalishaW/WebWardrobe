@@ -5,14 +5,14 @@ CITS3403 - Agile Web Development Project
 
 ## Description
 
-**Fashanize** is an intuitive wardrobe management and outfit-sharing web application designed to help users digitize their clothing, curate outfits, analyze their style habits, and share looks with others. Built using the Agile methodology, this full-stack Flask application supports:
+**Fashanize** is an intuitive wardrobe management and outfit-sharing web application designed to help users digitize their clothing, curate outfits, analyse their style habits, and share looks with others. Built using the Agile methodology, this full-stack Flask application supports:
 
 ### Key Features
 
 - **Wardrobe Management**: Upload and tag clothing items with categories like color, condition, size, and more.
 - **Outfit Creation**: Mix and match your uploaded items into styled outfits.
-- **Wardrobe Analysis**: Gain insights into your fashion usage, most-used items, and outfit frequency through data visualizations.
-- **Social Sharing**: Publish outfits and browse those shared by others.
+- **Wardrobe Analysis**: Gain insights into your fashion usage, most-used items, and outfit frequency through data visualisations.
+- **Social Sharing**: Share outfits and browse those shared by others.
 - **Smart Image Processing**: Auto-remove backgrounds using `rembg` libraries for cleaner visuals.
 
 ---
@@ -154,7 +154,7 @@ python.exe -m unittest tests/Sele_tests.py
 
 - Go to the **Outfits** page.
 - Click **Create Outfit** and select items from your wardrobe.
-- Name your outfit and choose to make it **public** or **private**.
+- Name your outfit.
 - Save the outfit to view it in your collection.
 
 ### 4. Analyse Your Wardrobe
