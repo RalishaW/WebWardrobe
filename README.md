@@ -44,7 +44,13 @@ cd WebWardrobe
 #### macOS/Linux
 
 ```bash
-python -m venv venv or python3 -m venv venv
+python -m venv venv
+source venv/bin/activate
+```
+- or
+  
+```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -84,7 +90,12 @@ pip install python-dotenv
 
 ### 5. Initialise a clean database
 ```bash
-python3 db_init.py or python db_init.py
+python3 db_init.py
+```
+or 
+
+```bash
+python db_init.py
 ```
 
 ### 6. Launch the application
