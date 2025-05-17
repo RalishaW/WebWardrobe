@@ -44,7 +44,7 @@ cd WebWardrobe
 #### macOS/Linux
 
 ```bash
-python -m venv venv
+python -m venv venv or python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -61,6 +61,7 @@ venv\Scripts\activate
 pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 ```
+- If running on intel mac, it can take a longer time to install.
 
 
 ### 4 .env structure
@@ -83,7 +84,7 @@ pip install python-dotenv
 
 ### 5. Initialise a clean database
 ```bash
-python3 db_init.py
+python3 db_init.py or python db_init.py
 ```
 
 ### 6. Launch the application
