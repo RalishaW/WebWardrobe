@@ -42,7 +42,7 @@ def create_app(config_object=Config):
     from app.models import User
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return db.session.get(User, user_id)
 
     # Register blueprint
     from app.blueprints import main as main_bp
