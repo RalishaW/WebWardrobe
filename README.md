@@ -39,6 +39,8 @@ cd WebWardrobe
 
 ### 2. Set up a virtual environment
 
+**Note**: This app needs the python to be 3.9.6 to work.
+
 #### macOS/Linux
 
 ```bash
@@ -59,7 +61,8 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## 4 .env structure
+
+### 4 .env structure
 - Create .env file (This is an example)
 ```bash
 SECRET_KEY=SECRET_KEY 
@@ -67,6 +70,11 @@ FLASK_APP=fashanise.py
 MAIL_USERNAME=somemail@gmail.com
 MAIL_PASSWORD=sixteen-character-smtp-pwd
 ```
+- Then run the command
+```bash
+pip install python-dotenv
+```
+
 ### 5. Initialise a clean database
 ```bash
 python3 db.init.py
@@ -94,13 +102,13 @@ Run the following to test basic backend functionality:
 #### macOS/Linux
 
 ```bash
-./venv/bin/python3 -m unittest ./tests/test_app.py
+python3 -m unittest tests/test_app.py
 ```
 
 #### Windows
 
 ```bash
-.env\Scripts\python.exe -m unittest ./tests/test_app.py
+python.exe -m unittest tests/test_app.py
 ```
 
 ---
@@ -112,13 +120,13 @@ These simulate user actions like login and upload:
 #### macOS/Linux
 
 ```bash
-python3 -m unittest selenium_tests/Sele_tests.py
+python3 -m unittest tests/Sele_tests.py
 ```
 
 #### Windows
 
 ```bash
-python -m unittest selenium_tests/Sele_tests.py
+python.exe -m unittest tests/Sele_tests.py
 ```
 
 > Ensure **ChromeDriver** is installed and available in your system `PATH`.
