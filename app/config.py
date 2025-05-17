@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'default-key-fallback')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_PROFILE_PICTURE = 'app/static/profile_picture'
     UPLOAD_CLOTHING_ITEM = 'app/static/clothing_items'
