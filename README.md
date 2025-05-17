@@ -71,6 +71,11 @@ FLASK_APP=fashanise.py
 MAIL_USERNAME=somemail@gmail.com
 MAIL_PASSWORD=sixteen-character-smtp-pwd
 ```
+- Email configuration is required for the "Forgot Password" feature to work. For Gmail accounts, make sure:
+- You have enabled 2-Step Verification
+- You generate an App Password from https://myaccount.google.com/apppasswords
+- Use this App Password as MAIL_PASSWORD instead of your normal email password
+
 - Then run the command
 ```bash
 pip install python-dotenv
