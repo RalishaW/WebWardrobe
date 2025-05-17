@@ -78,7 +78,7 @@ pip install python-dotenv
 
 ### 5. Initialise a clean database
 ```bash
-python3 db.init.py
+python3 db_init.py
 ```
 
 ### 6. Launch the application
