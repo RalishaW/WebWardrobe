@@ -10,7 +10,7 @@ from rembg import remove
 from PIL import Image, UnidentifiedImageError
 
 from werkzeug.security import check_password_hash
-from app.models import User
+from app.models import User, ClothingItem, Outfit
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'jfif', 'webp'}
@@ -122,3 +122,37 @@ def send_notification_delete(email):
         mail.send(msg)
     except Exception as e:
         current_app.logger.error(f"Failed to send email to {email}: {e}")
+
+# Cleanup function
+# Cleanup outfits
+def cleanup_outfits(user_id):
+    outfits = Outfit.query.filter_by(user_id=user_id).all()
+    for outfit in outfits:
+        if outfit.preview_image:
+            full_path = os.path.join(current_app.root_path, 'static', outfit.preview_image)
+            if os.path.isfile(full_path):
+                try:
+                    os.remove(full_path)
+                except Exception as e:
+                    current_app.logger.warning(f"Could not delete outfit preview image: {full_path}. Reason: {e}")
+
+def cleanup_clothing_items(user_id):
+    clothing_items = ClothingItem.query.filter_by(user_id=user_id).all()
+    for item in clothing_items:
+        if item.image_path:
+            full_path = os.path.join(current_app.root_path, 'static', item.image_path)
+            if os.path.isfile(full_path):
+                try:
+                    os.remove(full_path)
+                except Exception as e:
+                    current_app.logger.warning(f"Could not delete clothing item image: {full_path}. Reason: {e}")
+                    
+def cleanup_profile_picture(user):
+    default_pic = 'images/empty-profile-pic.png'
+    if user.profile_picture and user.profile_picture != default_pic:
+        full_path = os.path.join(current_app.root_path, 'static', user.profile_picture)
+        if os.path.isfile(full_path):
+            try:
+                os.remove(full_path)
+            except Exception as e:
+                current_app.logger.warning(f"Could not delete profile picture: {full_path}. Reason: {e}")

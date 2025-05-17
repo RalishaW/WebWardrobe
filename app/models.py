@@ -30,6 +30,8 @@ class User(db.Model, UserMixin):
 
     wardrobe_items = db.relationship('ClothingItem', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     outfits = db.relationship('Outfit', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    sent_shared = db.relationship('SharedOutfit', foreign_keys='SharedOutfit.sender_id', cascade='all, delete-orphan', backref='sender_user')
+    received_shared = db.relationship('SharedOutfit', foreign_keys='SharedOutfit.receiver_id', cascade='all, delete-orphan', backref='receiver_user')
 
 # ----------------------
 # Clothing Item Model
@@ -82,6 +84,6 @@ class SharedOutfit(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    outfit = db.relationship('Outfit', backref='shared_entries')
-    sender = db.relationship('User', foreign_keys=[sender_id])
-    receiver = db.relationship('User', foreign_keys=[receiver_id])
+    outfit = db.relationship('Outfit', backref=db.backref('shared_entries', cascade='all, delete-orphan'))
+    sender = db.relationship('User', foreign_keys=[sender_id], overlaps="sender_user,sent_shared")
+    receiver = db.relationship('User', foreign_keys=[receiver_id], overlaps="receiver_user,received_shared")

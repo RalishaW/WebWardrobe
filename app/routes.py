@@ -12,6 +12,9 @@ from .utils import (
     generate_reset_token, verify_reset_token, try_to_login,
     send_notification_welcome, send_notification_shared_outfit,
     send_notification_delete,
+    cleanup_clothing_items,
+    cleanup_outfits,
+    cleanup_profile_picture
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -604,10 +607,16 @@ def profile():
             return redirect(url_for('main.profile'))
         
         user_email = current_user.email
+        user_id = current_user.id            
+
         try:
+            cleanup_clothing_items(user_id)
+            cleanup_outfits(user_id)
+            cleanup_profile_picture(current_user)
+
             db.session.delete(current_user)
             db.session.commit()
-            
+
             logout_user()
         except Exception as e:
             db.session.rollback()
@@ -615,7 +624,6 @@ def profile():
             flash("Could not delete your account. Please try again", 'error')
             return redirect(url_for('main.profile'))
 
-        logout_user()
         # Send notification of deleting
         try:
             send_notification_delete(user_email)
