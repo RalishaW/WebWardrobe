@@ -5,7 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
-
+from dotenv import load_dotenv
+load_dotenv()
 from .config import Config, config_dict
 
 # Extension instances
@@ -41,7 +42,7 @@ def create_app(config_object=Config):
     from app.models import User
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return db.session.get(User, user_id)
 
     # Register blueprint
     from app.blueprints import main as main_bp

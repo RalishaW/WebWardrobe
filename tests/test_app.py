@@ -26,7 +26,7 @@ class UnitTest(unittest.TestCase):
             firstname='Test',
             lastname='User',
             email='test@gmail.com',
-            password=generate_password_hash('password')
+            password=generate_password_hash('password', method='pbkdf2:sha256')
         )
         db.session.add(default)
         db.session.commit()
@@ -259,7 +259,7 @@ class UnitTest(unittest.TestCase):
     def test_share_outfit(self):
         self.client.post('/login', data={'email':'test@gmail.com','password':'password'}, follow_redirects=True)
         u2 = User(username='u2',firstname='U',lastname='Two',
-                  email='u2@example.com',password=generate_password_hash('pw'))
+                  email='u2@example.com',password=generate_password_hash('pw',method='pbkdf2:sha256'))
         of = Outfit(outfit_name='S1',occasion='O',season='S',user_id=1)
 
         db.session.add_all([u2,of])
@@ -272,7 +272,7 @@ class UnitTest(unittest.TestCase):
     def test_deleted_shared_outfit(self):
         self.client.post('/login', data={'email':'test@gmail.com','password':'password'}, follow_redirects=True)
         u2 = User(username='u2',firstname='U',lastname='Two',
-                  email='u2@example.com',password=generate_password_hash('pw'))
+                  email='u2@example.com',password=generate_password_hash('pw',method='pbkdf2:sha256'))
         of = Outfit(outfit_name='S2',occasion='O',season='S',user_id=1)
 
         db.session.add_all([u2,of])

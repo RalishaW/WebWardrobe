@@ -264,7 +264,7 @@ def reset_password(token):
 
     if form.validate_on_submit():
         # hashed the password
-        hashed_pwd = generate_password_hash(form.password.data)
+        hashed_pwd = generate_password_hash(form.password.data, method='pbkdf2:sha256' )
         # Set the new password for the user
         user.password = hashed_pwd
         # Update password for user on database
